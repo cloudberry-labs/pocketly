@@ -86,12 +86,16 @@
     .bottom-nav{position:absolute;left:20px;right:20px;bottom:19px;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);padding:8px;border:2px solid rgba(255,255,255,.9);border-radius:22px;background:rgba(255,255,255,.92);box-shadow:0 9px 25px rgba(79,72,100,.16);backdrop-filter:blur(8px)}.nav-item{display:grid;gap:2px;place-items:center;border:0;background:transparent;color:#9a93a4;font-family:inherit;font-size:.58rem;cursor:pointer}.nav-item span{font-size:1.14rem}.nav-item.active{color:#df739e}
     .save-modal{position:absolute;inset:0;z-index:20;display:none;place-items:center;padding:25px;background:rgba(74,66,86,.34);backdrop-filter:blur(5px)}.save-modal.open{display:grid}.modal-card{width:100%;padding:25px;border:3px solid white;border-radius:27px;background:#fffafc;box-shadow:0 22px 55px rgba(60,51,72,.24);text-align:center}.modal-card h2{font-size:2.25rem}.modal-card p{margin:5px 0 18px;color:#8a8292;font-size:.78rem}.modal-actions{display:flex;gap:10px;margin-top:16px}
     .profile-cloud{display:grid;width:78px;height:78px;place-items:center;margin:0 auto 12px;border:5px solid white;border-radius:50%;background:#a9ddf6;box-shadow:0 9px 20px rgba(88,105,139,.15);font-size:2rem}.profile-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}.profile-stat{padding:12px 8px;border:2px solid #e2f1fa;border-radius:16px;background:#f7fcff}.profile-stat strong{display:block;color:#df739e;font-size:1.05rem}.profile-stat span{color:#888194;font-size:.64rem}
+    .pockets-view{position:relative;display:none;min-height:inherit;padding:25px 24px 82px;background:linear-gradient(180deg,rgba(246,252,255,.92),rgba(255,242,248,.92));backdrop-filter:blur(4px)}
+    .pockets-intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.pockets-intro p{margin:0;color:#888194;font-size:.7rem}.pockets-intro h2{margin:1px 0 0;color:#5b566c;font-size:2.15rem}.add-pocket-mini{display:grid;width:46px;height:46px;place-items:center;border:3px solid white;border-radius:16px;background:#ef8caf;color:white;box-shadow:0 6px 0 #cc5d8b;font:400 1.55rem "Darumadrop One",sans-serif;cursor:pointer}
+    .pockets-list{display:grid;max-height:645px;gap:12px;overflow:auto;padding:2px 2px 14px;scrollbar-width:none}.pockets-list::-webkit-scrollbar{display:none}
+    .goal-card{position:relative;padding:17px;border:2px solid white;border-radius:23px;background:rgba(255,255,255,.88);box-shadow:0 9px 22px rgba(93,82,113,.1)}.goal-card.active-pocket{border-color:#8fd0f2;box-shadow:0 9px 24px rgba(100,176,217,.17)}.goal-card.completed{background:linear-gradient(135deg,#fff9e6,#fff2f8)}.goal-card.archived{display:none}.active-tag{position:absolute;right:13px;top:12px;padding:5px 9px;border-radius:99px;background:#e2f4fd;color:#548eb0;font-size:.58rem}.goal-icon{display:grid;width:44px;height:44px;place-items:center;float:left;margin-right:11px;border-radius:15px;background:#fff0f6;font-size:1.35rem}.goal-card h3{margin:1px 0;color:#5e596d;font-size:1.38rem}.goal-card small{color:#938c9d;font-size:.62rem}.goal-progress{clear:both;padding-top:14px}.goal-money{display:flex;justify-content:space-between;margin-bottom:6px;color:#777082;font-size:.68rem}.goal-money strong{color:#dd709c;font-size:.88rem}.goal-actions{display:flex;gap:7px;margin-top:12px}.tiny-btn{flex:1;min-height:34px;border:2px solid #ebe4ec;border-radius:12px;background:white;color:#716b7c;font:400 .66rem "Darumadrop One",sans-serif;cursor:pointer}.tiny-btn.active-choice{border-color:#9fd7f3;background:#eef9ff;color:#4d8eaf}.tiny-btn.danger{color:#c8708e}.empty-pockets{padding:52px 25px;border:2px dashed #cde9f7;border-radius:24px;background:rgba(255,255,255,.6);color:#817a8c;text-align:center}.empty-pockets span{display:block;font-size:2.3rem}.empty-pockets h3{margin:8px 0;font-size:1.55rem}
     .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
     @keyframes waveA{0%,42%,100%{opacity:1}46%,88%{opacity:0}}
     @keyframes waveB{0%,42%,100%{opacity:0}46%,88%{opacity:1}}
     @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}.onboard-card{min-height:calc(100svh - 72px);padding-top:20px}.cici-intro{height:205px}.success-badge{margin-top:28px}}
-    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}.onboarding{padding:18px}.onboard-card{min-height:calc(100svh - 36px);padding:21px 20px}.dashboard{min-height:100svh}}
+    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}.onboarding{padding:18px}.onboard-card{min-height:calc(100svh - 36px);padding:21px 20px}.dashboard,.pockets-view{min-height:100svh}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
@@ -169,7 +173,14 @@
           <button class="btn primary dash-add" id="openSaveModal">+ ADD SAVINGS</button>
         </section>
         <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item active"><span>🏠</span>Home</button><button class="nav-item"><span>👛</span>Pockets</button><button class="nav-item"><span>🎲</span>Play</button><button class="nav-item"><span>🌸</span>Profile</button>
+          <button class="nav-item active"><span>🏠</span>Home</button><button class="nav-item" id="openPockets"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="bottomProfile"><span>🌸</span>Profile</button>
+        </nav>
+      </div>
+      <div class="pockets-view" id="pocketsView">
+        <header class="pockets-intro"><div><p>Save for every little dream</p><h2>My Pockets</h2></div><button class="add-pocket-mini" id="addPocketButton" aria-label="Create a new pocket">+</button></header>
+        <div class="pockets-list" id="pocketsList"></div>
+        <nav class="bottom-nav" aria-label="Main navigation">
+          <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
       <div class="save-modal" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
@@ -184,18 +195,24 @@
           <div class="modal-actions"><button class="btn soft-btn" id="profileHome">WELCOME PAGE</button><button class="btn primary" id="closeProfile">CLOSE</button></div>
         </div>
       </div>
+      <div class="save-modal" id="pocketModal" role="dialog" aria-modal="true" aria-labelledby="pocketModalTitle">
+        <div class="modal-card"><h2 id="pocketModalTitle">Create a New Pocket</h2><p>What little dream are you saving for?</p>
+          <div class="form"><div class="field"><label for="newPocketName">Pocket name</label><input id="newPocketName" maxlength="40" placeholder="e.g. Dream Trip"></div><div class="amount-row"><div class="field"><label for="newPocketTarget">Target amount</label><input id="newPocketTarget" type="number" min="1" step="1" inputmode="decimal" placeholder="10000"></div><div class="field"><label for="newPocketCurrency">Currency</label><select id="newPocketCurrency"><option>PHP</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option></select></div></div><div class="field"><label for="newPocketDate">Target date (optional)</label><input id="newPocketDate" type="date"></div></div><p class="form-error" id="pocketModalError"></p>
+          <div class="modal-actions"><button class="btn soft-btn" id="cancelPocketModal">CANCEL</button><button class="btn primary" id="savePocketButton">SAVE POCKET</button></div>
+        </div>
+      </div>
     </section>
-    <p class="phase">Pocketville · Phase 3</p>
+    <p class="phase">Pocketville · Phase 4</p>
   </main>
   <script>
     const copy={
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
     };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal");
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
     const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
-    let currentStep=0,selectedGoal="";
-    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none"}
+    let currentStep=0,selectedGoal="",editingPocketId=null;
+    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none"}
     function showWelcome(){hideViews();welcome.style.display="flex"}
     function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
     document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
@@ -214,11 +231,13 @@
     document.querySelector("#createPocket").onclick=()=>{
       const name=document.querySelector("#goalName").value.trim(),amount=Number(document.querySelector("#targetAmount").value),currency=document.querySelector("#currency").value,date=targetDate.value;
       if(!name||!amount||amount<=0){document.querySelector("#formError").textContent="Add a pocket name and a target amount.";return}
-      const pocket={name,amount,currency,date,saved:0,createdAt:new Date().toISOString()};
-      try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket))}catch(e){}
+      const pocket={id:Date.now(),name,amount,currency,date,saved:0,active:true,archived:false,createdAt:new Date().toISOString()};
+      try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket));localStorage.setItem("pocketlyPockets",JSON.stringify([pocket]))}catch(e){}
       document.querySelector("#summaryName").textContent=name;document.querySelector("#summaryAmount").textContent=new Intl.NumberFormat(undefined,{style:"currency",currency,maximumFractionDigits:0}).format(amount);document.querySelector("#formError").textContent="";showStep(3)
     };
-    function getPocket(){try{return JSON.parse(localStorage.getItem("pocketlyFirstPocket"))}catch(e){return null}}
+    function getPockets(){try{let pockets=JSON.parse(localStorage.getItem("pocketlyPockets"));if(Array.isArray(pockets)&&pockets.length)return pockets;const first=JSON.parse(localStorage.getItem("pocketlyFirstPocket"));if(first){first.id=first.id||Date.now();first.active=true;first.archived=false;pockets=[first];localStorage.setItem("pocketlyPockets",JSON.stringify(pockets));return pockets}return[]}catch(e){return[]}}
+    function savePockets(pockets){try{localStorage.setItem("pocketlyPockets",JSON.stringify(pockets));const active=pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived);if(active)localStorage.setItem("pocketlyFirstPocket",JSON.stringify(active))}catch(e){}}
+    function getPocket(){const pockets=getPockets();return pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived)||null}
     function money(value,currency){try{return new Intl.NumberFormat(undefined,{style:"currency",currency,maximumFractionDigits:0}).format(value)}catch(e){return currency+" "+Number(value).toLocaleString()}}
     function renderDashboard(){
       const pocket=getPocket();if(!pocket){showStep(0);return}
@@ -231,10 +250,22 @@
     document.querySelector("#finishOnboarding").textContent="ENTER POCKETVILLE →";document.querySelector("#finishOnboarding").onclick=showDashboard;
     document.querySelector("#openSaveModal").onclick=()=>{document.querySelector("#saveAmount").value="";document.querySelector("#saveError").textContent="";saveModal.classList.add("open");setTimeout(()=>document.querySelector("#saveAmount").focus(),50)};
     document.querySelector("#closeSaveModal").onclick=()=>saveModal.classList.remove("open");
-    document.querySelector("#confirmSave").onclick=()=>{const add=Number(document.querySelector("#saveAmount").value),pocket=getPocket();if(!add||add<=0){document.querySelector("#saveError").textContent="Enter an amount greater than zero.";return}pocket.saved=(Number(pocket.saved)||0)+add;try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket))}catch(e){}saveModal.classList.remove("open");renderDashboard()};
+    document.querySelector("#confirmSave").onclick=()=>{const add=Number(document.querySelector("#saveAmount").value),pocket=getPocket();if(!add||add<=0){document.querySelector("#saveError").textContent="Enter an amount greater than zero.";return}const pockets=getPockets(),target=pockets.find(p=>p.id===pocket.id);target.saved=(Number(target.saved)||0)+add;savePockets(pockets);saveModal.classList.remove("open");renderDashboard()};
     saveModal.onclick=e=>{if(e.target===saveModal)saveModal.classList.remove("open")};
     document.querySelector("#profileButton").onclick=()=>profileModal.classList.add("open");document.querySelector("#closeProfile").onclick=()=>profileModal.classList.remove("open");document.querySelector("#profileHome").onclick=()=>{profileModal.classList.remove("open");showWelcome()};profileModal.onclick=e=>{if(e.target===profileModal)profileModal.classList.remove("open")};
-    document.querySelectorAll(".nav-item:not(.active)").forEach(b=>b.onclick=()=>{document.querySelector("#ciciNote").textContent=b.textContent.trim()+" is coming in the next Pocketly phase!"});
+    function esc(value){return String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+    function renderPockets(){
+      const pockets=getPockets().filter(p=>!p.archived),list=document.querySelector("#pocketsList");if(!pockets.length){list.innerHTML='<div class="empty-pockets"><span>☁️</span><h3>No pockets yet</h3><p>Create a little place for your next dream.</p></div>';return}
+      const icons=["🏡","✈️","☂️","🎁","🌸","📚"];
+      list.innerHTML=pockets.map((p,i)=>{const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));return `<article class="goal-card ${p.active?"active-pocket":""} ${percent>=100?"completed":""}" data-id="${p.id}">${p.active?'<span class="active-tag">ACTIVE</span>':""}<span class="goal-icon">${icons[i%icons.length]}</span><h3>${esc(p.name)}</h3><small>${percent>=100?"Dream completed!":"Saving in progress"}</small><div class="goal-progress"><div class="goal-money"><strong>${money(Number(p.saved)||0,p.currency)}</strong><span>of ${money(p.amount,p.currency)} · ${percent}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></div><div class="goal-actions">${p.active?'<button class="tiny-btn active-choice" disabled>ACTIVE</button>':`<button class="tiny-btn" data-action="active">USE THIS</button>`}<button class="tiny-btn" data-action="edit">EDIT</button><button class="tiny-btn danger" data-action="archive">ARCHIVE</button></div></article>`}).join("")
+    }
+    function showPockets(){hideViews();renderPockets();pocketsView.style.display="block"}
+    function openPocketEditor(pocket=null){editingPocketId=pocket?pocket.id:null;document.querySelector("#pocketModalTitle").textContent=pocket?"Edit Your Pocket":"Create a New Pocket";document.querySelector("#newPocketName").value=pocket?pocket.name:"";document.querySelector("#newPocketTarget").value=pocket?pocket.amount:"";document.querySelector("#newPocketCurrency").value=pocket?pocket.currency:"PHP";document.querySelector("#newPocketDate").value=pocket&&pocket.date?pocket.date:"";document.querySelector("#pocketModalError").textContent="";pocketModal.classList.add("open")}
+    document.querySelector("#openPockets").onclick=showPockets;document.querySelector("#pocketsHome").onclick=showDashboard;document.querySelector("#addPocketButton").onclick=()=>openPocketEditor();document.querySelector("#bottomProfile").onclick=()=>profileModal.classList.add("open");document.querySelector("#pocketsProfile").onclick=()=>profileModal.classList.add("open");
+    document.querySelector("#cancelPocketModal").onclick=()=>pocketModal.classList.remove("open");pocketModal.onclick=e=>{if(e.target===pocketModal)pocketModal.classList.remove("open")};
+    document.querySelector("#savePocketButton").onclick=()=>{const name=document.querySelector("#newPocketName").value.trim(),amount=Number(document.querySelector("#newPocketTarget").value),currency=document.querySelector("#newPocketCurrency").value,date=document.querySelector("#newPocketDate").value;if(!name||!amount||amount<=0){document.querySelector("#pocketModalError").textContent="Add a pocket name and target amount.";return}const pockets=getPockets();if(editingPocketId){const p=pockets.find(x=>x.id===editingPocketId);Object.assign(p,{name,amount,currency,date})}else{pockets.push({id:Date.now(),name,amount,currency,date,saved:0,active:pockets.filter(p=>!p.archived).length===0,archived:false,createdAt:new Date().toISOString()})}savePockets(pockets);pocketModal.classList.remove("open");renderPockets()};
+    document.querySelector("#pocketsList").onclick=e=>{const btn=e.target.closest("[data-action]");if(!btn)return;const card=btn.closest("[data-id]"),id=Number(card.dataset.id),pockets=getPockets(),pocket=pockets.find(p=>p.id===id);if(btn.dataset.action==="active"){pockets.forEach(p=>p.active=p.id===id);savePockets(pockets);renderPockets()}if(btn.dataset.action==="edit")openPocketEditor(pocket);if(btn.dataset.action==="archive"){if(pockets.filter(p=>!p.archived).length===1){btn.textContent="KEEP ONE";setTimeout(()=>btn.textContent="ARCHIVE",1200);return}pocket.archived=true;if(pocket.active){const replacement=pockets.find(p=>!p.archived);if(replacement)replacement.active=true}savePockets(pockets);renderPockets()}};
+    document.querySelectorAll(".coming").forEach(b=>b.onclick=()=>{if(dashboard.style.display==="block")document.querySelector("#ciciNote").textContent="Play and Savopoly are coming in the next Pocketly phase!"});
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
