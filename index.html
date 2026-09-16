@@ -116,6 +116,48 @@
     @keyframes diceBounce{0%{transform:rotate(0) scale(1)}35%{transform:rotate(-18deg) scale(1.18)}70%{transform:rotate(18deg) scale(.92)}100%{transform:rotate(0) scale(1)}}
     @media(max-width:390px){.game-board{width:100%;gap:2px;padding:5px}.board-tile{font-size:.34rem}.board-tile .tile-icon{font-size:.64rem}}
 
+  
+    /* PHASE 5B — CARTOON BOARD POLISH */
+    .play-view{padding:18px 14px 84px;background:linear-gradient(180deg,#eaf7ff 0%,#fff0f7 100%)}
+    .play-intro{display:flex;align-items:end;justify-content:space-between;padding:0 7px 5px}
+    .play-intro:after{content:"Cici · Lv 1";padding:7px 10px;border:2px solid #fff;border-radius:99px;background:#f8dbe8;color:#665f79;font-size:.58rem;box-shadow:0 4px 10px rgba(95,75,105,.1)}
+    .game-card{position:relative;padding:9px 7px 14px;border:3px solid #fff;border-radius:29px;background:rgba(255,255,255,.76);box-shadow:0 14px 30px rgba(89,80,117,.16)}
+    .game-card h3{font-size:1.25rem}.game-card>p{font-size:.59rem;margin-bottom:5px}
+    .game-board{width:min(100%,420px);margin:8px auto 10px;padding:5px;gap:3px;border:5px solid #fff;border-radius:31px;background:#f8dfea;box-shadow:0 11px 22px rgba(90,74,111,.17),inset 0 0 0 2px #e9b8cc}
+    .board-tile{border:2px solid rgba(255,255,255,.95);border-radius:10px;font-size:.37rem;box-shadow:0 3px 0 rgba(119,93,119,.12)}
+    .board-tile .tile-icon{font-size:.72rem}.board-tile.save{background:#ffdce9}.board-tile.mystery{background:#eadfff}.board-tile.bonus{background:#dff3ff}.board-tile.challenge{background:#ffe3d4}.board-tile.treat{background:#fff0c9}.board-tile.boost{background:#e2f0d8}.board-tile.rest{background:#f4eff7}.board-tile.chaos{background:#e9dff0}
+    .board-center{background:
+      radial-gradient(circle at 18% 22%,#fff 0 2%,transparent 2.4%),
+      radial-gradient(circle at 78% 16%,#fff 0 2.4%,transparent 2.8%),
+      linear-gradient(180deg,#aee2fa 0 34%,#d9efcf 34% 48%,#f8d6e3 48% 100%);
+      border-radius:22px;border:3px solid #fff;box-shadow:inset 0 0 0 2px rgba(121,184,210,.15)}
+    .board-center:before{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;background:
+      radial-gradient(ellipse at 12% 100%,#b8d99e 0 18%,transparent 18.5%),
+      radial-gradient(ellipse at 88% 100%,#a9d293 0 20%,transparent 20.5%),
+      linear-gradient(165deg,transparent 0 45%,rgba(255,255,255,.5) 45% 51%,transparent 51%);
+      opacity:.9}
+    .board-scenery{position:absolute;inset:0;pointer-events:none}
+    .scene-shop,.scene-house,.scene-tree,.scene-bench,.scene-sign{position:absolute;filter:drop-shadow(0 4px 3px rgba(70,65,85,.12))}
+    .scene-shop{left:7%;top:29%;font-size:2.25rem}.scene-house{right:8%;top:24%;font-size:2.1rem}.scene-tree{right:16%;bottom:18%;font-size:2rem}.scene-bench{right:8%;bottom:8%;font-size:1.5rem}.scene-sign{left:9%;bottom:8%;font-size:1.25rem}
+    .board-center-title{position:relative;z-index:2;margin-top:-2px;padding:5px 13px;border-radius:12px;background:rgba(255,248,239,.82);color:#c8668d;font-size:1.05rem;transform:rotate(-2deg);box-shadow:0 3px 7px rgba(91,74,99,.1)}
+    .board-center-sub{position:relative;z-index:2;color:#665e76;font-size:.43rem}
+    .board-house{display:none}
+    .board-dice{position:relative;z-index:5;width:52px;height:52px;margin-top:12px;border-radius:15px;font-size:0;transform:rotate(-8deg);transition:.2s}
+    .board-dice:before{content:attr(data-face);font-size:2rem}
+    .board-dice.throwing{animation:diceThrow .85s cubic-bezier(.2,.7,.3,1)}
+    .player-token{width:28px;height:31px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible;transform-origin:50% 100%}
+    .player-token img{width:34px;height:40px;object-fit:contain;filter:drop-shadow(0 3px 2px rgba(68,58,80,.22))}
+    .player-token.hopping{animation:ciciHop .21s ease}
+    .landing-modal{position:absolute;inset:0;z-index:40;display:none;place-items:center;padding:24px;background:rgba(73,65,91,.28);backdrop-filter:blur(4px)}
+    .landing-modal.open{display:grid}
+    .landing-card{position:relative;width:min(100%,350px);padding:24px 20px 19px;border:4px solid #fff;border-radius:28px;background:#fff9fc;box-shadow:0 20px 50px rgba(68,55,80,.27);text-align:center;animation:popCard .28s ease}
+    .landing-icon{display:grid;width:62px;height:62px;place-items:center;margin:-50px auto 8px;border:4px solid #fff;border-radius:20px;background:#ffdce9;box-shadow:0 7px 14px rgba(100,76,105,.14);font-size:2rem;transform:rotate(-4deg)}
+    .landing-card h2{font-size:1.8rem;color:#5e586e}.landing-card p{margin:7px auto 16px;max-width:280px;color:#7e7687;font-size:.75rem;line-height:1.5}
+    .landing-actions{display:grid;gap:8px}.landing-skip{border:0;background:transparent;color:#777083;text-decoration:underline;cursor:pointer}
+    @keyframes ciciHop{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-15px) rotate(-7deg) scale(1.08)}100%{transform:translateY(0) rotate(0)}}
+    @keyframes diceThrow{0%{transform:translate(-75px,-55px) rotate(-300deg) scale(.55)}35%{transform:translate(25px,-25px) rotate(160deg) scale(1.18)}68%{transform:translate(-10px,8px) rotate(390deg) scale(.92)}100%{transform:translate(0,0) rotate(712deg) scale(1)}}
+    @keyframes popCard{0%{opacity:0;transform:scale(.72) translateY(20px)}75%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+
   </style>
 </head>
 <body>
@@ -214,6 +256,17 @@
         </section>
         <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
       </div>
+      <div class="landing-modal" id="landingModal">
+        <div class="landing-card">
+          <div class="landing-icon" id="landingIcon">🪙</div>
+          <h2 id="landingTitle">You landed here!</h2>
+          <p id="landingText">Every tiny step counts.</p>
+          <div class="landing-actions">
+            <button class="btn primary" id="landingAction">GOT IT! ✨</button>
+            <button class="landing-skip" id="landingSkip">Not now</button>
+          </div>
+        </div>
+      </div>
       <div class="save-modal" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
         <div class="modal-card"><h2 id="saveTitle">Add a Little Save</h2><p>Small amounts count. Every coin helps your Pocketville grow!</p>
           <div class="field"><label for="saveAmount">Amount to add</label><input id="saveAmount" type="number" min="1" step="1" inputmode="decimal" placeholder="100"></div><p class="form-error" id="saveError"></p>
@@ -310,22 +363,45 @@
     for(let r=2;r<=9;r++)boardCoords.push([r,1]);
     let playerPosition=Number(localStorage.getItem("pocketlyBoardPosition"))||0,rolling=false;
     function renderBoard(){
-      const board=document.querySelector("#gameBoard");board.innerHTML='<div class="board-center"><span class="board-clouds">☁ ✦ ☁</span><div class="board-house">🏡</div><strong class="board-center-title">Pocketville</strong><span class="board-center-sub">small saves · big dreams</span><div class="board-dice" id="boardDice">🎲</div></div>';
+      const board=document.querySelector("#gameBoard");board.innerHTML='<div class="board-center"><span class="board-clouds">☁ ✦ ☁</span><div class="board-scenery"><span class="scene-shop">🏪</span><span class="scene-house">🏡</span><span class="scene-tree">🌳</span><span class="scene-bench">🪑</span><span class="scene-sign">🪧</span></div><strong class="board-center-title">Welcome to Pocketville</strong><span class="board-center-sub">Small Savings · Big Dreams</span><div class="board-dice" id="boardDice" data-face="⚀"></div></div>';
       boardSpaces.forEach((space,i)=>{const tile=document.createElement("div");tile.className="board-tile "+space[0];tile.dataset.index=i;tile.style.gridRow=boardCoords[i][0];tile.style.gridColumn=boardCoords[i][1];tile.innerHTML=`<span class="tile-icon">${space[1]}</span><span class="tile-name">${space[2]}</span>`;board.appendChild(tile)});
       updateToken();
     }
-    function updateToken(){
-      document.querySelectorAll(".player-token").forEach(x=>x.remove());const tile=document.querySelector(`.board-tile[data-index="${playerPosition}"]`);if(tile){const token=document.createElement("span");token.className="player-token";token.innerHTML='<img src="cici-welcome.png" alt="Cici">';tile.appendChild(token)}
+    function updateToken(hop=false){
+      document.querySelectorAll(".player-token").forEach(x=>x.remove());const tile=document.querySelector(`.board-tile[data-index="${playerPosition}"]`);if(tile){const token=document.createElement("span");token.className="player-token"+(hop?" hopping":"");token.innerHTML='<img src="cici-welcome.png" alt="Cici">';tile.appendChild(token)}
     }
     function showPlay(){hideViews();const p=getPocket();document.querySelector("#playPocketName").textContent=p?p.name:"Create a pocket first";playView.style.display="block";renderBoard()}
     const landingCopy={save:"A little Save space! Choose an amount you can really put aside, then add it from your pocket.",mystery:"Mystery time! 🎀 A Pocketly card will open here in the next step.",bonus:"Lucky landing! ⭐ You earned a little game bonus — no money added automatically.",challenge:"Tiny challenge! Try a no-spend or mindful-money mission. You can always skip.",treat:"Treat space! 🧁 Celebrate your progress without guilt.",boost:"Savings Boost! 🌿 Your next confirmed save can earn extra Pocket Points.",rest:"Cozy rest stop. ☁️ Nothing to do — just enjoy the landing.",chaos:"Chaos! 🌀 A silly Pocketly twist is coming here.",start:"Back at START! 🌱 Another little lap around your dream."};
     document.querySelectorAll(".coming").forEach(b=>b.onclick=showPlay);
     document.querySelector("#playHome").onclick=showDashboard;document.querySelector("#playPockets").onclick=showPockets;document.querySelector("#playProfile").onclick=()=>profileModal.classList.add("open");
+    const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+    const landingDetails={
+      save:["🪙","You landed on Save!","Set aside a little amount today. Every bit counts!","I SAVED IT!"],
+      mystery:["🎁","Mystery time!","A surprise Pocketly card is waiting for you.","OPEN CARD"],
+      bonus:["⭐","Bonus!","Lucky landing! You earned a tiny Pocketly bonus.","YAY!"],
+      challenge:["💪","Tiny Challenge!","Try a mindful-money mission. You can always skip it.","I'LL TRY IT"],
+      treat:["💗","Treat Yourself!","Celebrate your progress with a small guilt-free treat.","THANK YOU!"],
+      boost:["🌱","Savings Boost!","Your next confirmed save can earn extra Pocket Points.","BOOST IT!"],
+      rest:["🌙","Cozy Rest Stop","Nothing to do here. Cici gets a tiny break too!","REST"],
+      chaos:["🌀","Plot Twist!","Pocketville has a silly surprise for this turn.","SHOW ME"],
+      start:["🏡","Welcome Back!","You made another little trip around Pocketville.","LET'S GO!"]
+    };
+    function showLanding(type){
+      const d=landingDetails[type]||["✨","Tiny step!","Every little step counts.","GOT IT!"];
+      document.querySelector("#landingIcon").textContent=d[0];document.querySelector("#landingTitle").textContent=d[1];document.querySelector("#landingText").textContent=d[2];document.querySelector("#landingAction").textContent=d[3]+" ✨";document.querySelector("#landingModal").classList.add("open")
+    }
+    document.querySelector("#landingAction").onclick=()=>document.querySelector("#landingModal").classList.remove("open");
+    document.querySelector("#landingSkip").onclick=()=>document.querySelector("#landingModal").classList.remove("open");
+    document.querySelector("#landingModal").onclick=e=>{if(e.target.id==="landingModal")e.currentTarget.classList.remove("open")};
     document.querySelector("#rollButton").onclick=async()=>{
       if(rolling)return;const p=getPocket();if(!p){document.querySelector("#playNote").textContent="Create a pocket first.";return}
-      rolling=true;const n=Math.floor(Math.random()*6)+1,dice=document.querySelector("#boardDice");dice.classList.add("rolling");document.querySelector("#rollResult").textContent="You rolled "+n+"! 🎲";
-      for(let i=0;i<n;i++){await new Promise(r=>setTimeout(r,210));playerPosition=(playerPosition+1)%36;updateToken()}
-      localStorage.setItem("pocketlyBoardPosition",playerPosition);dice.classList.remove("rolling");const type=boardSpaces[playerPosition][0].split(" ")[0];document.querySelector("#playNote").textContent=landingCopy[type]||"Tiny steps count!";rolling=false
+      rolling=true;const n=Math.floor(Math.random()*6)+1,dice=document.querySelector("#boardDice");dice.classList.remove("throwing");void dice.offsetWidth;dice.classList.add("throwing");
+      let flick=0;const flicker=setInterval(()=>{dice.dataset.face=diceFaces[flick++%6]},85);
+      document.querySelector("#rollResult").textContent="Rolling... 🎲";
+      await new Promise(r=>setTimeout(r,850));clearInterval(flicker);dice.dataset.face=diceFaces[n-1];document.querySelector("#rollResult").textContent="You rolled "+n+"! 🎲";
+      for(let i=0;i<n;i++){await new Promise(r=>setTimeout(r,260));playerPosition=(playerPosition+1)%36;updateToken(true)}
+      localStorage.setItem("pocketlyBoardPosition",playerPosition);const type=boardSpaces[playerPosition][0].split(" ")[0];document.querySelector("#playNote").textContent=landingCopy[type]||"Tiny steps count!";
+      await new Promise(r=>setTimeout(r,330));showLanding(type);rolling=false
     };
 
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
