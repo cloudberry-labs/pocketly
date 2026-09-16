@@ -17,7 +17,7 @@
     .orb{position:absolute;z-index:-2;border:1px solid rgba(255,255,255,.72);border-radius:48% 52% 68% 32%/54% 35% 65% 46%}
     .o1{width:340px;height:340px;top:-120px;right:-95px;background:rgba(159,222,248,.38);transform:rotate(24deg)}
     .o2{width:300px;height:300px;bottom:-115px;left:-95px;background:rgba(252,172,206,.34);transform:rotate(-18deg)}
-    .card{position:relative;width:min(100%,500px);min-height:min(840px,calc(100svh - 42px));overflow:hidden;border:5px solid rgba(255,255,255,.8);border-radius:38px;background:#fceaf1 url("pocketville-window.jpg") center/cover no-repeat;box-shadow:0 28px 90px rgba(105,91,139,.24),inset 0 0 0 1px rgba(99,82,121,.12)}
+    .card{position:relative;width:min(100%,500px);min-height:min(840px,calc(100svh - 42px));overflow:hidden;border:5px solid rgba(255,255,255,.8);border-radius:38px;background:#fceaf1 url("pocketville-window-soft.jpg") center/cover no-repeat;box-shadow:0 28px 90px rgba(105,91,139,.24),inset 0 0 0 1px rgba(99,82,121,.12)}
     .card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,245,250,.02) 48%,rgba(255,241,247,.55) 100%)}
     .welcome{position:relative;display:flex;min-height:inherit;flex-direction:column;align-items:center;padding:31px 34px 31px}
     .brand{position:relative;z-index:4;width:min(100%,390px);padding:18px 16px 14px;text-align:center}
@@ -27,9 +27,8 @@
     .tagline span{margin:0 5px;color:#e5a4c0}
     .spark{position:absolute;top:-22px;right:0;color:#efb55c;font-size:23px}
     .stage{position:relative;display:grid;width:100%;min-height:316px;place-items:center;margin:-4px 0 -4px}
-    .mascot{position:relative;z-index:3;width:min(274px,68vw);height:325px;animation:bob 3.6s ease-in-out infinite}
+    .mascot{position:relative;z-index:3;width:min(274px,68vw);height:325px;transform-origin:50% 88%;animation:ciciAlive 4.2s ease-in-out infinite}
     .mascot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 13px 9px rgba(74,62,95,.18))}
-    .frame-a{animation:frameA 3.8s step-end infinite}.frame-b{opacity:0;animation:frameB 3.8s step-end infinite}
     .cloud{position:absolute;width:105px;height:42px;border-radius:99px;background:rgba(255,255,255,.68);box-shadow:28px -12px 0 3px rgba(255,255,255,.68),52px 1px 0 -3px rgba(255,255,255,.68);animation:drift 8s ease-in-out infinite}
     .cl{left:-28px;bottom:61px;transform:scale(.72)}.cr{right:12px;top:78px;transform:scale(.52);opacity:.7}
     .coin{position:absolute;display:grid;width:34px;height:34px;place-items:center;border:3px solid #fff6d6;border-radius:50%;background:#ffd97d;color:#da85a9;box-shadow:0 6px 12px rgba(170,123,114,.14);font-size:13px;font-weight:900}
@@ -48,9 +47,14 @@
     h2{max-width:340px;margin:0;color:#5f5870;font-size:clamp(1.75rem,8vw,2.4rem);line-height:1.05}
     .body{max-width:330px;margin:18px 0 32px;color:#8a8393;font-size:1rem;line-height:1.6}
     .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
-    @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
-    @keyframes frameA{0%,82%,100%{opacity:1}83%,91%{opacity:0}}
-    @keyframes frameB{0%,82%,92%,100%{opacity:0}83%,91%{opacity:1}}
+    @keyframes ciciAlive{
+      0%,100%{transform:translateY(2px) rotate(-1.2deg) scale(1)}
+      18%{transform:translateY(-5px) rotate(1.4deg) scale(1.01,.99)}
+      38%{transform:translateY(0) rotate(-.4deg) scale(.995,1.012)}
+      58%{transform:translateY(-8px) rotate(1.1deg) scale(1.012,.992)}
+      76%{transform:translateY(-2px) rotate(-1deg) scale(1)}
+      88%{transform:translateY(1px) rotate(.3deg) scale(.998,1.008)}
+    }
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
     @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}}
     @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}}
@@ -65,10 +69,7 @@
         <div class="brand"><span class="spark">✦</span><h1>POCKETLY</h1><p class="tagline">Save <span>•</span> Play <span>•</span> Build Your Little World</p></div>
         <div class="stage">
           <div class="cloud cl"></div><div class="cloud cr"></div>
-          <div class="mascot">
-            <img class="frame-a" src="cici-welcome.png" alt="Cici waves hello">
-            <img class="frame-b" src="cici-blink.png" alt="">
-          </div>
+          <div class="mascot"><img src="cici-welcome.png" alt="Cici waves hello"></div>
           <span class="coin c1">♥</span><span class="coin c2">★</span>
         </div>
         <div class="actions">
