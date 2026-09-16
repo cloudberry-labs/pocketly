@@ -76,18 +76,16 @@
     .success-badge{display:grid;width:98px;height:98px;place-items:center;margin:60px 0 22px;border:7px solid rgba(255,255,255,.8);border-radius:50%;background:linear-gradient(145deg,#9cdbf7,#ef9cbe);color:white;box-shadow:0 12px 30px rgba(106,124,164,.2);font-size:2.7rem}
     .pocket-summary{width:100%;margin:20px 0 28px;padding:17px;border:2px dashed #a9d8ef;border-radius:20px;background:#f6fcff;color:#5f5a70}.pocket-summary strong{display:block;color:#ec75a6;font-family:"Darumadrop One",sans-serif;font-size:1.65rem;font-weight:400}.pocket-summary span{font-size:.8rem;font-weight:600}
     .dashboard{position:relative;display:none;min-height:inherit;padding:25px 24px 82px;background:linear-gradient(180deg,rgba(247,252,255,.88),rgba(255,244,249,.88));backdrop-filter:blur(4px)}
-    .dash-head{display:flex;align-items:center;justify-content:space-between}.dash-head p{margin:0;color:#858096;font-size:.76rem}.dash-head h2{margin-top:1px;color:#59546b;font-size:2.05rem}.avatar{display:grid;width:48px;height:48px;place-items:center;border:3px solid #fff;border-radius:50%;background:#a9ddf6;box-shadow:0 7px 15px rgba(90,97,135,.14);font-size:1.35rem}
-    .village-card{position:relative;height:220px;margin:18px 0 14px;overflow:hidden;border:3px solid rgba(255,255,255,.9);border-radius:27px;background:linear-gradient(#bde8fb 0 55%,#cae7b2 55% 100%);box-shadow:0 13px 28px rgba(89,99,132,.15)}
-    .village-card:before{content:"";position:absolute;left:-30px;right:-30px;bottom:-64px;height:145px;border-radius:50%;background:#a8d393;box-shadow:180px -16px 0 #b8dea5}
-    .sun{position:absolute;top:24px;right:28px;width:43px;height:43px;border:7px solid rgba(255,248,188,.55);border-radius:50%;background:#ffdb7d}
-    .dash-cloud{position:absolute;width:72px;height:25px;border-radius:99px;background:rgba(255,255,255,.8);box-shadow:18px -9px 0 1px rgba(255,255,255,.8),35px 1px 0 rgba(255,255,255,.8)}.dc1{top:35px;left:25px}.dc2{top:73px;right:57px;transform:scale(.65)}
-    .house{position:absolute;left:50%;bottom:36px;width:123px;height:95px;border:4px solid #756678;border-radius:8px;background:#fff0dd;transform:translateX(-50%);box-shadow:0 8px 0 rgba(81,90,74,.12)}.house:before{content:"";position:absolute;left:50%;top:-61px;width:93px;height:93px;border:4px solid #756678;border-radius:9px 12px 5px 8px;background:#ef8eb0;transform:translateX(-50%) rotate(45deg);z-index:-1}.door{position:absolute;left:48px;bottom:0;width:31px;height:55px;border:3px solid #756678;border-bottom:0;border-radius:15px 15px 0 0;background:#91ccec}.window{position:absolute;top:24px;width:25px;height:25px;border:3px solid #756678;border-radius:7px;background:#c8edfc}.w1{left:12px}.w2{right:12px}.tiny-cici{position:absolute;right:17px;bottom:14px;width:92px;height:112px;object-fit:contain;filter:drop-shadow(0 5px 4px rgba(65,67,84,.14))}
+    .dash-head{display:flex;align-items:center;justify-content:space-between}.dash-head p{margin:0;color:#858096;font-size:.76rem}.dash-head h2{margin-top:1px;color:#59546b;font-size:2.05rem}.avatar{display:grid;width:48px;height:48px;place-items:center;border:3px solid #fff;border-radius:50%;background:#a9ddf6;box-shadow:0 7px 15px rgba(90,97,135,.14);font:inherit;font-size:1.35rem;cursor:pointer;transition:.18s}.avatar:hover,.avatar:focus-visible{transform:translateY(-2px);box-shadow:0 10px 19px rgba(90,97,135,.2);outline:3px solid rgba(236,131,173,.25)}
+    .village-card{position:relative;height:220px;margin:18px 0 14px;overflow:hidden;border:3px solid rgba(255,255,255,.9);border-radius:27px;background:#cceafa url("pocketville-cottage.jpg") center/cover no-repeat;box-shadow:0 13px 28px rgba(89,99,132,.15)}
+    .tiny-cici{position:absolute;right:11px;bottom:8px;width:92px;height:112px;object-fit:contain;filter:drop-shadow(0 5px 4px rgba(65,67,84,.14))}
     .level-pill{position:absolute;left:14px;top:13px;padding:7px 11px;border:2px solid white;border-radius:99px;background:rgba(255,255,255,.82);color:#645e78;font-size:.68rem}
     .pocket-card{padding:19px;border:2px solid white;border-radius:24px;background:rgba(255,255,255,.85);box-shadow:0 11px 25px rgba(100,88,122,.11)}.pocket-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.pocket-top small{color:#918a9b;font-size:.68rem}.pocket-top h3{margin:2px 0;color:#5d586d;font-size:1.55rem}.percent{display:grid;min-width:58px;height:58px;place-items:center;border:6px solid #d8effa;border-top-color:#ef8caf;border-radius:50%;color:#dd709b;font-size:.86rem}
     .money-line{display:flex;align-items:flex-end;justify-content:space-between;margin:13px 0 8px;color:#686276}.money-line strong{color:#e177a1;font-size:1.3rem}.money-line span{font-size:.7rem}.progress-track{height:13px;overflow:hidden;border:3px solid white;border-radius:99px;background:#e8e4ec;box-shadow:inset 0 1px 3px rgba(85,77,96,.12)}.progress-fill{width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#84caf1,#ee8eb2);transition:width .6s ease}
     .cici-note{margin:13px 0;padding:12px 14px;border:2px solid #e2f1fa;border-radius:18px;background:#f8fdff;color:#6e687b;font-size:.75rem;line-height:1.45}.dash-add{min-height:48px;margin-top:2px}
     .bottom-nav{position:absolute;left:20px;right:20px;bottom:19px;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);padding:8px;border:2px solid rgba(255,255,255,.9);border-radius:22px;background:rgba(255,255,255,.92);box-shadow:0 9px 25px rgba(79,72,100,.16);backdrop-filter:blur(8px)}.nav-item{display:grid;gap:2px;place-items:center;border:0;background:transparent;color:#9a93a4;font-family:inherit;font-size:.58rem;cursor:pointer}.nav-item span{font-size:1.14rem}.nav-item.active{color:#df739e}
     .save-modal{position:absolute;inset:0;z-index:20;display:none;place-items:center;padding:25px;background:rgba(74,66,86,.34);backdrop-filter:blur(5px)}.save-modal.open{display:grid}.modal-card{width:100%;padding:25px;border:3px solid white;border-radius:27px;background:#fffafc;box-shadow:0 22px 55px rgba(60,51,72,.24);text-align:center}.modal-card h2{font-size:2.25rem}.modal-card p{margin:5px 0 18px;color:#8a8292;font-size:.78rem}.modal-actions{display:flex;gap:10px;margin-top:16px}
+    .profile-cloud{display:grid;width:78px;height:78px;place-items:center;margin:0 auto 12px;border:5px solid white;border-radius:50%;background:#a9ddf6;box-shadow:0 9px 20px rgba(88,105,139,.15);font-size:2rem}.profile-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}.profile-stat{padding:12px 8px;border:2px solid #e2f1fa;border-radius:16px;background:#f7fcff}.profile-stat strong{display:block;color:#df739e;font-size:1.05rem}.profile-stat span{color:#888194;font-size:.64rem}
     .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
     @keyframes waveA{0%,42%,100%{opacity:1}46%,88%{opacity:0}}
@@ -159,10 +157,9 @@
         </div>
       </div>
       <div class="dashboard" id="dashboard">
-        <header class="dash-head"><div><p>Welcome to</p><h2>Your Little World!</h2></div><div class="avatar" aria-label="Profile">☁️</div></header>
+        <header class="dash-head"><div><p>Welcome to</p><h2>Your Little World!</h2></div><button class="avatar" id="profileButton" aria-label="Open profile menu">☁️</button></header>
         <section class="village-card" aria-label="Your growing Pocketville">
-          <span class="level-pill" id="levelPill">Tiny Beginning · Level 1</span><i class="sun"></i><i class="dash-cloud dc1"></i><i class="dash-cloud dc2"></i>
-          <div class="house"><i class="door"></i><i class="window w1"></i><i class="window w2"></i></div><img class="tiny-cici" src="cici-welcome.png" alt="Cici beside your little home">
+          <span class="level-pill" id="levelPill">Tiny Beginning · Level 1</span><img class="tiny-cici" src="cici-welcome.png" alt="Cici beside your little home">
         </section>
         <section class="pocket-card">
           <div class="pocket-top"><div><small>MY FIRST POCKET</small><h3 id="dashPocketName">My Dream</h3></div><div class="percent" id="dashPercent">0%</div></div>
@@ -181,15 +178,21 @@
           <div class="modal-actions"><button class="btn soft-btn" id="closeSaveModal">CANCEL</button><button class="btn primary" id="confirmSave">SAVE ✨</button></div>
         </div>
       </div>
+      <div class="save-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+        <div class="modal-card"><div class="profile-cloud">☁️</div><h2 id="profileTitle">Pocketville Profile</h2><p>Guest Dreamer</p>
+          <div class="profile-stats"><div class="profile-stat"><strong id="profileLevel">Level 1</strong><span>Current level</span></div><div class="profile-stat"><strong id="profileProgress">0%</strong><span>Dream progress</span></div></div>
+          <div class="modal-actions"><button class="btn soft-btn" id="profileHome">WELCOME PAGE</button><button class="btn primary" id="closeProfile">CLOSE</button></div>
+        </div>
+      </div>
     </section>
-    <p class="phase">Pocketville · Phase 2</p>
+    <p class="phase">Pocketville · Phase 3</p>
   </main>
   <script>
     const copy={
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
     };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),saveModal=document.querySelector("#saveModal");
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal");
     const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
     let currentStep=0,selectedGoal="";
     function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none"}
@@ -222,7 +225,7 @@
       pocket.saved=Number(pocket.saved)||0;const percent=Math.min(100,Math.round((pocket.saved/Number(pocket.amount))*100));
       document.querySelector("#dashPocketName").textContent=pocket.name;document.querySelector("#dashSaved").textContent=money(pocket.saved,pocket.currency);document.querySelector("#dashTarget").textContent=money(pocket.amount,pocket.currency);document.querySelector("#dashPercent").textContent=percent+"%";document.querySelector("#progressFill").style.width=percent+"%";
       const note=percent===0?"Every little save is a tiny brick for your dream. Let’s begin!":percent<25?"A tiny start is still a start. I’m proud of you!":percent<50?"Look! Your little world is starting to grow!":percent<75?"You’re more than halfway to something wonderful!":percent<100?"So close! Your dream is almost within reach!":"You did it! Your dream pocket is complete!";
-      document.querySelector("#ciciNote").textContent=note;document.querySelector("#levelPill").textContent=percent<25?"Tiny Beginning · Level 1":percent<50?"Little Builder · Level 2":percent<75?"Dream Grower · Level 3":percent<100?"Cozy Creator · Level 4":"Dream Keeper · Level 5";
+      const level=percent<25?1:percent<50?2:percent<75?3:percent<100?4:5;document.querySelector("#ciciNote").textContent=note;document.querySelector("#levelPill").textContent=level===1?"Tiny Beginning · Level 1":level===2?"Little Builder · Level 2":level===3?"Dream Grower · Level 3":level===4?"Cozy Creator · Level 4":"Dream Keeper · Level 5";document.querySelector("#profileLevel").textContent="Level "+level;document.querySelector("#profileProgress").textContent=percent+"%";
     }
     function showDashboard(){hideViews();renderDashboard();dashboard.style.display="block"}
     document.querySelector("#finishOnboarding").textContent="ENTER POCKETVILLE →";document.querySelector("#finishOnboarding").onclick=showDashboard;
@@ -230,6 +233,7 @@
     document.querySelector("#closeSaveModal").onclick=()=>saveModal.classList.remove("open");
     document.querySelector("#confirmSave").onclick=()=>{const add=Number(document.querySelector("#saveAmount").value),pocket=getPocket();if(!add||add<=0){document.querySelector("#saveError").textContent="Enter an amount greater than zero.";return}pocket.saved=(Number(pocket.saved)||0)+add;try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket))}catch(e){}saveModal.classList.remove("open");renderDashboard()};
     saveModal.onclick=e=>{if(e.target===saveModal)saveModal.classList.remove("open")};
+    document.querySelector("#profileButton").onclick=()=>profileModal.classList.add("open");document.querySelector("#closeProfile").onclick=()=>profileModal.classList.remove("open");document.querySelector("#profileHome").onclick=()=>{profileModal.classList.remove("open");showWelcome()};profileModal.onclick=e=>{if(e.target===profileModal)profileModal.classList.remove("open")};
     document.querySelectorAll(".nav-item:not(.active)").forEach(b=>b.onclick=()=>{document.querySelector("#ciciNote").textContent=b.textContent.trim()+" is coming in the next Pocketly phase!"});
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
