@@ -56,12 +56,34 @@
     .eyebrow{margin:4px 0 9px;color:#8780b9;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
     h2{max-width:340px;margin:0;color:#5f5870;font-size:clamp(1.75rem,8vw,2.4rem);line-height:1.05}
     .body{max-width:330px;margin:18px 0 32px;color:#8a8393;font-size:1rem;line-height:1.6}
+    .onboarding{position:relative;display:none;min-height:inherit;padding:28px 28px 32px}
+    .onboarding:before{content:"";position:absolute;inset:0;background:rgba(255,249,250,.76);backdrop-filter:blur(5px)}
+    .onboard-card{position:relative;z-index:1;display:flex;min-height:calc(min(840px,100svh - 42px) - 65px);flex-direction:column;align-items:center;padding:28px 25px;border:2px solid rgba(255,255,255,.9);border-radius:30px;background:rgba(255,255,255,.76);box-shadow:0 18px 45px rgba(86,81,105,.15);text-align:center}
+    .onboard-top{display:flex;width:100%;align-items:center;justify-content:space-between}
+    .onboard-back{display:grid;width:40px;height:40px;place-items:center;border:1px solid #eadde7;border-radius:14px;background:#fff;color:#6b6680;cursor:pointer}
+    .progress{display:flex;gap:7px;margin-right:3px}.progress i{width:9px;height:9px;border-radius:50%;background:#dfd8e7;transition:.25s}.progress i.active{width:24px;border-radius:10px;background:#ec83ad}
+    .step{display:none;width:100%;flex:1;flex-direction:column;align-items:center}.step.active{display:flex}
+    .step-kicker{margin:22px 0 5px;color:#8b84b4;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .step h2{color:#665f79;font-size:clamp(2.1rem,10vw,3rem)}
+    .step-copy{max-width:340px;margin:11px 0 22px;color:#777186;font-size:.9rem;line-height:1.6}
+    .cici-intro{width:210px;height:255px;margin:-4px 0 -7px;object-fit:contain;filter:drop-shadow(0 10px 8px rgba(74,62,95,.14))}
+    .speech{position:relative;max-width:315px;margin:0 0 23px;padding:14px 17px;border:2px solid #dceeff;border-radius:20px;background:#fff;color:#596080;font-size:.88rem;font-weight:600;line-height:1.55}
+    .speech:after{content:"";position:absolute;left:50%;bottom:-9px;width:15px;height:15px;border-right:2px solid #dceeff;border-bottom:2px solid #dceeff;background:#fff;transform:translateX(-50%) rotate(45deg)}
+    .dream-grid{display:grid;width:100%;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0}
+    .dream-option{min-height:92px;padding:10px;border:2px solid #eee6ee;border-radius:18px;background:rgba(255,255,255,.86);color:#625d73;cursor:pointer;transition:.18s}
+    .dream-option span{display:block;margin-bottom:4px;font-size:1.55rem}.dream-option strong{font-size:.8rem}.dream-option.selected{border-color:#ec83ad;background:#fff0f6;box-shadow:0 6px 16px rgba(226,123,165,.18);transform:translateY(-2px)}
+    .wide{grid-column:1/-1;min-height:66px}
+    .form{display:grid;width:100%;gap:13px;margin:20px 0;text-align:left}.field{display:grid;gap:6px}.field label{padding-left:3px;color:#696378;font-size:.74rem;font-weight:700}.field input,.field select{width:100%;height:49px;border:2px solid #e8e0e9;border-radius:15px;outline:0;background:rgba(255,255,255,.93);padding:0 14px;color:#5b5669;font:600 .86rem "Poppins",sans-serif}.field input:focus,.field select:focus{border-color:#93cff2;box-shadow:0 0 0 4px rgba(147,207,242,.18)}
+    .amount-row{display:grid;grid-template-columns:1fr 105px;gap:10px}.form-error{min-height:18px;margin:0;color:#d65e8c;font-size:.75rem;font-weight:600}
+    .onboard-actions{display:flex;width:100%;gap:10px;margin-top:auto}.onboard-actions .btn{min-height:49px}.soft-btn{border:2px solid #e9e1ea;background:#fff;color:#746e80;box-shadow:none}
+    .success-badge{display:grid;width:98px;height:98px;place-items:center;margin:60px 0 22px;border:7px solid rgba(255,255,255,.8);border-radius:50%;background:linear-gradient(145deg,#9cdbf7,#ef9cbe);color:white;box-shadow:0 12px 30px rgba(106,124,164,.2);font-size:2.7rem}
+    .pocket-summary{width:100%;margin:20px 0 28px;padding:17px;border:2px dashed #a9d8ef;border-radius:20px;background:#f6fcff;color:#5f5a70}.pocket-summary strong{display:block;color:#ec75a6;font-family:"Darumadrop One",sans-serif;font-size:1.65rem;font-weight:400}.pocket-summary span{font-size:.8rem;font-weight:600}
     .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
     @keyframes waveA{0%,42%,100%{opacity:1}46%,88%{opacity:0}}
     @keyframes waveB{0%,42%,100%{opacity:0}46%,88%{opacity:1}}
-    @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}}
-    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}}
+    @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}.onboard-card{min-height:calc(100svh - 72px);padding-top:20px}.cici-intro{height:205px}.success-badge{margin-top:28px}}
+    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}.onboarding{padding:18px}.onboard-card{min-height:calc(100svh - 36px);padding:21px 20px}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
@@ -88,17 +110,79 @@
         <p class="eyebrow" id="eyebrow"></p><h2 id="title"></h2><p class="body" id="body"></p>
         <button class="btn primary" id="back2">BACK TO WELCOME</button>
       </div>
+      <div class="onboarding" id="onboarding">
+        <div class="onboard-card">
+          <div class="onboard-top"><button class="onboard-back" id="onboardBack" aria-label="Go back">←</button><div class="progress" aria-label="Onboarding progress"><i class="active"></i><i></i><i></i></div></div>
+          <section class="step active" data-step="0">
+            <p class="step-kicker">Welcome to Pocketville</p><h2>Meet Cici!</h2>
+            <img class="cici-intro" src="cici-welcome.png" alt="Cici">
+            <div class="speech">Hi! I’m Cici. I’ll help you save, play, and build your little world—one tiny pocket at a time.</div>
+            <div class="onboard-actions"><button class="btn primary next-step">LET’S BEGIN →</button></div>
+          </section>
+          <section class="step" data-step="1">
+            <p class="step-kicker">Step 2 of 3</p><h2>Choose Your First Dream</h2><p class="step-copy">Pick what you’d love to start saving for. You can always change it later.</p>
+            <div class="dream-grid">
+              <button class="dream-option" data-goal="Cozy Home"><span>🏡</span><strong>Cozy Home</strong></button>
+              <button class="dream-option" data-goal="Travel"><span>✈️</span><strong>Travel</strong></button>
+              <button class="dream-option" data-goal="Emergency Fund"><span>☂️</span><strong>Emergency Fund</strong></button>
+              <button class="dream-option" data-goal="Something Special"><span>🎁</span><strong>Something Special</strong></button>
+              <button class="dream-option wide" data-goal="My Dream"><span>✨</span><strong>Custom Goal</strong></button>
+            </div>
+            <p class="form-error" id="goalError"></p>
+            <div class="onboard-actions"><button class="btn soft-btn prev-step">BACK</button><button class="btn primary next-step">NEXT →</button></div>
+          </section>
+          <section class="step" data-step="2">
+            <p class="step-kicker">Step 3 of 3</p><h2>Create Your Pocket</h2><p class="step-copy">Give your first savings pocket a name and target.</p>
+            <form class="form" id="pocketForm">
+              <div class="field"><label for="goalName">Pocket name</label><input id="goalName" maxlength="40" placeholder="e.g. My Cozy Home" required></div>
+              <div class="amount-row"><div class="field"><label for="targetAmount">Target amount</label><input id="targetAmount" type="number" min="1" step="1" inputmode="decimal" placeholder="10000" required></div><div class="field"><label for="currency">Currency</label><select id="currency"><option>PHP</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option></select></div></div>
+              <div class="field"><label for="targetDate">Target date <span style="font-weight:400">(optional)</span></label><input id="targetDate" type="date"></div>
+              <p class="form-error" id="formError"></p>
+            </form>
+            <div class="onboard-actions"><button class="btn soft-btn prev-step">BACK</button><button class="btn primary" id="createPocket">CREATE POCKET ✨</button></div>
+          </section>
+          <section class="step" data-step="3">
+            <div class="success-badge">✓</div><p class="step-kicker">Tiny beginning, big dream</p><h2>Your First Pocket Is Ready!</h2><p class="step-copy">Cici will keep it safe while we build the rest of your Pocketville.</p>
+            <div class="pocket-summary"><strong id="summaryName">My Dream</strong><span id="summaryAmount">PHP 0</span></div>
+            <div class="onboard-actions"><button class="btn primary" id="finishOnboarding">DONE FOR NOW</button></div>
+          </section>
+        </div>
+      </div>
     </section>
-    <p class="phase">Pocketville · Phase 1</p>
+    <p class="phase">Pocketville · Phase 2</p>
   </main>
   <script>
     const copy={
-      create:["Your Pocketville begins here","Let’s make your first pocket.","Your account setup and first savings goal will live here in the next step."],
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
     };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next");
-    document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{const c=copy[b.dataset.view];document.querySelector("#eyebrow").textContent=c[0];document.querySelector("#title").textContent=c[1];document.querySelector("#body").textContent=c[2];welcome.style.display="none";next.style.display="flex"});
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding");
+    const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
+    let currentStep=0,selectedGoal="";
+    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none"}
+    function showWelcome(){hideViews();welcome.style.display="flex"}
+    function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
+    document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
+      if(b.dataset.view==="create"){showStep(0);return}
+      const c=copy[b.dataset.view];document.querySelector("#eyebrow").textContent=c[0];document.querySelector("#title").textContent=c[1];document.querySelector("#body").textContent=c[2];hideViews();next.style.display="flex"
+    });
+    document.querySelector("#onboardBack").onclick=()=>currentStep===0?showWelcome():showStep(currentStep-1);
+    document.querySelectorAll(".next-step").forEach(b=>b.onclick=()=>{
+      if(currentStep===1&&!selectedGoal){document.querySelector("#goalError").textContent="Choose one dream to continue.";return}
+      if(currentStep===1)document.querySelector("#goalName").value=selectedGoal;
+      showStep(currentStep+1)
+    });
+    document.querySelectorAll(".prev-step").forEach(b=>b.onclick=()=>showStep(currentStep-1));
+    document.querySelectorAll(".dream-option").forEach(b=>b.onclick=()=>{selectedGoal=b.dataset.goal;document.querySelectorAll(".dream-option").forEach(x=>x.classList.toggle("selected",x===b));document.querySelector("#goalError").textContent=""});
+    const targetDate=document.querySelector("#targetDate");targetDate.min=new Date().toISOString().split("T")[0];
+    document.querySelector("#createPocket").onclick=()=>{
+      const name=document.querySelector("#goalName").value.trim(),amount=Number(document.querySelector("#targetAmount").value),currency=document.querySelector("#currency").value,date=targetDate.value;
+      if(!name||!amount||amount<=0){document.querySelector("#formError").textContent="Add a pocket name and a target amount.";return}
+      const pocket={name,amount,currency,date,createdAt:new Date().toISOString()};
+      try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket))}catch(e){}
+      document.querySelector("#summaryName").textContent=name;document.querySelector("#summaryAmount").textContent=new Intl.NumberFormat(undefined,{style:"currency",currency,maximumFractionDigits:0}).format(amount);document.querySelector("#formError").textContent="";showStep(3)
+    };
+    document.querySelector("#finishOnboarding").onclick=showWelcome;
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 </body>
