@@ -8,13 +8,11 @@
   <meta name="description" content="Save, play, and build your little world in Pocketville.">
   <style>
     @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:swap}
-    @font-face{font-family:"Poppins";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Regular.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
-    @font-face{font-family:"Poppins";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-SemiBold.ttf") format("truetype");font-style:normal;font-weight:600;font-display:swap}
-    @font-face{font-family:"Poppins";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Bold.ttf") format("truetype");font-style:normal;font-weight:700;font-display:swap}
+    @font-face{font-family:"Pochirin";src:url("Pochirin.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
     :root{--ink:#565169;--purple:#7470cc;--pink:#eaa1bf;--blue:#9bd8f7}
     *{box-sizing:border-box}
     html,body{min-height:100%;margin:0}
-    body{font-family:"Poppins","Avenir Next",Arial,sans-serif;color:var(--ink)}
+    body{font-family:"Pochirin","Comic Sans MS",sans-serif;color:var(--ink)}
     h1,h2,h3,h4,h5,h6,.title,.section-title{font-family:"Darumadrop One","Comic Sans MS",sans-serif;font-weight:400}
     button{font:inherit}
     .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:28px 18px 48px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
@@ -73,7 +71,7 @@
     .dream-option{min-height:92px;padding:10px;border:2px solid #eee6ee;border-radius:18px;background:rgba(255,255,255,.86);color:#625d73;cursor:pointer;transition:.18s}
     .dream-option span{display:block;margin-bottom:4px;font-size:1.55rem}.dream-option strong{font-size:.8rem}.dream-option.selected{border-color:#ec83ad;background:#fff0f6;box-shadow:0 6px 16px rgba(226,123,165,.18);transform:translateY(-2px)}
     .wide{grid-column:1/-1;min-height:66px}
-    .form{display:grid;width:100%;gap:13px;margin:20px 0;text-align:left}.field{display:grid;gap:6px}.field label{padding-left:3px;color:#696378;font-size:.74rem;font-weight:700}.field input,.field select{width:100%;height:49px;border:2px solid #e8e0e9;border-radius:15px;outline:0;background:rgba(255,255,255,.93);padding:0 14px;color:#5b5669;font:600 .86rem "Poppins",sans-serif}.field input:focus,.field select:focus{border-color:#93cff2;box-shadow:0 0 0 4px rgba(147,207,242,.18)}
+    .form{display:grid;width:100%;gap:13px;margin:20px 0;text-align:left}.field{display:grid;gap:6px}.field label{padding-left:3px;color:#696378;font-size:.74rem;font-weight:700}.field input,.field select{width:100%;height:49px;border:2px solid #e8e0e9;border-radius:15px;outline:0;background:rgba(255,255,255,.93);padding:0 14px;color:#5b5669;font:400 .96rem "Pochirin","Comic Sans MS",sans-serif}.field input:focus,.field select:focus{border-color:#93cff2;box-shadow:0 0 0 4px rgba(147,207,242,.18)}
     .amount-row{display:grid;grid-template-columns:1fr 105px;gap:10px}.form-error{min-height:18px;margin:0;color:#d65e8c;font-size:.75rem;font-weight:600}
     .onboard-actions{display:flex;width:100%;gap:10px;margin-top:auto}.onboard-actions .btn{min-height:49px}.soft-btn{border:2px solid #e9e1ea;background:#fff;color:#746e80;box-shadow:none}
     .success-badge{display:grid;width:98px;height:98px;place-items:center;margin:60px 0 22px;border:7px solid rgba(255,255,255,.8);border-radius:50%;background:linear-gradient(145deg,#9cdbf7,#ef9cbe);color:white;box-shadow:0 12px 30px rgba(106,124,164,.2);font-size:2.7rem}
