@@ -20,15 +20,10 @@
     .card{position:relative;width:min(100%,500px);min-height:min(840px,calc(100svh - 42px));overflow:hidden;border:5px solid rgba(255,255,255,.8);border-radius:38px;background:#fceaf1 url("pocketville-window-soft.jpg") center/cover no-repeat;box-shadow:0 28px 90px rgba(105,91,139,.24),inset 0 0 0 1px rgba(99,82,121,.12)}
     .card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,245,250,.02) 48%,rgba(255,241,247,.55) 100%)}
     .welcome{position:relative;display:flex;min-height:inherit;flex-direction:column;align-items:center;padding:31px 34px 31px}
-    .brand{position:relative;z-index:4;width:min(100%,410px);padding:25px 14px 16px;text-align:center}
-    .brand:before{content:"";position:absolute;inset:-4px -13px -10px;z-index:-1;background:
-      radial-gradient(circle at 12% 58%,rgba(255,255,255,.94) 0 19%,transparent 20%),
-      radial-gradient(circle at 27% 33%,rgba(255,255,255,.94) 0 24%,transparent 25%),
-      radial-gradient(circle at 48% 27%,rgba(255,255,255,.94) 0 30%,transparent 31%),
-      radial-gradient(circle at 69% 34%,rgba(255,255,255,.94) 0 25%,transparent 26%),
-      radial-gradient(circle at 87% 58%,rgba(255,255,255,.94) 0 20%,transparent 21%),
-      radial-gradient(ellipse at 50% 70%,rgba(255,255,255,.94) 0 54%,transparent 55%);
-      filter:drop-shadow(0 10px 12px rgba(93,80,119,.14))}
+    .brand{position:relative;z-index:4;width:min(100%,430px);padding:25px 14px 17px;text-align:center}
+    .brand-cloud{position:absolute;inset:-13px -15px -12px;z-index:-1;width:calc(100% + 30px);height:calc(100% + 25px);overflow:visible;filter:drop-shadow(0 8px 8px rgba(78,91,129,.12))}
+    .cloud-halo{fill:rgba(255,255,255,.2);stroke:rgba(255,255,255,.94);stroke-width:15;stroke-linejoin:round}
+    .cloud-sketch{fill:none;stroke:rgba(128,193,232,.68);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3}
     h1{margin:0;font-family:"Arial Rounded MT Bold","Comic Sans MS","Trebuchet MS",sans-serif;font-size:clamp(2.75rem,12vw,4.35rem);font-weight:900;line-height:.88;letter-spacing:-.06em;transform:rotate(-1deg);filter:drop-shadow(0 4px 0 rgba(255,255,255,.95))}
     h1 span{display:inline-block;-webkit-text-stroke:1.5px rgba(53,78,132,.32);text-shadow:inset 0 2px 0 #fff}
     h1 span:nth-child(odd){transform:translateY(-1px) rotate(-2deg)}
@@ -38,8 +33,7 @@
     .tagline span{margin:0 5px;color:#e5a4c0}
     .spark{position:absolute;top:-22px;right:0;color:#efb55c;font-size:23px}
     .stage{position:relative;display:grid;width:100%;min-height:316px;place-items:center;margin:-4px 0 -4px}
-    .mascot{position:relative;z-index:3;width:min(274px,68vw);height:325px}
-    .mascot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 13px 9px rgba(74,62,95,.18))}
+    .mascot{position:relative;z-index:3;width:min(342px,84vw);height:330px;background-image:url("cici-seated-wave-sprite.png");background-repeat:no-repeat;background-position:left center;background-size:200% 100%;filter:drop-shadow(0 10px 8px rgba(74,62,95,.16));animation:ciciWave 2.2s steps(1,end) infinite}
     .cloud{position:absolute;width:105px;height:42px;border-radius:99px;background:rgba(255,255,255,.68);box-shadow:28px -12px 0 3px rgba(255,255,255,.68),52px 1px 0 -3px rgba(255,255,255,.68);animation:drift 8s ease-in-out infinite}
     .cl{left:-28px;bottom:61px;transform:scale(.72)}.cr{right:12px;top:78px;transform:scale(.52);opacity:.7}
     .coin{position:absolute;display:grid;width:34px;height:34px;place-items:center;border:3px solid #fff6d6;border-radius:50%;background:#ffd97d;color:#da85a9;box-shadow:0 6px 12px rgba(170,123,114,.14);font-size:13px;font-weight:900}
@@ -59,6 +53,7 @@
     .body{max-width:330px;margin:18px 0 32px;color:#8a8393;font-size:1rem;line-height:1.6}
     .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
+    @keyframes ciciWave{0%,42%,100%{background-position:left center}46%,88%{background-position:right center}}
     @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}}
     @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -69,10 +64,10 @@
     <div class="orb o1"></div><div class="orb o2"></div>
     <section class="card" aria-live="polite">
       <div class="welcome" id="welcome">
-        <div class="brand"><span class="spark">✦</span><h1 aria-label="Pocketly"><span class="letter-pink">P</span><span class="letter-pink">o</span><span class="letter-blue">c</span><span class="letter-blue">k</span><span class="letter-pink">e</span><span class="letter-pink">t</span><span class="letter-blue">l</span><span class="letter-blue">y</span></h1><p class="tagline">Save <span>•</span> Play <span>•</span> Build Your Little World</p></div>
+        <div class="brand"><svg class="brand-cloud" viewBox="0 0 430 145" aria-hidden="true"><path class="cloud-halo" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/><path class="cloud-sketch" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/></svg><span class="spark">✦</span><h1 aria-label="Pocketly"><span class="letter-pink">P</span><span class="letter-pink">o</span><span class="letter-blue">c</span><span class="letter-blue">k</span><span class="letter-pink">e</span><span class="letter-pink">t</span><span class="letter-blue">l</span><span class="letter-blue">y</span></h1><p class="tagline">Save <span>•</span> Play <span>•</span> Build Your Little World</p></div>
         <div class="stage">
           <div class="cloud cl"></div><div class="cloud cr"></div>
-          <div class="mascot"><img src="cici-welcome.png" alt="Cici waves hello"></div>
+          <div class="mascot" role="img" aria-label="Cici sits by the window, cuddles her cat, and waves hello"></div>
           <span class="coin c1">♥</span><span class="coin c2">★</span>
         </div>
         <div class="actions">
