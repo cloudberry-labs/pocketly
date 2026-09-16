@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8dfea">
+  <title>Pocketly</title>
+  <meta name="description" content="Save, play, and build your little world in Pocketville.">
+  <style>
+    :root{--ink:#565169;--purple:#7470cc;--pink:#eaa1bf;--blue:#9bd8f7}
+    *{box-sizing:border-box}
+    html,body{min-height:100%;margin:0}
+    body{font-family:"Trebuchet MS","Avenir Next",Arial,sans-serif;color:var(--ink)}
+    button{font:inherit}
+    .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:28px 18px 48px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
+    .shell:before{content:"";position:absolute;inset:0;z-index:-3;opacity:.38;background-image:radial-gradient(#beaee0 1.2px,transparent 1.2px);background-size:22px 22px}
+    .orb{position:absolute;z-index:-2;border:1px solid rgba(255,255,255,.72);border-radius:48% 52% 68% 32%/54% 35% 65% 46%}
+    .o1{width:340px;height:340px;top:-120px;right:-95px;background:rgba(159,222,248,.38);transform:rotate(24deg)}
+    .o2{width:300px;height:300px;bottom:-115px;left:-95px;background:rgba(252,172,206,.34);transform:rotate(-18deg)}
+    .card{position:relative;width:min(100%,460px);min-height:min(790px,calc(100svh - 58px));overflow:hidden;border:1px solid rgba(255,255,255,.95);border-radius:38px;background:rgba(255,253,254,.82);box-shadow:0 24px 80px rgba(105,91,139,.17),inset 0 0 0 5px rgba(255,255,255,.45);backdrop-filter:blur(18px)}
+    .card:before{content:"";position:absolute;inset:11px;pointer-events:none;border:1.5px dashed rgba(179,158,198,.38);border-radius:29px}
+    .welcome{display:flex;min-height:inherit;flex-direction:column;align-items:center;padding:48px 34px 34px}
+    .brand{position:relative;z-index:2;text-align:center}
+    h1{margin:0;color:#6661b4;font-size:clamp(2.5rem,11vw,3.9rem);line-height:.92;letter-spacing:.055em;text-shadow:0 3px 0 #fff,0 6px 0 rgba(212,199,232,.7)}
+    .tagline{margin:14px 0 0;color:#7f7890;font-size:.88rem;font-weight:700}
+    .tagline span{margin:0 5px;color:#e5a4c0}
+    .spark{position:absolute;top:-22px;right:0;color:#efb55c;font-size:23px}
+    .stage{position:relative;display:grid;width:100%;min-height:285px;place-items:center;margin:6px 0 4px}
+    .mascot{position:relative;z-index:2;width:min(230px,63vw);height:285px}
+    .mascot img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 10px rgba(112,91,143,.16));animation:bob 3.6s ease-in-out infinite}
+    .cloud{position:absolute;width:105px;height:42px;border-radius:99px;background:rgba(255,255,255,.74);box-shadow:28px -12px 0 3px rgba(255,255,255,.74),52px 1px 0 -3px rgba(255,255,255,.74)}
+    .cl{left:-28px;bottom:61px;transform:scale(.72)}.cr{right:12px;top:78px;transform:scale(.52);opacity:.7}
+    .coin{position:absolute;display:grid;width:34px;height:34px;place-items:center;border:3px solid #fff6d6;border-radius:50%;background:#ffd97d;color:#da85a9;box-shadow:0 6px 12px rgba(170,123,114,.14);font-size:13px;font-weight:900}
+    .c1{left:40px;top:72px;transform:rotate(-13deg)}.c2{right:44px;bottom:58px;transform:rotate(12deg)}
+    .actions{z-index:2;display:grid;width:100%;gap:11px}
+    .btn{display:flex;width:100%;min-height:52px;align-items:center;justify-content:center;gap:8px;border-radius:17px;font-size:.92rem;font-weight:800;letter-spacing:.025em;cursor:pointer}
+    .primary{border:0;background:linear-gradient(135deg,#7773c9,#9992e1);color:#fff;box-shadow:0 9px 0 #5f5ba9,0 13px 25px rgba(104,96,181,.24)}
+    .primary:active{transform:translateY(6px);box-shadow:0 3px 0 #5f5ba9}
+    .secondary{border:1.5px solid #d6cbe0;background:rgba(255,255,255,.77);color:#686177}
+    .guest{min-height:38px;border:0;background:transparent;color:#888096;font-size:.9rem;font-weight:700;text-decoration:underline;text-decoration-color:#d2c7da;text-underline-offset:4px;cursor:pointer}
+    .dreams{display:flex;align-items:center;gap:5px;margin:auto 0 0;padding-top:16px;color:#9a8fa2;font-size:.82rem;font-weight:700}
+    .next{position:relative;display:none;min-height:inherit;flex-direction:column;align-items:center;justify-content:center;padding:54px 38px;text-align:center}
+    .back{position:absolute;top:34px;left:34px;display:grid;width:44px;height:44px;place-items:center;border:1px solid #ded2e5;border-radius:15px;background:rgba(255,255,255,.8);color:#716a7e;cursor:pointer}
+    .mini{width:175px;height:220px}.mini img{width:100%;height:100%;object-fit:contain}
+    .eyebrow{margin:4px 0 9px;color:#8780b9;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    h2{max-width:340px;margin:0;color:#5f5870;font-size:clamp(1.75rem,8vw,2.4rem);line-height:1.05}
+    .body{max-width:330px;margin:18px 0 32px;color:#8a8393;font-size:1rem;line-height:1.6}
+    .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+    @media(max-height:760px){.card{min-height:calc(100svh - 42px)}.welcome{padding-top:36px}.stage{min-height:240px}.mascot{height:242px}}
+    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.card:before{inset:9px;border-radius:25px}.welcome{padding-inline:30px}.phase{z-index:3;bottom:13px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="orb o1"></div><div class="orb o2"></div>
+    <section class="card" aria-live="polite">
+      <div class="welcome" id="welcome">
+        <div class="brand"><span class="spark">✦</span><h1>POCKETLY</h1><p class="tagline">Save <span>•</span> Play <span>•</span> Build Your Little World</p></div>
+        <div class="stage">
+          <div class="cloud cl"></div><div class="cloud cr"></div>
+          <div class="mascot"><img src="cici-welcome.png" alt="Cici waves hello"></div>
+          <span class="coin c1">♥</span><span class="coin c2">★</span>
+        </div>
+        <div class="actions">
+          <button class="btn primary" data-view="create">GET STARTED <span>→</span></button>
+          <button class="btn secondary" data-view="login">♙ &nbsp; I already have an account</button>
+          <button class="guest" data-view="guest">Continue as Guest</button>
+        </div>
+        <p class="dreams">Small saves. Big dreams. ✨</p>
+      </div>
+      <div class="next" id="next">
+        <button class="back" id="back" aria-label="Back">←</button>
+        <div class="mini"><img src="cici-welcome.png" alt=""></div>
+        <p class="eyebrow" id="eyebrow"></p><h2 id="title"></h2><p class="body" id="body"></p>
+        <button class="btn primary" id="back2">BACK TO WELCOME</button>
+      </div>
+    </section>
+    <p class="phase">Pocketville · Phase 1</p>
+  </main>
+  <script>
+    const copy={
+      create:["Your Pocketville begins here","Let’s make your first pocket.","Your account setup and first savings goal will live here in the next step."],
+      login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
+      guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
+    };
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next");
+    document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{const c=copy[b.dataset.view];document.querySelector("#eyebrow").textContent=c[0];document.querySelector("#title").textContent=c[1];document.querySelector("#body").textContent=c[2];welcome.style.display="none";next.style.display="flex"});
+    function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
+  </script>
+</body>
+</html>
