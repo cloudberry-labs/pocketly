@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Pocketly Board Layout Lab</title>
+  <style>
+    :root{color-scheme:light;--ink:#413453;--pink:#ed72a6;--pink-deep:#be4f84;--cream:#fff9f1}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:var(--ink)}
+    body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 13% 10%,#fff 0 7%,transparent 7.2%),radial-gradient(circle at 92% 12%,#cfefff 0 17%,transparent 17.2%),linear-gradient(145deg,#fff0f7,#edf8ff)}
+    button{font:inherit}
+    .lab{width:min(100%,470px)}
+    .lab-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 5px 11px}
+    .lab-head small{display:block;color:#887c91;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .lab-head h1{margin:2px 0 0;font-size:27px;line-height:1}
+    .preview-button{min-height:42px;padding:7px 13px;border:3px solid #fff;border-radius:16px;background:linear-gradient(#f38ab5,#e66fa5);box-shadow:0 5px 0 var(--pink-deep),0 9px 16px rgba(94,65,88,.17);color:#fff;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation}
+    .preview-button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pink-deep)}
+    .preview-button:disabled{cursor:wait;opacity:.65}
+
+    .storybook-board{position:relative;width:100%;aspect-ratio:2/3;overflow:hidden;border:5px solid #fff;border-radius:38px;background:url("pocketville-board-map.jpg") center/cover no-repeat;box-shadow:0 24px 50px rgba(87,67,101,.23),inset 0 0 0 3px rgba(230,144,181,.5);isolation:isolate}
+    .storybook-board:before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(222,242,255,.12),rgba(255,234,243,.08) 55%,rgba(82,61,86,.08));pointer-events:none}
+    .storybook-board:after{content:"";position:absolute;inset:1.3%;z-index:1;border:12px solid rgba(255,190,216,.56);border-radius:32px;box-shadow:inset 0 0 0 3px rgba(145,77,111,.18),0 0 0 4px rgba(255,255,255,.7);pointer-events:none}
+    .foliage{position:absolute;z-index:2;color:#6eaa69;font-size:19px;line-height:1;filter:drop-shadow(0 2px 1px rgba(72,81,58,.15));pointer-events:none}
+    .foliage.f1{left:2%;top:14%;transform:rotate(-18deg)}.foliage.f2{right:2%;top:15%;transform:rotate(20deg)}
+    .foliage.f3{left:3%;bottom:14%;transform:rotate(13deg)}.foliage.f4{right:3%;bottom:14%;transform:rotate(-16deg)}
+    .foliage.f5{left:28%;top:14%;font-size:15px}.foliage.f6{right:29%;bottom:13%;font-size:15px}
+
+    .center-world{position:absolute;inset:17% 15.5%;z-index:3;display:flex;align-items:center;justify-content:center;overflow:hidden;border:4px solid rgba(255,255,255,.9);border-radius:30px;box-shadow:inset 0 0 24px rgba(71,54,82,.12),0 7px 18px rgba(77,59,87,.12);pointer-events:none}
+    .center-world:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,239,246,.06) 56%,rgba(255,240,246,.13))}
+    .welcome-sign{position:relative;width:78%;margin-top:-20%;padding:10px 12px 11px;border:3px solid rgba(255,255,255,.92);border-radius:22px 27px 19px 25px;background:rgba(255,245,232,.86);box-shadow:0 7px 0 rgba(145,86,105,.2),0 12px 18px rgba(67,53,74,.14);text-align:center;transform:rotate(-1.2deg);backdrop-filter:blur(2px)}
+    .welcome-sign small{display:block;font-size:11px}.welcome-sign strong{display:block;color:#9c486c;font-size:25px;line-height:1}.welcome-sign span{display:block;margin-top:4px;font-size:9px}
+
+    .tile{--depth:6px;--edge:rgba(132,78,108,.25);position:absolute;z-index:6;left:var(--x);top:var(--y);width:var(--w);height:var(--h);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 3px;border:3px solid rgba(255,255,255,.98);border-radius:var(--radius);background:var(--fill);box-shadow:0 var(--depth) 0 var(--edge),0 calc(var(--depth) + 4px) 12px rgba(65,51,76,.14),inset 0 3px 7px rgba(255,255,255,.68);color:#453755;text-align:center;transform:translate3d(0,0,0) rotate(var(--rot));transform-origin:center;cursor:pointer;touch-action:manipulation;will-change:transform,box-shadow,filter}
+    .tile:hover{filter:brightness(1.035)}
+    .tile-number{position:absolute;left:8px;top:6px;font-size:clamp(7px,1.7vw,10px);font-weight:900}
+    .tile-icon{font-size:clamp(17px,5vw,28px);line-height:1;filter:drop-shadow(0 2px 1px rgba(78,56,77,.13))}
+    .tile-name{margin-top:3px;font-size:clamp(7px,2.15vw,12px);font-weight:900;line-height:.96}
+    .tile.pink{--fill:linear-gradient(145deg,#ffe5ef,#ffc9df)}.tile.blue{--fill:linear-gradient(145deg,#e5f7ff,#bfe8fb)}
+    .tile.mint{--fill:linear-gradient(145deg,#edf9e6,#cbe9be)}.tile.yellow{--fill:linear-gradient(145deg,#fff9df,#ffe6a8)}
+    .tile.lavender{--fill:linear-gradient(145deg,#f4ecff,#ddcff7)}.tile.peach{--fill:linear-gradient(145deg,#fff0e5,#ffd4bd)}
+    .tile.feature{--depth:8px;z-index:8;border-width:4px}.tile.feature .tile-icon{font-size:clamp(24px,7vw,39px)}.tile.feature .tile-name{font-size:clamp(9px,2.7vw,15px)}
+    .tile.key-press{z-index:15;animation:keyPress .34s cubic-bezier(.2,.78,.25,1)}
+    .tile.key-final{z-index:16;animation:keyFinal .62s cubic-bezier(.18,.8,.22,1)}
+    @keyframes keyPress{
+      0%,100%{transform:translate3d(0,0,0) rotate(var(--rot)) scale(1);box-shadow:0 var(--depth) 0 var(--edge),0 calc(var(--depth) + 4px) 12px rgba(65,51,76,.14),inset 0 3px 7px rgba(255,255,255,.68)}
+      42%{transform:translate3d(0,5px,0) rotate(var(--rot)) scale(.96,.91);box-shadow:0 1px 0 var(--edge),0 3px 5px rgba(65,51,76,.1),inset 0 2px 8px rgba(255,255,255,.82);filter:brightness(1.08)}
+      72%{transform:translate3d(0,-2px,0) rotate(var(--rot)) scale(1.025)}
+    }
+    @keyframes keyFinal{
+      0%,100%{transform:translate3d(0,0,0) rotate(var(--rot)) scale(1)}
+      24%{transform:translate3d(0,6px,0) rotate(var(--rot)) scale(.93,.87);box-shadow:0 1px 0 var(--edge),0 3px 4px rgba(65,51,76,.08);filter:brightness(1.1)}
+      52%{transform:translate3d(0,-5px,0) rotate(var(--rot)) scale(1.075);box-shadow:0 10px 0 var(--edge),0 15px 18px rgba(65,51,76,.15)}
+      76%{transform:translate3d(0,1px,0) rotate(var(--rot)) scale(.985)}
+    }
+    .spark{position:absolute;z-index:20;width:7px;height:7px;border-radius:50%;background:#fff8a8;box-shadow:15px -6px 0 #ffd0e2,-14px -7px 0 #c8efff,9px 12px 0 #e7d8ff;pointer-events:none;animation:spark .58s ease-out forwards}
+    @keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}32%{opacity:1}100%{opacity:0;transform:translate(-50%,-28px) scale(1.5) rotate(90deg)}}
+    .note{margin:12px 7px 0;color:#766a7d;font-size:11px;line-height:1.45;text-align:center}
+    @media(max-width:390px){body{padding:8px}.lab-head{margin-inline:7px}.lab-head h1{font-size:23px}.preview-button{padding-inline:10px}.storybook-board{border-radius:28px}.tile{border-width:2px}.tile.feature{border-width:3px}.tile-number{left:5px;top:4px}.center-world{border-radius:23px}.welcome-sign strong{font-size:20px}}
+    @media(prefers-reduced-motion:reduce){.tile.key-press,.tile.key-final{animation-duration:.08s}.spark{display:none}}
+  </style>
+</head>
+<body>
+  <main class="lab">
+    <header class="lab-head">
+      <div><small>Pocketly · Board Lab</small><h1>Organic Tile Study</h1></div>
+      <button class="preview-button" id="previewButton" type="button">PREVIEW STEPS</button>
+    </header>
+    <section class="storybook-board" id="board" aria-label="Pocketly 36-space board layout preview">
+      <i class="foliage f1">🌿🌸</i><i class="foliage f2">🌼🌿</i><i class="foliage f3">🌸🌱</i><i class="foliage f4">🌿🌷</i><i class="foliage f5">🌸</i><i class="foliage f6">🌼</i>
+      <div class="center-world"><div class="welcome-sign"><small>Welcome to</small><strong>Pocketville</strong><span>Save · Play · Build Your Little World</span></div></div>
+    </section>
+    <p class="note">Tap any tile to test its keyboard-style press. “Preview Steps” demonstrates ordinary steps followed by a stronger final landing.</p>
+  </main>
+  <script>
+    (()=>{
+      "use strict";
+      const spaces=[
+        ["🌱","START","mint",1],["🪙","Save","pink"],["🎁","Mystery","lavender"],["⭐","Bonus","blue"],["📵","No-Spend","peach"],["💗","Treat","yellow"],["🌿","Boost","mint"],["🎀","Mystery","lavender"],
+        ["🪙","Save","pink"],["🏡","Mini Shop","blue",1],["⭐","Bonus","blue"],["💗","Treat","yellow"],["🔎","Challenge","peach"],["🪙","Save","pink"],["🏝️","Travel Spot","blue",1],["🌙","Rest","lavender"],["🌿","Boost","mint"],
+        ["🎁","Mystery","lavender"],["🌈","Reward","pink",1],["🌿","Boost","mint"],["🎀","Mystery","lavender"],["🌱","Boost","mint"],["💗","Treat","yellow"],["🌈","Lucky Day!","pink",1],["🪙","Save","pink"],["⭐","Bonus","blue"],["🎁","Mystery","lavender"],
+        ["🌙","Rest","lavender",1],["🌿","Boost","mint"],["🔎","Challenge","peach"],["💗","Treat","yellow"],["🪙","Save","pink"],["🎀","Mystery","lavender"],["🌿","Boost","mint"],["💗","Treat","yellow"],["🪑","Rest","lavender",1]
+      ];
+      const L=(x,y,w,h,rot,radius)=>({x,y,w,h,rot,radius});
+      const layouts=[
+        L(1,1,19,16,-2,"28px 35px 24px 31px"),L(19,2,11.5,14,1.4,"22px 29px 18px 25px"),L(29.8,3,10.8,13,-1.5,"27px 18px 25px 17px"),L(39.9,2,11,14,1,"18px 27px 20px 30px"),L(50.2,3,11.4,13,-1.3,"26px 18px 29px 20px"),L(60.8,1.8,10.7,14.6,1.7,"20px 31px 18px 27px"),L(70.8,2.7,11.4,13.5,-1,"29px 19px 26px 17px"),L(81.4,1.4,17.4,15.5,1.2,"24px 34px 27px 31px"),
+        L(86,15.5,13,8.5,1.1,"24px 18px 28px 20px"),L(83.4,23,15.6,13,-1.5,"31px 23px 30px 21px"),L(85.2,35,13.6,8.4,1,"19px 29px 20px 27px"),L(84,42.5,15,8.5,-1,"27px 18px 28px 21px"),L(85.2,50.2,13.6,8.6,1.5,"20px 28px 19px 30px"),L(84.1,58,14.9,8.2,-1.2,"29px 18px 26px 21px"),L(82.5,65.3,16.5,12.7,1.3,"26px 33px 29px 22px"),L(84.5,77.3,14.3,8.2,-1,"24px 18px 28px 20px"),L(83.7,84.6,15.3,13.8,1.4,"28px 33px 24px 30px"),
+        L(86,84.2,13,14,-1.4,"24px 17px 27px 20px"),L(74,83.7,13,14.7,1,"29px 20px 31px 22px"),L(65,85.1,10,12.7,-1.2,"19px 28px 20px 30px"),L(56,84.1,10,13.7,1.4,"28px 19px 27px 21px"),L(47,85.2,10,12.5,-1,"21px 29px 19px 27px"),L(38,84.2,10,13.5,1.2,"29px 18px 26px 22px"),L(25,83.2,14,15.1,-1.5,"31px 24px 29px 22px"),L(16,85.2,10,12.4,1.2,"21px 29px 18px 27px"),L(8,84.2,9,13.6,-1.2,"28px 19px 27px 20px"),L(1,83.2,8.5,14.7,1.1,"20px 29px 19px 27px"),
+        L(.7,73.6,15,11.2,-1.4,"31px 22px 29px 20px"),L(1.4,65.8,12.6,8.8,1,"21px 29px 19px 27px"),L(.8,58,13.8,8.7,-1.1,"29px 18px 26px 21px"),L(1.5,50.3,12.6,8.5,1.3,"20px 28px 19px 30px"),L(.8,42.6,13.8,8.5,-1.3,"28px 19px 27px 21px"),L(1.4,34.9,12.7,8.3,1,"21px 29px 18px 27px"),L(.7,27.4,13.8,8.2,-1.1,"29px 18px 27px 20px"),L(1.4,20.1,12.8,8,1.3,"20px 28px 19px 29px"),L(.8,13.1,15.6,8.2,-1.2,"30px 22px 32px 24px")
+      ];
+      const board=document.querySelector("#board"),button=document.querySelector("#previewButton");
+      spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button");tile.type="button";tile.className=`tile ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${name}</span>`;tile.addEventListener("click",()=>press(tile,true));board.appendChild(tile)});
+      function sparkle(tile){const boardRect=board.getBoundingClientRect(),r=tile.getBoundingClientRect(),spark=document.createElement("i");spark.className="spark";spark.style.left=`${r.left-boardRect.left+r.width/2}px`;spark.style.top=`${r.top-boardRect.top+r.height*.55}px`;board.appendChild(spark);setTimeout(()=>spark.remove(),650)}
+      function press(tile,final=false){tile.classList.remove("key-press","key-final");void tile.offsetWidth;tile.classList.add(final?"key-final":"key-press");if(final)sparkle(tile);setTimeout(()=>tile.classList.remove("key-press","key-final"),700)}
+      const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+      button.addEventListener("click",async()=>{if(button.disabled)return;button.disabled=true;button.textContent="STEPPING…";const tiles=[...board.querySelectorAll(".tile")];for(let i=0;i<10;i++){press(tiles[i],i===9);await wait(i===9?650:245)}button.disabled=false;button.textContent="PREVIEW STEPS"});
+    })();
+  </script>
+</body>
+</html>
