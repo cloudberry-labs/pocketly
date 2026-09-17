@@ -25,11 +25,11 @@
     @keyframes tileLand{32%{transform:rotate(var(--r)) scale(.88,.84)}65%{transform:rotate(var(--r)) scale(1.09);filter:brightness(1.12)}}
 
     .character-layer{position:absolute;inset:0;z-index:20;pointer-events:none;overflow:visible}
-    .cici-token{position:absolute;left:0;top:0;width:72px;height:86px;transform-origin:50% 92%;will-change:transform}
-    .cici-token img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%}
-    .cici-token[data-state="idle"] img{animation:idle 3.2s ease-in-out infinite}
-    .cici-token[data-state="moving"] img{animation:waddle .23s ease-in-out infinite alternate}
-    .cici-token[data-state="landing"] img{animation:landing .43s cubic-bezier(.2,.8,.25,1)}
+    .cici-token{position:absolute;left:0;top:0;width:78px;height:78px;transform-origin:50% 92%;will-change:transform}
+    .cici-sprite{display:block;width:100%;height:100%;background-image:url("cici-walk-atlas-v1.webp");background-repeat:no-repeat;background-size:400% 200%;background-position:0 0;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%;will-change:transform,background-position}
+    .cici-token[data-state="idle"] .cici-sprite{animation:idle 3.2s ease-in-out infinite}
+    .cici-token[data-state="moving"] .cici-sprite{animation:waddle .23s ease-in-out infinite alternate}
+    .cici-token[data-state="landing"] .cici-sprite{animation:landing .43s cubic-bezier(.2,.8,.25,1)}
     @keyframes idle{0%,100%{transform:translateY(0) rotate(-.7deg)}50%{transform:translateY(-2px) rotate(.7deg) scale(1.01,.995)}}
     @keyframes waddle{from{transform:translateY(1px) rotate(-5deg) scale(.98,1.02)}to{transform:translateY(-7px) rotate(5deg) scale(1.03,.97)}}
     @keyframes landing{0%{transform:translateY(0)}36%{transform:translateY(-20px) rotate(-5deg) scale(.96,1.08)}68%{transform:translateY(5px) scale(1.12,.82)}84%{transform:translateY(-3px) scale(.98,1.04)}100%{transform:translateY(0)}}
@@ -52,8 +52,8 @@
 
     .status{margin:14px 2px 0;padding:11px 13px;border-radius:16px;background:#fff;color:#756a7c;font-size:12px;line-height:1.4;box-shadow:0 5px 14px rgba(84,66,90,.08)}
     .status strong{color:#d75c96}.debug{margin:8px 2px 0;min-height:44px;padding:9px 11px;border:1px dashed #d9cfdd;border-radius:14px;background:rgba(255,255,255,.55);font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}
-    @media(max-width:380px){body{padding:8px}.lab{padding:12px;border-radius:27px}.world{min-height:480px}.track{inset:10px;gap:8px}.cici-token{width:62px;height:74px}.die-scene{width:60px;height:60px;margin:-30px}.face{transform-origin:center}.f1{transform:rotateY(0) translateZ(30px)}.f2{transform:rotateY(90deg) translateZ(30px)}.f3{transform:rotateX(90deg) translateZ(30px)}.f4{transform:rotateX(-90deg) translateZ(30px)}.f5{transform:rotateY(-90deg) translateZ(30px)}.f6{transform:rotateY(180deg) translateZ(30px)}}
-    @media(prefers-reduced-motion:reduce){.cici-token img{animation:none!important}}
+    @media(max-width:380px){body{padding:8px}.lab{padding:12px;border-radius:27px}.world{min-height:480px}.track{inset:10px;gap:8px}.cici-token{width:68px;height:68px}.die-scene{width:60px;height:60px;margin:-30px}.face{transform-origin:center}.f1{transform:rotateY(0) translateZ(30px)}.f2{transform:rotateY(90deg) translateZ(30px)}.f3{transform:rotateX(90deg) translateZ(30px)}.f4{transform:rotateX(-90deg) translateZ(30px)}.f5{transform:rotateY(-90deg) translateZ(30px)}.f6{transform:rotateY(180deg) translateZ(30px)}}
+    @media(prefers-reduced-motion:reduce){.cici-token .cici-sprite{animation:none!important}}
   </style>
 </head>
 <body>
@@ -84,7 +84,7 @@
           <span class="roll-label" id="rollLabel">ROLL THE DICE 🎲</span>
         </button>
       </div>
-      <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><img src="cici-welcome.png" alt=""></span></div>
+      <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><span class="cici-sprite" id="ciciSprite"></span></span></div>
     </section>
     <div class="status" id="status"><strong>READY</strong> · Current tile: 1</div>
     <div class="debug" id="debug">Diagnostics ready. No hidden fallback errors.</div>
@@ -93,19 +93,20 @@
     (()=>{
       "use strict";
       const $=selector=>document.querySelector(selector);
-      const world=$("#world"),cici=$("#cici"),die=$("#die"),dieScene=$("#dieScene"),shadow=$("#diceShadow"),button=$("#diceButton"),label=$("#rollLabel"),status=$("#status"),debug=$("#debug");
+      const world=$("#world"),cici=$("#cici"),sprite=$("#ciciSprite"),die=$("#die"),dieScene=$("#dieScene"),shadow=$("#diceShadow"),button=$("#diceButton"),label=$("#rollLabel"),status=$("#status"),debug=$("#debug");
       const reduced=matchMedia("(prefers-reduced-motion: reduce)");
       const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       let points=[],position=0,state="IDLE",facing=1,resizeFrame=0;
       const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
       const log=(phase,message)=>{debug.textContent=`${new Date().toLocaleTimeString()}  ${phase}\n${message}`};
       const setState=next=>{state=next;world.dataset.state=next;log(next,`Position ${position+1}`)};
+      function setSpriteFrame(frame){const safe=((frame%8)+8)%8,col=safe%4,row=Math.floor(safe/4);sprite.style.backgroundPosition=`${col*(100/3)}% ${row*100}%`;sprite.dataset.frame=String(safe)}
       function measure(){
         const wr=world.getBoundingClientRect(),tokenW=cici.offsetWidth,tokenH=cici.offsetHeight;
         points=[...document.querySelectorAll(".tile")].sort((a,b)=>Number(a.dataset.tile)-Number(b.dataset.tile)).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-wr.left+r.width/2-tokenW/2,y:r.top-wr.top+r.height*.58-tokenH*.82,cx:r.left-wr.left+r.width/2,cy:r.top-wr.top+r.height/2,tile}});
       }
       function tokenTransform(point,face=facing,bob=0,rot=0,sx=1,sy=1){return `translate3d(${point.x}px,${point.y+bob}px,0) rotate(${rot}deg) scaleX(${face*sx}) scaleY(${sy})`}
-      function place(index){measure();const point=points[index];cici.style.transform=tokenTransform(point);cici.dataset.state="idle";status.innerHTML=`<strong>READY</strong> · Current tile: ${index+1}`}
+      function place(index){measure();const point=points[index];setSpriteFrame(0);cici.style.transform=tokenTransform(point);cici.dataset.state="idle";status.innerHTML=`<strong>READY</strong> · Current tile: ${index+1}`}
       function setDieFace(result){const [x,y,z]=orientation[result];die.style.transform=`rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z-4}deg)`;die.dataset.face=result}
       async function animateDie(result){
         setState("ROLLING");
@@ -133,13 +134,13 @@
       async function moveSegment(fromIndex,toIndex){
         const from=points[fromIndex],to=points[toIndex],dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing,distance=Math.hypot(dx,dy),duration=reduced.matches?70:Math.max(190,Math.min(290,160+distance*.42));
         cici.dataset.state="moving";
-        await new Promise(resolve=>{const start=performance.now();function frame(now){const raw=Math.min(1,(now-start)/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+dx*ease,y=from.y+dy*ease,bob=reduced.matches?0:-Math.sin(raw*Math.PI)*9,rotation=reduced.matches?0:Math.sin(raw*Math.PI*2)*3.5*newFacing;cici.style.transform=tokenTransform({x,y},newFacing,bob,rotation);if(raw<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
-        facing=newFacing;cici.style.transform=tokenTransform(to);position=toIndex
+        await new Promise(resolve=>{const start=performance.now();function frame(now){const elapsed=now-start,raw=Math.min(1,elapsed/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+dx*ease,y=from.y+dy*ease,bob=reduced.matches?0:-Math.sin(raw*Math.PI)*9,rotation=reduced.matches?0:Math.sin(raw*Math.PI*2)*3.5*newFacing;if(!reduced.matches)setSpriteFrame(Math.floor(elapsed/62)%8);cici.style.transform=tokenTransform({x,y},newFacing,bob,rotation);if(raw<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
+        facing=newFacing;setSpriteFrame(0);cici.style.transform=tokenTransform(to);position=toIndex
       }
       async function move(result){
         setState("MOVING");measure();
         for(let step=0;step<result;step++){const from=position,to=(position+1)%points.length;await moveSegment(from,to);const final=step===result-1;react(to,final);if(!final)await wait(reduced.matches?20:70)}
-        setState("LANDING");cici.dataset.state="landing";await wait(reduced.matches?80:430);cici.dataset.state="idle";setState("IDLE");status.innerHTML=`<strong>COMPLETE</strong> · Cici landed on tile ${position+1}. Tap again.`
+        setState("LANDING");setSpriteFrame(3);cici.dataset.state="landing";await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";setState("IDLE");status.innerHTML=`<strong>COMPLETE</strong> · Cici landed on tile ${position+1}. Tap again.`
       }
       async function takeTurn(){
         if(state!=="IDLE")return;
