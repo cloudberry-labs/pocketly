@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Pocketly Motion Lab</title>
+  <style>
+    :root{color-scheme:light;--ink:#62586d;--pink:#ed78aa;--pink-dark:#c94f87;--cream:#fffaf0;--shadow:#9d7890}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+    body{display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 16% 14%,#fff 0 8%,transparent 8.3%),radial-gradient(circle at 90% 12%,#cfeeff 0 16%,transparent 16.3%),linear-gradient(145deg,#fff0f8,#edf8ff)}
+    button{font:inherit}
+    .lab{width:min(100%,440px);padding:18px;border:3px solid #fff;border-radius:36px;background:rgba(255,255,255,.72);box-shadow:0 24px 60px rgba(105,81,111,.18);backdrop-filter:blur(10px)}
+    .eyebrow{margin:0;color:#93889b;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+    h1{margin:4px 0 2px;font-size:32px;line-height:1}
+    .intro{margin:0 0 14px;font-size:13px;line-height:1.45}
+    .world{position:relative;min-height:520px;overflow:hidden;border:3px solid white;border-radius:30px;background:linear-gradient(rgba(255,255,255,.06),rgba(255,255,255,.18)),url("pocketville-board-map.jpg") center/cover;box-shadow:inset 0 0 0 1px rgba(116,82,109,.1),0 14px 25px rgba(95,74,99,.15)}
+    .track{position:absolute;inset:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:11px;pointer-events:none}
+    .tile{position:relative;display:grid;place-items:center;align-content:center;min-width:0;padding:8px;border:3px solid white;border-radius:26px 18px 30px 20px;background:linear-gradient(145deg,#ffe5ef,#ffcce0);box-shadow:0 8px 0 rgba(170,111,142,.25),0 12px 16px rgba(79,59,83,.16),inset 0 3px 8px rgba(255,255,255,.76);transform:rotate(var(--r));transition:filter .15s}
+    .tile:nth-child(2),.tile:nth-child(5){background:linear-gradient(145deg,#dff4ff,#bfe7fb);border-radius:18px 30px 19px 27px}
+    .tile:nth-child(3),.tile:nth-child(6){background:linear-gradient(145deg,#e8f7df,#cdebbd);border-radius:29px 20px 25px 17px}
+    .tile b{font-size:25px}.tile span{font-size:11px;font-weight:900}.tile small{position:absolute;left:10px;top:8px;font-weight:900}
+    .tile.step{animation:tileStep .2s ease}.tile.land{animation:tileLand .52s cubic-bezier(.2,.8,.25,1)}
+    @keyframes tileStep{50%{transform:rotate(var(--r)) scale(.92,.88);filter:brightness(1.08)}}
+    @keyframes tileLand{32%{transform:rotate(var(--r)) scale(.88,.84)}65%{transform:rotate(var(--r)) scale(1.09);filter:brightness(1.12)}}
+
+    .character-layer{position:absolute;inset:0;z-index:20;pointer-events:none;overflow:visible}
+    .cici-token{position:absolute;left:0;top:0;width:72px;height:86px;transform-origin:50% 92%;will-change:transform}
+    .cici-token img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%}
+    .cici-token[data-state="idle"] img{animation:idle 3.2s ease-in-out infinite}
+    .cici-token[data-state="moving"] img{animation:waddle .23s ease-in-out infinite alternate}
+    .cici-token[data-state="landing"] img{animation:landing .43s cubic-bezier(.2,.8,.25,1)}
+    @keyframes idle{0%,100%{transform:translateY(0) rotate(-.7deg)}50%{transform:translateY(-2px) rotate(.7deg) scale(1.01,.995)}}
+    @keyframes waddle{from{transform:translateY(1px) rotate(-5deg) scale(.98,1.02)}to{transform:translateY(-7px) rotate(5deg) scale(1.03,.97)}}
+    @keyframes landing{0%{transform:translateY(0)}36%{transform:translateY(-20px) rotate(-5deg) scale(.96,1.08)}68%{transform:translateY(5px) scale(1.12,.82)}84%{transform:translateY(-3px) scale(.98,1.04)}100%{transform:translateY(0)}}
+    .spark{position:absolute;z-index:19;width:7px;height:7px;border-radius:50%;background:#fff7b5;box-shadow:18px -5px 0 #ffd0e4,-17px -8px 0 #c7edff,10px 13px 0 #e3d3ff;pointer-events:none;animation:spark .55s ease-out forwards}
+    @keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-30px) scale(1.5) rotate(75deg)}}
+
+    .dice-zone{position:absolute;left:50%;top:50%;z-index:10;display:grid;place-items:center;width:154px;height:154px;transform:translate(-50%,-50%);perspective:700px;pointer-events:none}
+    .dice-button{position:relative;width:110px;height:120px;border:0;background:transparent;cursor:pointer;touch-action:manipulation;pointer-events:auto}
+    .dice-button:disabled{cursor:wait}
+    .dice-shadow{position:absolute;left:50%;bottom:13px;width:70px;height:18px;border-radius:50%;background:rgba(85,58,69,.24);filter:blur(5px);transform:translateX(-50%);will-change:transform,opacity}
+    /* Shadow/filter stays on siblings. Never put filter, opacity or overflow on .die-scene/.die. */
+    .die-scene{position:absolute;left:50%;top:45%;width:68px;height:68px;margin:-34px;transform-style:preserve-3d;will-change:transform}
+    .die{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+    .face{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:8px;border:2px solid rgba(255,255,255,.94);border-radius:16px;background:linear-gradient(145deg,#fffef9 0%,#faefdf 62%,#ead4bd 100%);box-shadow:inset 7px 7px 13px rgba(255,255,255,.85),inset -7px -8px 13px rgba(139,99,75,.19),0 0 0 1px rgba(115,84,68,.08);backface-visibility:hidden}
+    .f1{transform:rotateY(0) translateZ(34px)}.f2{transform:rotateY(90deg) translateZ(34px)}.f3{transform:rotateX(90deg) translateZ(34px)}.f4{transform:rotateX(-90deg) translateZ(34px)}.f5{transform:rotateY(-90deg) translateZ(34px)}.f6{transform:rotateY(180deg) translateZ(34px)}
+    .pip{align-self:center;justify-self:center;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#716a75,#29252d 62%);box-shadow:inset 1px 1px 2px rgba(255,255,255,.25),0 1px 1px rgba(70,52,58,.3)}
+    .p1{grid-area:1/1}.p2{grid-area:1/2}.p3{grid-area:1/3}.p4{grid-area:2/1}.p5{grid-area:2/2}.p6{grid-area:2/3}.p7{grid-area:3/1}.p8{grid-area:3/2}.p9{grid-area:3/3}
+    .roll-label{position:absolute;left:50%;bottom:-7px;min-width:145px;padding:10px 12px;border:2px solid white;border-radius:999px;background:linear-gradient(#f28ab6,#e66ea4);box-shadow:0 6px 0 var(--pink-dark),0 10px 14px rgba(95,66,87,.18);color:white;font-size:12px;font-weight:900;letter-spacing:.04em;transform:translateX(-50%);white-space:nowrap}
+    .dice-button:active:not(:disabled) .roll-label{transform:translate(-50%,4px);box-shadow:0 2px 0 var(--pink-dark)}
+
+    .status{margin:14px 2px 0;padding:11px 13px;border-radius:16px;background:#fff;color:#756a7c;font-size:12px;line-height:1.4;box-shadow:0 5px 14px rgba(84,66,90,.08)}
+    .status strong{color:#d75c96}.debug{margin:8px 2px 0;min-height:44px;padding:9px 11px;border:1px dashed #d9cfdd;border-radius:14px;background:rgba(255,255,255,.55);font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}
+    @media(max-width:380px){body{padding:8px}.lab{padding:12px;border-radius:27px}.world{min-height:480px}.track{inset:10px;gap:8px}.cici-token{width:62px;height:74px}.die-scene{width:60px;height:60px;margin:-30px}.face{transform-origin:center}.f1{transform:rotateY(0) translateZ(30px)}.f2{transform:rotateY(90deg) translateZ(30px)}.f3{transform:rotateX(90deg) translateZ(30px)}.f4{transform:rotateX(-90deg) translateZ(30px)}.f5{transform:rotateY(-90deg) translateZ(30px)}.f6{transform:rotateY(180deg) translateZ(30px)}}
+    @media(prefers-reduced-motion:reduce){.cici-token img{animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="lab">
+    <p class="eyebrow">Pocketly · Step 1</p>
+    <h1>Motion Lab</h1>
+    <p class="intro">Tap the cream die. It must tumble in real 3D, land on the correct face, then Cici must visit every tile without teleporting.</p>
+    <section class="world" id="world">
+      <div class="track" id="track">
+        <div class="tile" data-tile="0" style="--r:-2deg"><small>1</small><b>🌱</b><span>START</span></div>
+        <div class="tile" data-tile="1" style="--r:1.5deg"><small>2</small><b>💧</b><span>SAVE</span></div>
+        <div class="tile" data-tile="5" style="--r:-1deg"><small>6</small><b>🏡</b><span>DREAM</span></div>
+        <div class="tile" data-tile="2" style="--r:1.8deg"><small>3</small><b>🎁</b><span>MYSTERY</span></div>
+        <div class="tile" data-tile="4" style="--r:-1.2deg"><small>5</small><b>⭐</b><span>BONUS</span></div>
+        <div class="tile" data-tile="3" style="--r:1deg"><small>4</small><b>🌿</b><span>BOOST</span></div>
+      </div>
+      <div class="dice-zone">
+        <button class="dice-button" id="diceButton" type="button" aria-label="Roll the Pocketly die">
+          <span class="dice-shadow" id="diceShadow"></span>
+          <span class="die-scene" id="dieScene"><span class="die" id="die">
+            <span class="face f1"><i class="pip p5"></i></span>
+            <span class="face f2"><i class="pip p1"></i><i class="pip p9"></i></span>
+            <span class="face f3"><i class="pip p1"></i><i class="pip p5"></i><i class="pip p9"></i></span>
+            <span class="face f4"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p7"></i><i class="pip p9"></i></span>
+            <span class="face f5"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p5"></i><i class="pip p7"></i><i class="pip p9"></i></span>
+            <span class="face f6"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p4"></i><i class="pip p6"></i><i class="pip p7"></i><i class="pip p9"></i></span>
+          </span></span>
+          <span class="roll-label" id="rollLabel">ROLL THE DICE 🎲</span>
+        </button>
+      </div>
+      <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><img src="cici-welcome.png" alt=""></span></div>
+    </section>
+    <div class="status" id="status"><strong>READY</strong> · Current tile: 1</div>
+    <div class="debug" id="debug">Diagnostics ready. No hidden fallback errors.</div>
+  </main>
+  <script>
+    (()=>{
+      "use strict";
+      const $=selector=>document.querySelector(selector);
+      const world=$("#world"),cici=$("#cici"),die=$("#die"),dieScene=$("#dieScene"),shadow=$("#diceShadow"),button=$("#diceButton"),label=$("#rollLabel"),status=$("#status"),debug=$("#debug");
+      const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+      const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
+      let points=[],position=0,state="IDLE",facing=1,resizeFrame=0;
+      const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+      const log=(phase,message)=>{debug.textContent=`${new Date().toLocaleTimeString()}  ${phase}\n${message}`};
+      const setState=next=>{state=next;world.dataset.state=next;log(next,`Position ${position+1}`)};
+      function measure(){
+        const wr=world.getBoundingClientRect(),tokenW=cici.offsetWidth,tokenH=cici.offsetHeight;
+        points=[...document.querySelectorAll(".tile")].sort((a,b)=>Number(a.dataset.tile)-Number(b.dataset.tile)).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-wr.left+r.width/2-tokenW/2,y:r.top-wr.top+r.height*.58-tokenH*.82,cx:r.left-wr.left+r.width/2,cy:r.top-wr.top+r.height/2,tile}});
+      }
+      function tokenTransform(point,face=facing,bob=0,rot=0,sx=1,sy=1){return `translate3d(${point.x}px,${point.y+bob}px,0) rotate(${rot}deg) scaleX(${face*sx}) scaleY(${sy})`}
+      function place(index){measure();const point=points[index];cici.style.transform=tokenTransform(point);cici.dataset.state="idle";status.innerHTML=`<strong>READY</strong> · Current tile: ${index+1}`}
+      function setDieFace(result){const [x,y,z]=orientation[result];die.style.transform=`rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z-4}deg)`;die.dataset.face=result}
+      async function animateDie(result){
+        setState("ROLLING");
+        const current=Number(die.dataset.face)||1,[x,y,z]=orientation[result];
+        if(reduced.matches){setDieFace(result);await wait(80);return}
+        const press=dieScene.animate([{transform:"translateY(0) scale(1)"},{transform:"translateY(7px) scale(.84,.78)"},{transform:"translateY(-5px) scale(1.08,.95)"},{transform:"translateY(0) scale(1)"}],{duration:190,easing:"cubic-bezier(.2,.8,.25,1)"});
+        await press.finished;
+        const tumble=die.animate([
+          {transform:`rotateX(${orientation[current][0]}deg) rotateY(${orientation[current][1]}deg) rotateZ(-4deg)`},
+          {transform:"rotateX(255deg) rotateY(210deg) rotateZ(125deg)",offset:.28},
+          {transform:"rotateX(515deg) rotateY(430deg) rotateZ(290deg)",offset:.62},
+          {transform:`rotateX(${x+720}deg) rotateY(${y+720}deg) rotateZ(${z+360-4}deg)`,offset:1}
+        ],{duration:reduced.matches?150:960,easing:"cubic-bezier(.14,.72,.22,1)",fill:"forwards"});
+        const jump=dieScene.animate([{transform:"translate3d(-28px,0,0) scale(.88)"},{transform:"translate3d(22px,-62px,0) scale(1.12)",offset:.34},{transform:"translate3d(-8px,-16px,0) scale(.96)",offset:.72},{transform:"translate3d(0,0,0) scale(1)"}],{duration:960,easing:"cubic-bezier(.14,.72,.22,1)"});
+        const shade=shadow.animate([{transform:"translateX(-50%) scale(1)",opacity:.25},{transform:"translateX(-50%) scale(.45)",opacity:.08,offset:.34},{transform:"translateX(-50%) scale(1.2)",opacity:.31,offset:.84},{transform:"translateX(-50%) scale(1)",opacity:.24}],{duration:960,easing:"ease-in-out"});
+        await Promise.all([tumble.finished,jump.finished,shade.finished]);
+        tumble.cancel();setDieFace(result);
+        await dieScene.animate([{transform:"translateY(0) scale(1)"},{transform:"translateY(6px) scale(1.1,.82)"},{transform:"translateY(-4px) scale(.97,1.06)"},{transform:"translateY(0) scale(1)"}],{duration:250,easing:"cubic-bezier(.2,.8,.25,1)"}).finished;
+        setState("DICE_LANDED");status.innerHTML=`<strong>ROLLED ${result}</strong> · Cici will move ${result} ${result===1?"tile":"tiles"}`;await wait(300)
+      }
+      function react(index,final=false){
+        const {tile,cx,cy}=points[index];tile.classList.remove("step","land");void tile.offsetWidth;tile.classList.add(final?"land":"step");
+        const particle=document.createElement("i");particle.className="spark";particle.style.left=`${cx}px`;particle.style.top=`${cy+15}px`;$("#characterLayer").appendChild(particle);setTimeout(()=>particle.remove(),600);setTimeout(()=>tile.classList.remove("step","land"),600)
+      }
+      async function moveSegment(fromIndex,toIndex){
+        const from=points[fromIndex],to=points[toIndex],dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing,distance=Math.hypot(dx,dy),duration=reduced.matches?70:Math.max(190,Math.min(290,160+distance*.42));
+        cici.dataset.state="moving";
+        await new Promise(resolve=>{const start=performance.now();function frame(now){const raw=Math.min(1,(now-start)/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+dx*ease,y=from.y+dy*ease,bob=reduced.matches?0:-Math.sin(raw*Math.PI)*9,rotation=reduced.matches?0:Math.sin(raw*Math.PI*2)*3.5*newFacing;cici.style.transform=tokenTransform({x,y},newFacing,bob,rotation);if(raw<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
+        facing=newFacing;cici.style.transform=tokenTransform(to);position=toIndex
+      }
+      async function move(result){
+        setState("MOVING");measure();
+        for(let step=0;step<result;step++){const from=position,to=(position+1)%points.length;await moveSegment(from,to);const final=step===result-1;react(to,final);if(!final)await wait(reduced.matches?20:70)}
+        setState("LANDING");cici.dataset.state="landing";await wait(reduced.matches?80:430);cici.dataset.state="idle";setState("IDLE");status.innerHTML=`<strong>COMPLETE</strong> · Cici landed on tile ${position+1}. Tap again.`
+      }
+      async function takeTurn(){
+        if(state!=="IDLE")return;
+        button.disabled=true;label.textContent="ROLLING…";const result=Math.floor(Math.random()*6)+1;
+        try{await animateDie(result);await move(result);log("PASS",`Die showed ${result}; Cici moved exactly ${result} step${result===1?"":"s"}.`)}
+        catch(error){console.error("Pocketly Motion Lab",error);setState("ERROR");status.innerHTML="<strong>ERROR</strong> · Open the diagnostic message below.";log("ERROR",`${error.name}: ${error.message}\n${error.stack||"No stack available"}`)}
+        finally{button.disabled=false;label.textContent=state==="ERROR"?"TRY AGAIN":"ROLL THE DICE 🎲";if(state==="ERROR")state="IDLE"}
+      }
+      button.addEventListener("click",takeTurn,{passive:true});
+      addEventListener("error",event=>log("WINDOW ERROR",`${event.message}\n${event.filename}:${event.lineno}:${event.colno}`));
+      addEventListener("unhandledrejection",event=>log("PROMISE ERROR",String(event.reason?.stack||event.reason)));
+      new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{measure();if(state==="IDLE")place(position)})}).observe(world);
+      setDieFace(1);requestAnimationFrame(()=>place(0));
+    })();
+  </script>
+</body>
+</html>
