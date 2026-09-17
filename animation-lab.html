@@ -28,10 +28,10 @@
     .cici-token{position:absolute;left:0;top:0;width:78px;height:78px;transform-origin:50% 92%;will-change:transform}
     .cici-sprite{display:block;width:100%;height:100%;background-image:url("cici-walk-atlas-v2.webp");background-repeat:no-repeat;background-size:400% 200%;background-position:0 0;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%;will-change:transform,background-position}
     .cici-token[data-state="idle"] .cici-sprite{animation:idle 3.2s ease-in-out infinite}
-    .cici-token[data-state="moving"] .cici-sprite{animation:waddle .23s ease-in-out infinite alternate}
+    .cici-token[data-state="moving"] .cici-sprite{animation:waddle .16s ease-in-out infinite alternate}
     .cici-token[data-state="landing"] .cici-sprite{animation:landing .43s cubic-bezier(.2,.8,.25,1)}
     @keyframes idle{0%,100%{transform:translateY(0) rotate(-.7deg)}50%{transform:translateY(-2px) rotate(.7deg) scale(1.01,.995)}}
-    @keyframes waddle{from{transform:translateY(1px) rotate(-5deg) scale(.98,1.02)}to{transform:translateY(-7px) rotate(5deg) scale(1.03,.97)}}
+    @keyframes waddle{from{transform:translateY(1px) rotate(-2.5deg) scale(.985,1.015)}to{transform:translateY(-3px) rotate(2.5deg) scale(1.015,.985)}}
     @keyframes landing{0%{transform:translateY(0)}36%{transform:translateY(-20px) rotate(-5deg) scale(.96,1.08)}68%{transform:translateY(5px) scale(1.12,.82)}84%{transform:translateY(-3px) scale(.98,1.04)}100%{transform:translateY(0)}}
     .spark{position:absolute;z-index:19;width:7px;height:7px;border-radius:50%;background:#fff7b5;box-shadow:18px -5px 0 #ffd0e4,-17px -8px 0 #c7edff,10px 13px 0 #e3d3ff;pointer-events:none;animation:spark .55s ease-out forwards}
     @keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-30px) scale(1.5) rotate(75deg)}}
@@ -132,9 +132,37 @@
         const particle=document.createElement("i");particle.className="spark";particle.style.left=`${cx}px`;particle.style.top=`${cy+15}px`;$("#characterLayer").appendChild(particle);setTimeout(()=>particle.remove(),600);setTimeout(()=>tile.classList.remove("step","land"),600)
       }
       async function moveSegment(fromIndex,toIndex){
-        const from=points[fromIndex],to=points[toIndex],dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing,distance=Math.hypot(dx,dy),duration=reduced.matches?70:Math.max(190,Math.min(290,160+distance*.42));
+        const from=points[fromIndex],to=points[toIndex],dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing,distance=Math.hypot(dx,dy),duration=reduced.matches?90:Math.max(340,Math.min(520,245+distance*.72));
+        const tinySteps=Math.max(3,Math.min(6,Math.round(distance/34))),walkEnd=.76;
         cici.dataset.state="moving";
-        await new Promise(resolve=>{const start=performance.now();function frame(now){const elapsed=now-start,raw=Math.min(1,elapsed/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+dx*ease,y=from.y+dy*ease,bob=reduced.matches?0:-Math.sin(raw*Math.PI)*9,rotation=reduced.matches?0:Math.sin(raw*Math.PI*2)*3.5*newFacing;if(!reduced.matches)setSpriteFrame(Math.floor(elapsed/62)%8);cici.style.transform=tokenTransform({x,y},newFacing,bob,rotation);if(raw<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
+        if(!reduced.matches){
+          await cici.animate([
+            {transform:tokenTransform(from,newFacing,0,0,1,1)},
+            {transform:tokenTransform(from,newFacing,2,-2*newFacing,1.07,.9)},
+            {transform:tokenTransform(from,newFacing,-2,1.5*newFacing,.97,1.04)}
+          ],{duration:95,easing:"cubic-bezier(.2,.8,.25,1)"}).finished;
+        }
+        await new Promise(resolve=>{const start=performance.now();function frame(now){
+          const elapsed=now-start,raw=Math.min(1,elapsed/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+dx*ease,y=from.y+dy*ease;
+          let bob=0,rotation=0,sx=1,sy=1;
+          if(!reduced.matches){
+            if(raw<walkEnd){
+              const walkProgress=raw/walkEnd,stepWave=Math.abs(Math.sin(walkProgress*tinySteps*Math.PI));
+              bob=-stepWave*3.2;
+              rotation=Math.sin(walkProgress*tinySteps*Math.PI*2)*1.7*newFacing;
+              sx=1+stepWave*.018;sy=1-stepWave*.018;
+              setSpriteFrame(Math.floor(walkProgress*tinySteps*4)%8);
+            }else{
+              const hop=(raw-walkEnd)/(1-walkEnd),hopArc=Math.sin(hop*Math.PI);
+              bob=-hopArc*10.5;
+              rotation=(1-hop)*-2.2*newFacing;
+              sx=1-hopArc*.035;sy=1+hopArc*.055;
+              setSpriteFrame(hop<.48?6:7);
+            }
+          }
+          cici.style.transform=tokenTransform({x,y},newFacing,bob,rotation,sx,sy);
+          if(raw<1)requestAnimationFrame(frame);else resolve()
+        }requestAnimationFrame(frame)});
         facing=newFacing;setSpriteFrame(0);cici.style.transform=tokenTransform(to);position=toIndex
       }
       async function move(result){
