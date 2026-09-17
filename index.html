@@ -14,556 +14,465 @@
     body{font-family:"Darumadrop One","Comic Sans MS",sans-serif;color:var(--ink);font-weight:400}
     h1,h2,h3,h4,h5,h6,.title,.section-title{font-family:"Darumadrop One","Comic Sans MS",sans-serif;font-weight:400}
     button{font:inherit}
-    .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:28px 18px 48px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
+    .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:20px 14px 40px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
     .shell:before{content:"";position:absolute;inset:0;z-index:-3;opacity:.38;background-image:radial-gradient(#beaee0 1.2px,transparent 1.2px);background-size:22px 22px}
     .orb{position:absolute;z-index:-2;border:1px solid rgba(255,255,255,.72);border-radius:48% 52% 68% 32%/54% 35% 65% 46%}
     .o1{width:340px;height:340px;top:-120px;right:-95px;background:rgba(159,222,248,.38);transform:rotate(24deg)}
     .o2{width:300px;height:300px;bottom:-115px;left:-95px;background:rgba(252,172,206,.34);transform:rotate(-18deg)}
-    .card{position:relative;width:min(100%,500px);min-height:min(840px,calc(100svh - 42px));overflow:hidden;border:5px solid rgba(255,255,255,.8);border-radius:38px;background:#fceaf1 url("pocketville-window-soft.jpg") center/cover no-repeat;box-shadow:0 28px 90px rgba(105,91,139,.24),inset 0 0 0 1px rgba(99,82,121,.12)}
-    .card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,245,250,.02) 48%,rgba(255,241,247,.55) 100%)}
-    .welcome{position:relative;display:flex;min-height:inherit;flex-direction:column;align-items:center;padding:31px 34px 31px}
-    .brand{position:relative;z-index:4;width:min(100%,430px);padding:25px 14px 17px;text-align:center}
-    .brand-cloud{position:absolute;left:50%;top:50%;z-index:-1;width:108%;height:145px;overflow:visible;transform:translate(-50%,-50%);filter:drop-shadow(0 8px 8px rgba(78,91,129,.12))}
+    .card{position:relative;width:min(100%,480px);min-height:min(850px,calc(100svh - 32px));overflow:hidden;border:5px solid rgba(255,255,255,.85);border-radius:38px;background:#fceaf1 url("pocketville-window-soft.jpg") center/cover no-repeat;box-shadow:0 28px 90px rgba(105,91,139,.24)}
+
+    /* WELCOME & ONBOARDING */
+    .welcome{position:relative;display:flex;min-height:inherit;flex-direction:column;align-items:center;padding:30px 24px}
+    .brand{position:relative;z-index:4;width:100%;text-align:center}
+    .brand-cloud{position:absolute;left:50%;top:50%;z-index:-1;width:105%;height:140px;transform:translate(-50%,-50%);filter:drop-shadow(0 8px 8px rgba(78,91,129,.12))}
     .cloud-halo{fill:rgba(255,255,255,.2);stroke:rgba(255,255,255,.94);stroke-width:15;stroke-linejoin:round}
     .cloud-sketch{fill:none;stroke:rgba(128,193,232,.68);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3}
-    h1{margin:0;font-size:clamp(3rem,13vw,4.65rem);line-height:.82;letter-spacing:-.025em;filter:drop-shadow(0 4px 0 rgba(255,255,255,.95))}
-    h1 span{display:inline-block;-webkit-text-stroke:1.5px rgba(53,78,132,.32);text-shadow:inset 0 2px 0 #fff}
-    h1 span:nth-child(odd){transform:translateY(-1px)}
-    h1 span:nth-child(even){transform:translateY(2px)}
+    h1{margin:0;font-size:clamp(2.8rem,12vw,4.4rem);line-height:.85;letter-spacing:-.025em}
     .letter-pink{color:#ec79ad}.letter-blue{color:#68b9ee}
-    .tagline{margin:12px 0 0;color:#40517d;font-size:.88rem;font-weight:800}
-    .tagline span{margin:0 5px;color:#e5a4c0}
-    .spark{position:absolute;top:-22px;right:0;color:#efb55c;font-size:23px}
-    .stage{position:relative;display:grid;width:100%;min-height:316px;place-items:center;margin:-4px 0 -4px}
-    .mascot{position:relative;z-index:3;width:min(342px,84vw);height:330px;filter:drop-shadow(0 10px 8px rgba(74,62,95,.16))}
+    .tagline{margin:10px 0 0;color:#40517d;font-size:.86rem;font-weight:800}
+    .stage{position:relative;display:grid;width:100%;min-height:300px;place-items:center}
+    .mascot{position:relative;z-index:3;width:min(320px,80vw);height:310px}
     .mascot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
     .wave-a{animation:waveA 2.2s steps(1,end) infinite}.wave-b{opacity:0;animation:waveB 2.2s steps(1,end) infinite}
-    .cloud{position:absolute;width:105px;height:42px;border-radius:99px;background:rgba(255,255,255,.68);box-shadow:28px -12px 0 3px rgba(255,255,255,.68),52px 1px 0 -3px rgba(255,255,255,.68);animation:drift 8s ease-in-out infinite}
-    .cl{left:-28px;bottom:61px;transform:scale(.72)}.cr{right:12px;top:78px;transform:scale(.52);opacity:.7}
-    .actions{z-index:2;display:grid;width:100%;gap:11px}
-    .btn{display:flex;width:100%;min-height:52px;align-items:center;justify-content:center;gap:8px;border-radius:17px;font-size:.92rem;font-weight:800;letter-spacing:.025em;cursor:pointer}
-    .primary{border:2px solid rgba(255,255,255,.76);background:linear-gradient(135deg,#ef75a6,#f49abb);color:#fff;box-shadow:0 8px 0 #cb5c8b,0 13px 25px rgba(156,73,113,.22)}
-    .primary:active{transform:translateY(5px);box-shadow:0 3px 0 #cb5c8b}
+    .actions{z-index:2;display:grid;width:100%;gap:10px}
+    .btn{display:flex;width:100%;min-height:50px;align-items:center;justify-content:center;gap:8px;border-radius:17px;font-size:.92rem;font-weight:800;cursor:pointer}
+    .primary{border:2px solid rgba(255,255,255,.76);background:linear-gradient(135deg,#ef75a6,#f49abb);color:#fff;box-shadow:0 7px 0 #cb5c8b,0 12px 22px rgba(156,73,113,.22)}
+    .primary:active{transform:translateY(4px);box-shadow:0 3px 0 #cb5c8b}
     .secondary{border:2px solid rgba(255,255,255,.88);background:linear-gradient(135deg,rgba(164,218,251,.94),rgba(124,194,242,.94));color:#344d7b;box-shadow:0 5px 0 rgba(76,145,197,.65)}
-    .guest{min-height:44px;border:2px solid rgba(255,255,255,.84);border-radius:17px;background:rgba(255,251,249,.88);color:#596080;font-size:.9rem;font-weight:800;cursor:pointer;box-shadow:0 4px 0 rgba(143,120,133,.26)}
-    .dreams{display:flex;align-items:center;gap:5px;margin:auto 0 0;padding:14px 18px 9px;border-radius:99px;background:rgba(255,255,255,.72);color:#566082;font-size:.82rem;font-weight:800}
-    .next{position:relative;display:none;min-height:inherit;flex-direction:column;align-items:center;justify-content:center;padding:54px 38px;text-align:center}
-    .back{position:absolute;top:34px;left:34px;display:grid;width:44px;height:44px;place-items:center;border:1px solid #ded2e5;border-radius:15px;background:rgba(255,255,255,.8);color:#716a7e;cursor:pointer}
-    .mini{width:175px;height:220px}.mini img{width:100%;height:100%;object-fit:contain}
-    .eyebrow{margin:4px 0 9px;color:#8780b9;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-    h2{max-width:340px;margin:0;color:#5f5870;font-size:clamp(1.75rem,8vw,2.4rem);line-height:1.05}
-    .body{max-width:330px;margin:18px 0 32px;color:#8a8393;font-size:1rem;line-height:1.6}
-    .onboarding{position:relative;display:none;min-height:inherit;padding:28px 28px 32px}
-    .onboarding:before{content:"";position:absolute;inset:0;background:rgba(255,249,250,.76);backdrop-filter:blur(5px)}
-    .onboard-card{position:relative;z-index:1;display:flex;min-height:calc(min(840px,100svh - 42px) - 65px);flex-direction:column;align-items:center;padding:28px 25px;border:2px solid rgba(255,255,255,.9);border-radius:30px;background:rgba(255,255,255,.76);box-shadow:0 18px 45px rgba(86,81,105,.15);text-align:center}
+    .guest{min-height:44px;border:2px solid rgba(255,255,255,.84);border-radius:17px;background:rgba(255,251,249,.88);color:#596080;font-size:.9rem;font-weight:800;cursor:pointer}
+    .dreams{display:flex;align-items:center;gap:5px;margin:auto 0 0;padding:12px 18px 8px;border-radius:99px;background:rgba(255,255,255,.72);color:#566082;font-size:.8rem;font-weight:800}
+
+    /* ONBOARDING & DASHBOARD */
+    .onboarding{position:relative;display:none;min-height:inherit;padding:24px 20px}
+    .onboard-card{position:relative;z-index:1;display:flex;min-height:calc(min(840px,100svh - 42px) - 60px);flex-direction:column;align-items:center;padding:24px 20px;border:2px solid rgba(255,255,255,.9);border-radius:30px;background:rgba(255,255,255,.88);box-shadow:0 18px 45px rgba(86,81,105,.15);text-align:center}
     .onboard-top{display:flex;width:100%;align-items:center;justify-content:space-between}
-    .onboard-back{display:grid;width:40px;height:40px;place-items:center;border:1px solid #eadde7;border-radius:14px;background:#fff;color:#6b6680;cursor:pointer}
-    .progress{display:flex;gap:7px;margin-right:3px}.progress i{width:9px;height:9px;border-radius:50%;background:#dfd8e7;transition:.25s}.progress i.active{width:24px;border-radius:10px;background:#ec83ad}
+    .onboard-back{display:grid;width:40px;height:40px;place-items:center;border:1px solid #eadde7;border-radius:14px;background:#fff;cursor:pointer}
+    .progress{display:flex;gap:7px}.progress i{width:9px;height:9px;border-radius:50%;background:#dfd8e7}.progress i.active{width:22px;border-radius:10px;background:#ec83ad}
     .step{display:none;width:100%;flex:1;flex-direction:column;align-items:center}.step.active{display:flex}
-    .step-kicker{margin:22px 0 5px;color:#8b84b4;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-    .step h2{color:#665f79;font-size:clamp(2.1rem,10vw,3rem)}
-    .step-copy{max-width:340px;margin:11px 0 22px;color:#777186;font-size:.9rem;line-height:1.6}
-    .cici-intro{width:210px;height:255px;margin:-4px 0 -7px;object-fit:contain;filter:drop-shadow(0 10px 8px rgba(74,62,95,.14))}
-    .speech{position:relative;max-width:315px;margin:0 0 23px;padding:14px 17px;border:2px solid #dceeff;border-radius:20px;background:#fff;color:#596080;font-size:.88rem;font-weight:600;line-height:1.55}
-    .speech:after{content:"";position:absolute;left:50%;bottom:-9px;width:15px;height:15px;border-right:2px solid #dceeff;border-bottom:2px solid #dceeff;background:#fff;transform:translateX(-50%) rotate(45deg)}
-    .dream-grid{display:grid;width:100%;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0}
-    .dream-option{min-height:92px;padding:10px;border:2px solid #eee6ee;border-radius:18px;background:rgba(255,255,255,.86);color:#625d73;cursor:pointer;transition:.18s}
-    .dream-option span{display:block;margin-bottom:4px;font-size:1.55rem}.dream-option strong{font-size:.8rem}.dream-option.selected{border-color:#ec83ad;background:#fff0f6;box-shadow:0 6px 16px rgba(226,123,165,.18);transform:translateY(-2px)}
-    .wide{grid-column:1/-1;min-height:66px}
-    .form{display:grid;width:100%;gap:13px;margin:20px 0;text-align:left}.field{display:grid;gap:6px}.field label{padding-left:3px;color:#696378;font-size:.74rem;font-weight:700}.field input,.field select{width:100%;height:49px;border:2px solid #e8e0e9;border-radius:15px;outline:0;background:rgba(255,255,255,.93);padding:0 14px;color:#5b5669;font:400 1rem "Darumadrop One","Comic Sans MS",sans-serif}.field input:focus,.field select:focus{border-color:#93cff2;box-shadow:0 0 0 4px rgba(147,207,242,.18)}
-    .amount-row{display:grid;grid-template-columns:1fr 105px;gap:10px}.form-error{min-height:18px;margin:0;color:#d65e8c;font-size:.75rem;font-weight:600}
-    .onboard-actions{display:flex;width:100%;gap:10px;margin-top:auto}.onboard-actions .btn{min-height:49px}.soft-btn{border:2px solid #e9e1ea;background:#fff;color:#746e80;box-shadow:none}
-    .success-badge{display:grid;width:98px;height:98px;place-items:center;margin:60px 0 22px;border:7px solid rgba(255,255,255,.8);border-radius:50%;background:linear-gradient(145deg,#9cdbf7,#ef9cbe);color:white;box-shadow:0 12px 30px rgba(106,124,164,.2);font-size:2.7rem}
-    .pocket-summary{width:100%;margin:20px 0 28px;padding:17px;border:2px dashed #a9d8ef;border-radius:20px;background:#f6fcff;color:#5f5a70}.pocket-summary strong{display:block;color:#ec75a6;font-family:"Darumadrop One",sans-serif;font-size:1.65rem;font-weight:400}.pocket-summary span{font-size:.8rem;font-weight:600}
-    .dashboard{position:relative;display:none;min-height:inherit;padding:25px 24px 82px;background:linear-gradient(180deg,rgba(247,252,255,.88),rgba(255,244,249,.88));backdrop-filter:blur(4px)}
-    .dash-head{display:flex;align-items:center;justify-content:space-between}.dash-head p{margin:0;color:#858096;font-size:.76rem}.dash-head h2{margin-top:1px;color:#59546b;font-size:2.05rem}.avatar{display:grid;width:48px;height:48px;place-items:center;border:3px solid #fff;border-radius:50%;background:#a9ddf6;box-shadow:0 7px 15px rgba(90,97,135,.14);font:inherit;font-size:1.35rem;cursor:pointer;transition:.18s}.avatar:hover,.avatar:focus-visible{transform:translateY(-2px);box-shadow:0 10px 19px rgba(90,97,135,.2);outline:3px solid rgba(236,131,173,.25)}
-    .village-card{position:relative;height:220px;margin:18px 0 14px;overflow:hidden;border:3px solid rgba(255,255,255,.9);border-radius:27px;background:#cceafa url("pocketville-cottage.jpg") center/cover no-repeat;box-shadow:0 13px 28px rgba(89,99,132,.15)}
-    .tiny-cici{position:absolute;right:11px;bottom:8px;width:92px;height:112px;object-fit:contain;filter:drop-shadow(0 5px 4px rgba(65,67,84,.14))}
-    .level-pill{position:absolute;left:14px;top:13px;padding:7px 11px;border:2px solid white;border-radius:99px;background:rgba(255,255,255,.82);color:#645e78;font-size:.68rem}
-    .pocket-card{padding:19px;border:2px solid white;border-radius:24px;background:rgba(255,255,255,.85);box-shadow:0 11px 25px rgba(100,88,122,.11)}.pocket-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.pocket-top small{color:#918a9b;font-size:.68rem}.pocket-top h3{margin:2px 0;color:#5d586d;font-size:1.55rem}.percent{display:grid;min-width:58px;height:58px;place-items:center;border:6px solid #d8effa;border-top-color:#ef8caf;border-radius:50%;color:#dd709b;font-size:.86rem}
-    .money-line{display:flex;align-items:flex-end;justify-content:space-between;margin:13px 0 8px;color:#686276}.money-line strong{color:#e177a1;font-size:1.3rem}.money-line span{font-size:.7rem}.progress-track{height:13px;overflow:hidden;border:3px solid white;border-radius:99px;background:#e8e4ec;box-shadow:inset 0 1px 3px rgba(85,77,96,.12)}.progress-fill{width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#84caf1,#ee8eb2);transition:width .6s ease}
-    .cici-note{margin:13px 0;padding:12px 14px;border:2px solid #e2f1fa;border-radius:18px;background:#f8fdff;color:#6e687b;font-size:.75rem;line-height:1.45}.dash-add{min-height:48px;margin-top:2px}
-    .bottom-nav{position:absolute;left:20px;right:20px;bottom:19px;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);padding:8px;border:2px solid rgba(255,255,255,.9);border-radius:22px;background:rgba(255,255,255,.92);box-shadow:0 9px 25px rgba(79,72,100,.16);backdrop-filter:blur(8px)}.nav-item{display:grid;gap:2px;place-items:center;border:0;background:transparent;color:#9a93a4;font-family:inherit;font-size:.58rem;cursor:pointer}.nav-item span{font-size:1.14rem}.nav-item.active{color:#df739e}
-    .save-modal{position:absolute;inset:0;z-index:20;display:none;place-items:center;padding:25px;background:rgba(74,66,86,.34);backdrop-filter:blur(5px)}.save-modal.open{display:grid}.modal-card{width:100%;padding:25px;border:3px solid white;border-radius:27px;background:#fffafc;box-shadow:0 22px 55px rgba(60,51,72,.24);text-align:center}.modal-card h2{font-size:2.25rem}.modal-card p{margin:5px 0 18px;color:#8a8292;font-size:.78rem}.modal-actions{display:flex;gap:10px;margin-top:16px}
-    .profile-cloud{display:grid;width:78px;height:78px;place-items:center;margin:0 auto 12px;border:5px solid white;border-radius:50%;background:#a9ddf6;box-shadow:0 9px 20px rgba(88,105,139,.15);font-size:2rem}.profile-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0}.profile-stat{padding:12px 8px;border:2px solid #e2f1fa;border-radius:16px;background:#f7fcff}.profile-stat strong{display:block;color:#df739e;font-size:1.05rem}.profile-stat span{color:#888194;font-size:.64rem}
-    .pockets-view{position:relative;display:none;min-height:inherit;padding:25px 24px 82px;background:linear-gradient(180deg,rgba(246,252,255,.92),rgba(255,242,248,.92));backdrop-filter:blur(4px)}
-    .pockets-intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.pockets-intro p{margin:0;color:#888194;font-size:.7rem}.pockets-intro h2{margin:1px 0 0;color:#5b566c;font-size:2.15rem}.add-pocket-mini{display:grid;width:46px;height:46px;place-items:center;border:3px solid white;border-radius:16px;background:#ef8caf;color:white;box-shadow:0 6px 0 #cc5d8b;font:400 1.55rem "Darumadrop One",sans-serif;cursor:pointer}
-    .pockets-list{display:grid;max-height:645px;gap:12px;overflow:auto;padding:2px 2px 14px;scrollbar-width:none}.pockets-list::-webkit-scrollbar{display:none}
-    .goal-card{position:relative;padding:17px;border:2px solid white;border-radius:23px;background:rgba(255,255,255,.88);box-shadow:0 9px 22px rgba(93,82,113,.1)}.goal-card.active-pocket{border-color:#8fd0f2;box-shadow:0 9px 24px rgba(100,176,217,.17)}.goal-card.completed{background:linear-gradient(135deg,#fff9e6,#fff2f8)}.goal-card.archived{display:none}.active-tag{position:absolute;right:13px;top:12px;padding:5px 9px;border-radius:99px;background:#e2f4fd;color:#548eb0;font-size:.58rem}.goal-icon{display:grid;width:44px;height:44px;place-items:center;float:left;margin-right:11px;border-radius:15px;background:#fff0f6;font-size:1.35rem}.goal-card h3{margin:1px 0;color:#5e596d;font-size:1.38rem}.goal-card small{color:#938c9d;font-size:.62rem}.goal-progress{clear:both;padding-top:14px}.goal-money{display:flex;justify-content:space-between;margin-bottom:6px;color:#777082;font-size:.68rem}.goal-money strong{color:#dd709c;font-size:.88rem}.goal-actions{display:flex;gap:7px;margin-top:12px}.tiny-btn{flex:1;min-height:34px;border:2px solid #ebe4ec;border-radius:12px;background:white;color:#716b7c;font:400 .66rem "Darumadrop One",sans-serif;cursor:pointer}.tiny-btn:disabled{cursor:not-allowed;opacity:.45}.tiny-btn.active-choice{border-color:#9fd7f3;background:#eef9ff;color:#4d8eaf}.tiny-btn.danger{color:#c8708e}.empty-pockets{padding:52px 25px;border:2px dashed #cde9f7;border-radius:24px;background:rgba(255,255,255,.6);color:#817a8c;text-align:center}.empty-pockets span{display:block;font-size:2.3rem}.empty-pockets h3{margin:8px 0;font-size:1.55rem}
-    .phase{position:absolute;bottom:17px;margin:0;color:rgba(95,88,112,.58);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
-    @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
+    .cici-intro{width:190px;height:230px;object-fit:contain}
+    .speech{position:relative;max-width:300px;margin:0 0 20px;padding:14px 16px;border:2px solid #dceeff;border-radius:20px;background:#fff;color:#596080;font-size:.86rem;font-weight:600}
+    .dream-grid{display:grid;width:100%;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+    .dream-option{min-height:86px;padding:10px;border:2px solid #eee6ee;border-radius:18px;background:#fff;cursor:pointer}
+    .dream-option.selected{border-color:#ec83ad;background:#fff0f6;box-shadow:0 5px 14px rgba(226,123,165,.18)}
+    .dream-option.wide{grid-column:1/-1;min-height:60px}
+    .form{display:grid;width:100%;gap:12px;margin:16px 0;text-align:left}
+    .field{display:grid;gap:5px}.field label{color:#696378;font-size:.74rem;font-weight:700}
+    .field input,.field select{width:100%;height:46px;border:2px solid #e8e0e9;border-radius:14px;background:#fff;padding:0 12px;font:inherit}
+    .amount-row{display:grid;grid-template-columns:1fr 100px;gap:10px}
+    .dashboard,.pockets-view{position:relative;display:none;min-height:inherit;padding:24px 20px 80px;background:linear-gradient(180deg,rgba(247,252,255,.9),rgba(255,244,249,.9))}
+    .dash-head,.pockets-intro{display:flex;align-items:center;justify-content:space-between}
+    .avatar{width:46px;height:46px;border-radius:50%;border:3px solid #fff;background:#a9ddf6;cursor:pointer}
+    .village-card{position:relative;height:210px;margin:16px 0;border-radius:24px;border:3px solid #fff;background:#cceafa url("pocketville-cottage.jpg") center/cover no-repeat}
+    .tiny-cici{position:absolute;right:10px;bottom:8px;width:90px;height:105px;object-fit:contain}
+    .level-pill{position:absolute;left:12px;top:12px;padding:6px 10px;border-radius:99px;background:rgba(255,255,255,.85);font-size:.66rem}
+    .pocket-card{padding:18px;border-radius:24px;border:2px solid #fff;background:rgba(255,255,255,.9);box-shadow:0 10px 24px rgba(100,88,122,.1)}
+    .progress-track{height:12px;border-radius:99px;background:#e8e4ec;overflow:hidden;border:2px solid #fff}
+    .progress-fill{width:0;height:100%;background:linear-gradient(90deg,#84caf1,#ee8eb2);transition:width .6s ease}
+
+    /* THE REDESIGNED STORYBOOK BOARD (PHASE 5+) */
+    .play-view{position:relative;display:none;min-height:inherit;padding:16px 14px 80px;background:linear-gradient(180deg,#eef9ff 0%,#fff1f7 100%)}
+    .play-header{display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px}
+    .play-header h2{margin:0;font-size:2rem;color:#5f576e}
+    .badge-pill{padding:6px 12px;border:2px solid #fff;border-radius:999px;background:rgba(255,255,255,.85);color:#7a7288;font-size:.7rem;box-shadow:0 3px 8px rgba(90,75,100,.08)}
+    
+    .board-container{position:relative;width:100%;aspect-ratio:.76;margin:4px auto;border:6px solid #fff;border-radius:36px;background:#f7d9e5;box-shadow:0 14px 28px rgba(85,70,100,.15);overflow:hidden}
+    .board-art-bg{position:absolute;inset:12.5% 12%;border-radius:24px;background:#fff url("pocketville-board-map.jpg") center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px 10px 12px;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,.06)}
+    .board-art-bg:before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.18);pointer-events:none}
+    
+    /* ORGANIC COBBLESTONE TRACK SIDES */
+    .board-side{position:absolute;display:flex;gap:3px;z-index:10}
+    .board-side.horizontal{left:11%;right:11%;height:13.5%}
+    .board-side.bottom{bottom:3px;flex-direction:row}
+    .board-side.top{top:3px;flex-direction:row-reverse}
+    .board-side.vertical{top:12.5%;bottom:12.5%;width:13.5%}
+    .board-side.right{right:3px;flex-direction:column-reverse}
+    .board-side.left{left:3px;flex-direction:column}
+
+    .board-tile{
+      position:relative;flex:var(--w, 1) 1 0;min-width:0;min-height:0;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      border:2.5px solid #fff;border-radius:var(--r, 16px);
+      box-shadow:0 4px 0 rgba(115,85,110,.18), 0 5px 8px rgba(90,70,95,.08);
+      transform:rotate(var(--rot, 0deg));transition:transform .2s ease;
+    }
+    .board-tile .t-num{position:absolute;left:4px;top:2px;font-size:.38rem;color:rgba(90,80,100,.65)}
+    .board-tile .t-icon{font-size:.95rem;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.08))}
+    .board-tile .t-txt{font-size:.38rem;white-space:nowrap;margin-top:1px;color:#5e586d}
+    .board-tile.pink{background:#ffdbe7}
+    .board-tile.yellow{background:#fff1be}
+    .board-tile.mint{background:#ddf7d9}
+    .board-tile.blue{background:#def2ff}
+    .board-tile.lavender{background:#ede3ff}
+    .board-tile.peach{background:#ffe3d2}
+    .board-tile.featured{border-width:3px;box-shadow:0 5px 0 rgba(115,85,110,.25),0 7px 10px rgba(90,70,95,.15)}
+
+    /* CENTER ISLAND & 3D PINK DICE */
+    .center-panel{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;width:94%;background:rgba(255,255,255,.84);backdrop-filter:blur(4px);padding:8px 10px;border-radius:18px;border:2.5px solid #fff;box-shadow:0 6px 14px rgba(80,60,90,.1)}
+    .center-title{color:#a25677;font-size:1.08rem;margin:0}
+    .center-sub{color:#766c82;font-size:.48rem}
+
+    .dice-stage{width:70px;height:70px;perspective:600px;margin:auto;display:grid;place-items:center;cursor:pointer}
+    .dice-cube{position:relative;width:52px;height:52px;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(32deg);transition:transform 1s cubic-bezier(.2, .8, .25, 1)}
+    .dice-cube.rolling{animation:tumbleDice 1s cubic-bezier(.2,.85,.25,1) forwards}
+    .dice-face{position:absolute;width:52px;height:52px;border:3px solid #fff;border-radius:15px;background:linear-gradient(145deg,#ffbfd7,#f99cbf);box-shadow:inset 0 0 8px rgba(255,255,255,.7), inset -3px -3px 8px rgba(184,80,121,.3);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:6px;gap:2px}
+    .face-1{transform:translateZ(26px)}
+    .face-6{transform:rotateY(180deg) translateZ(26px)}
+    .face-2{transform:rotateY(90deg) translateZ(26px)}
+    .face-5{transform:rotateY(-90deg) translateZ(26px)}
+    .face-3{transform:rotateX(90deg) translateZ(26px)}
+    .face-4{transform:rotateX(-90deg) translateZ(26px)}
+    .dot{background:#fff;border-radius:50%;box-shadow:0 1px 2px rgba(150,50,90,.3);align-self:center;justify-self:center;width:8.5px;height:8.5px}
+    .face-1 .d1{grid-area:2/2;background:#ff4d88;width:12px;height:12px}
+    .face-2 .d1{grid-area:1/1}.face-2 .d2{grid-area:3/3}
+    .face-3 .d1{grid-area:1/1}.face-3 .d2{grid-area:2/2}.face-3 .d3{grid-area:3/3}
+    .face-4 .d1{grid-area:1/1}.face-4 .d2{grid-area:1/3}.face-4 .d3{grid-area:3/1}.face-4 .d4{grid-area:3/3}
+    .face-5 .d1{grid-area:1/1}.face-5 .d2{grid-area:1/3}.face-5 .d3{grid-area:2/2}.face-5 .d4{grid-area:3/1}.face-5 .d5{grid-area:3/3}
+    .face-6 .d1{grid-area:1/1}.face-6 .d2{grid-area:1/3}.face-6 .d3{grid-area:2/1}.face-6 .d4{grid-area:2/3}.face-6 .d5{grid-area:3/1}.face-6 .d6{grid-area:3/3}
+
+    @keyframes tumbleDice{
+      0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.8)}
+      40%{transform:rotateX(720deg) rotateY(360deg) rotateZ(180deg) scale(1.15) translateY(-25px)}
+      80%{transform:rotateX(1080deg) rotateY(720deg) rotateZ(360deg) scale(.95) translateY(5px)}
+      100%{transform:var(--target-rotation, rotateX(0deg) rotateY(0deg))}
+    }
+
+    /* CARTOON WALKING TOKEN */
+    .player-token{position:absolute;z-index:25;width:40px;height:52px;pointer-events:none;transition:left .32s ease-out, top .32s ease-out;transform-origin:bottom center}
+    .player-token img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(70,50,80,.25))}
+    .player-token.walking{animation:walkWaddle .32s infinite ease-in-out}
+    .player-token.face-left{transform:scaleX(-1)}
+    .player-token.face-right{transform:scaleX(1)}
+    @keyframes walkWaddle{0%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg) scaleY(1.05)}100%{transform:translateY(0) rotate(-6deg)}}
+
+    .roll-btn{position:relative;z-index:2;width:86%;min-height:45px;border:2.5px solid #fff;border-radius:18px;background:linear-gradient(135deg,#ff7da7,#f99cbf);color:#fff;font-size:.9rem;cursor:pointer;box-shadow:0 6px 0 #cc5881, 0 10px 18px rgba(160,70,110,.25)}
+    .roll-btn:disabled{cursor:not-allowed;opacity:.65;box-shadow:0 3px 0 #cc5881}
+
+    /* BOTTOM NAV & MODALS */
+    .bottom-nav{position:absolute;left:18px;right:18px;bottom:14px;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border:2px solid #fff;border-radius:20px;background:rgba(255,255,255,.94);box-shadow:0 8px 22px rgba(80,65,95,.12)}
+    .nav-btn{display:grid;gap:1px;place-items:center;border:0;background:transparent;color:#9b92a5;font-size:.65rem;cursor:pointer}
+    .nav-btn.active{color:#df739e}
+    .landing-modal,.save-modal{position:absolute;inset:0;z-index:40;display:none;place-items:center;padding:24px;background:rgba(73,65,91,.32);backdrop-filter:blur(4px)}
+    .landing-modal.open,.save-modal.open{display:grid}
+    .modal-card{width:min(100%,350px);padding:22px;border:3px solid #fff;border-radius:26px;background:#fffafc;box-shadow:0 20px 50px rgba(68,55,80,.25);text-align:center}
     @keyframes waveA{0%,42%,100%{opacity:1}46%,88%{opacity:0}}
     @keyframes waveB{0%,42%,100%{opacity:0}46%,88%{opacity:1}}
-    @media(max-height:800px){.card{min-height:calc(100svh - 20px)}.welcome{padding-top:23px}.stage{min-height:270px}.mascot{height:280px}.brand{padding-top:14px}.dreams{padding-top:9px}.onboard-card{min-height:calc(100svh - 72px);padding-top:20px}.cici-intro{height:205px}.success-badge{margin-top:28px}}
-    @media(max-width:520px){.shell{padding:0}.card{width:100%;min-height:100svh;border:0;border-radius:0;box-shadow:none}.welcome{padding-inline:27px}.phase{z-index:5;bottom:8px}.onboarding{padding:18px}.onboard-card{min-height:calc(100svh - 36px);padding:21px 20px}.dashboard,.pockets-view{min-height:100svh}}
-    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
-
-    /* POCKETLY PHASE 5 — 36 SPACE COZY BOARD */
-    .play-view{position:relative;display:none;min-height:inherit;padding:25px 18px 82px;background:linear-gradient(180deg,rgba(246,252,255,.94),rgba(255,242,248,.94));backdrop-filter:blur(4px)}
-    .play-intro{text-align:left;padding:0 6px}.play-intro h2{margin:1px 0;color:#5b566c;font-size:2.15rem}.play-intro p{margin:0;color:#888194;font-size:.7rem}
-    .game-card{margin-top:13px;padding:14px 10px 16px;border:2px solid white;border-radius:25px;background:rgba(255,255,255,.9);box-shadow:0 10px 24px rgba(93,82,113,.11);text-align:center}
-    .game-card h3{margin:0 0 2px;color:#5e596d;font-size:1.3rem}.game-card>p{margin:0;color:#8b8494;font-size:.66rem}
-    .game-board{position:relative;display:grid;grid-template-columns:1.18fr repeat(8,1fr) 1.18fr;grid-template-rows:1.18fr repeat(8,1fr) 1.18fr;width:min(100%,390px);aspect-ratio:1;margin:13px auto;padding:6px;gap:3px;border:4px solid #fff;border-radius:27px;background:linear-gradient(145deg,#dff4ff,#fff0f6 48%,#fff8e8);box-shadow:0 12px 25px rgba(93,82,113,.14),inset 0 0 0 2px #cde9f7}
-    .board-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:0;padding:2px;border:1.5px solid rgba(255,255,255,.98);border-radius:8px;color:#645e73;font-size:.39rem;line-height:1.05;text-align:center;box-shadow:0 2px 4px rgba(88,76,108,.08)}
-    .board-tile .tile-icon{display:block;margin-bottom:1px;font-size:.72rem;line-height:1}.board-tile .tile-name{overflow:hidden;max-width:100%;text-overflow:ellipsis;white-space:nowrap}
-    .board-tile.save{background:#ffe3ef}.board-tile.mystery{background:#eee5ff}.board-tile.bonus{background:#e1f4ff}.board-tile.challenge{background:#ffe6d9}.board-tile.treat{background:#fff1bf}.board-tile.boost{background:#e2f1dc}.board-tile.rest{background:#f5f1f6}.board-tile.chaos{background:#eadff2}
-    .board-tile.corner{border:2px solid #fff;border-radius:11px;font-size:.43rem;box-shadow:0 3px 7px rgba(89,76,107,.11)}.board-tile.start{background:linear-gradient(145deg,#aee3fa,#f8d6e5)}.board-tile.corner .tile-icon{font-size:.92rem}
-    .board-center{position:relative;grid-column:2/10;grid-row:2/10;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;margin:2px;border:3px solid rgba(255,255,255,.95);border-radius:20px;background:radial-gradient(circle at 50% 14%,rgba(255,255,255,.95),transparent 34%),linear-gradient(180deg,#dff5ff,#f6eaff 52%,#ffe7ef);box-shadow:inset 0 0 20px rgba(255,255,255,.75)}
-    .board-clouds{position:absolute;top:11px;color:#fff;font-size:1rem;letter-spacing:7px}.board-center-title{color:#df739e;font-size:1.32rem;line-height:.9}.board-center-sub{margin-top:4px;color:#7f7990;font-size:.48rem}.board-house{margin:7px 0 3px;font-size:2.55rem;filter:drop-shadow(0 5px 4px rgba(75,66,91,.12))}
-    .board-dice{display:grid;width:42px;height:42px;place-items:center;margin-top:5px;border:3px solid #fff;border-radius:13px;background:#fff9fb;color:#df739e;box-shadow:0 5px 0 #efbfd2,0 8px 12px rgba(84,71,100,.12);font-size:1.5rem}.board-dice.rolling{animation:diceBounce .45s ease}
-    .player-token{position:absolute;right:-5px;bottom:-5px;z-index:10;display:grid;width:23px;height:23px;place-items:center;overflow:hidden;border:2px solid #fff;border-radius:50%;background:#9edbf5;box-shadow:0 3px 7px rgba(70,62,85,.22)}.player-token img{width:145%;height:145%;object-fit:contain}
-    .roll-result{min-height:22px;margin:7px 0 3px;color:#df739e;font-size:.86rem}.play-note{min-height:18px;margin:8px 4px 0;color:#736c80;font-size:.65rem;line-height:1.4}
-    @keyframes diceBounce{0%{transform:rotate(0) scale(1)}35%{transform:rotate(-18deg) scale(1.18)}70%{transform:rotate(18deg) scale(.92)}100%{transform:rotate(0) scale(1)}}
-    @media(max-width:390px){.game-board{width:100%;gap:2px;padding:5px}.board-tile{font-size:.34rem}.board-tile .tile-icon{font-size:.64rem}}
-
-  
-    /* PHASE 5B — CARTOON BOARD POLISH */
-    .play-view{padding:18px 14px 84px;background:linear-gradient(180deg,#eaf7ff 0%,#fff0f7 100%)}
-    .play-intro{display:flex;align-items:end;justify-content:space-between;padding:0 7px 5px}
-    .play-intro:after{content:"Cici · Lv 1";padding:7px 10px;border:2px solid #fff;border-radius:99px;background:#f8dbe8;color:#665f79;font-size:.58rem;box-shadow:0 4px 10px rgba(95,75,105,.1)}
-    .game-card{position:relative;padding:9px 7px 14px;border:3px solid #fff;border-radius:29px;background:rgba(255,255,255,.76);box-shadow:0 14px 30px rgba(89,80,117,.16)}
-    .game-card h3{font-size:1.25rem}.game-card>p{font-size:.59rem;margin-bottom:5px}
-    .game-board{width:min(100%,420px);margin:8px auto 10px;padding:5px;gap:3px;border:5px solid #fff;border-radius:31px;background:#f8dfea;box-shadow:0 11px 22px rgba(90,74,111,.17),inset 0 0 0 2px #e9b8cc}
-    .board-tile{border:2px solid rgba(255,255,255,.95);border-radius:10px;font-size:.37rem;box-shadow:0 3px 0 rgba(119,93,119,.12)}
-    .board-tile .tile-icon{font-size:.72rem}.board-tile.save{background:#ffdce9}.board-tile.mystery{background:#eadfff}.board-tile.bonus{background:#dff3ff}.board-tile.challenge{background:#ffe3d4}.board-tile.treat{background:#fff0c9}.board-tile.boost{background:#e2f0d8}.board-tile.rest{background:#f4eff7}.board-tile.chaos{background:#e9dff0}
-    .board-center{background:
-      radial-gradient(circle at 18% 22%,#fff 0 2%,transparent 2.4%),
-      radial-gradient(circle at 78% 16%,#fff 0 2.4%,transparent 2.8%),
-      linear-gradient(180deg,#aee2fa 0 34%,#d9efcf 34% 48%,#f8d6e3 48% 100%);
-      border-radius:22px;border:3px solid #fff;box-shadow:inset 0 0 0 2px rgba(121,184,210,.15)}
-    .board-center:before{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;background:
-      radial-gradient(ellipse at 12% 100%,#b8d99e 0 18%,transparent 18.5%),
-      radial-gradient(ellipse at 88% 100%,#a9d293 0 20%,transparent 20.5%),
-      linear-gradient(165deg,transparent 0 45%,rgba(255,255,255,.5) 45% 51%,transparent 51%);
-      opacity:.9}
-    .board-scenery{position:absolute;inset:0;pointer-events:none}
-    .scene-shop,.scene-house,.scene-tree,.scene-bench,.scene-sign{position:absolute;filter:drop-shadow(0 4px 3px rgba(70,65,85,.12))}
-    .scene-shop{left:7%;top:29%;font-size:2.25rem}.scene-house{right:8%;top:24%;font-size:2.1rem}.scene-tree{right:16%;bottom:18%;font-size:2rem}.scene-bench{right:8%;bottom:8%;font-size:1.5rem}.scene-sign{left:9%;bottom:8%;font-size:1.25rem}
-    .board-center-title{position:relative;z-index:2;margin-top:-2px;padding:5px 13px;border-radius:12px;background:rgba(255,248,239,.82);color:#c8668d;font-size:1.05rem;transform:rotate(-2deg);box-shadow:0 3px 7px rgba(91,74,99,.1)}
-    .board-center-sub{position:relative;z-index:2;color:#665e76;font-size:.43rem}
-    .board-house{display:none}
-    .board-dice{position:relative;z-index:5;width:52px;height:52px;margin-top:12px;border-radius:15px;font-size:0;transform:rotate(-8deg);transition:.2s}
-    .board-dice:before{content:attr(data-face);font-size:2rem}
-    .board-dice.throwing{animation:diceThrow .85s cubic-bezier(.2,.7,.3,1)}
-    .player-token{width:28px;height:31px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible;transform-origin:50% 100%}
-    .player-token img{width:34px;height:40px;object-fit:contain;filter:drop-shadow(0 3px 2px rgba(68,58,80,.22))}
-    .player-token.hopping{animation:ciciHop .21s ease}
-    .landing-modal{position:absolute;inset:0;z-index:40;display:none;place-items:center;padding:24px;background:rgba(73,65,91,.28);backdrop-filter:blur(4px)}
-    .landing-modal.open{display:grid}
-    .landing-card{position:relative;width:min(100%,350px);padding:24px 20px 19px;border:4px solid #fff;border-radius:28px;background:#fff9fc;box-shadow:0 20px 50px rgba(68,55,80,.27);text-align:center;animation:popCard .28s ease}
-    .landing-icon{display:grid;width:62px;height:62px;place-items:center;margin:-50px auto 8px;border:4px solid #fff;border-radius:20px;background:#ffdce9;box-shadow:0 7px 14px rgba(100,76,105,.14);font-size:2rem;transform:rotate(-4deg)}
-    .landing-card h2{font-size:1.8rem;color:#5e586e}.landing-card p{margin:7px auto 16px;max-width:280px;color:#7e7687;font-size:.75rem;line-height:1.5}
-    .landing-actions{display:grid;gap:8px}.landing-skip{border:0;background:transparent;color:#777083;text-decoration:underline;cursor:pointer}
-    @keyframes ciciHop{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-15px) rotate(-7deg) scale(1.08)}100%{transform:translateY(0) rotate(0)}}
-    @keyframes diceThrow{0%{transform:translate(-75px,-55px) rotate(-300deg) scale(.55)}35%{transform:translate(25px,-25px) rotate(160deg) scale(1.18)}68%{transform:translate(-10px,8px) rotate(390deg) scale(.92)}100%{transform:translate(0,0) rotate(712deg) scale(1)}}
-    @keyframes popCard{0%{opacity:0;transform:scale(.72) translateY(20px)}75%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
-
-  
-/* PHASE 5C — POCKETLY STORYBOOK BOARD */
-.play-view{padding:14px 10px 84px;background:linear-gradient(180deg,#dff3ff 0%,#fff0f7 92%)}
-.play-intro{padding:0 8px 6px}.play-intro h2{font-size:2.05rem}
-.game-card{padding:8px 6px 13px;border-radius:30px;background:rgba(255,255,255,.72)}
-.game-board{
-  width:min(100%,440px);aspect-ratio:.83;margin:7px auto 11px;padding:7px;gap:4px;
-  grid-template-columns:1.28fr repeat(8,1fr) 1.28fr;
-  grid-template-rows:1.32fr repeat(8,1fr) 1.32fr;
-  border:5px solid #fff;border-radius:35px;
-  background:linear-gradient(180deg,#bde9fb 0 28%,#cce7bd 28% 44%,#f9d8e5 44% 100%);
-  box-shadow:0 14px 28px rgba(86,72,108,.2),inset 0 0 0 3px #e7a9c2;
-}
-.board-tile{
-  z-index:3;border:2.5px solid #fff;border-radius:14px;
-  font-size:.44rem;box-shadow:0 4px 0 rgba(111,80,105,.16),0 6px 9px rgba(80,67,95,.08);
-  transform:rotate(var(--wiggle,0deg)) scale(var(--tileScale,1));
-}
-.board-tile:nth-of-type(3n){--wiggle:-2deg}.board-tile:nth-of-type(4n){--wiggle:2deg}
-.board-tile:nth-of-type(7n){--tileScale:1.08}.board-tile:nth-of-type(11n){--tileScale:.95}
-.board-tile .tile-icon{font-size:.9rem;margin-bottom:2px}.board-tile .tile-name{font-size:.43rem}
-.board-tile.corner{border-radius:18px;--tileScale:1.08}.board-tile.start{background:linear-gradient(145deg,#d9f4d3,#ffe0ea)}
-.board-center{
-  margin:0;border:4px solid #fff;border-radius:25px;
-  background:
-    radial-gradient(circle at 20% 12%,rgba(255,255,255,.95) 0 2.8%,transparent 3%),
-    radial-gradient(circle at 72% 9%,rgba(255,255,255,.9) 0 3.3%,transparent 3.5%),
-    linear-gradient(180deg,#9edcf5 0 27%,#bdddac 27% 48%,#f5d2df 48% 100%);
-  box-shadow:inset 0 0 0 3px rgba(255,255,255,.35);
-}
-.board-center:before{
-  height:100%;opacity:1;
-  background:
-    radial-gradient(ellipse at 12% 48%,#86bd78 0 12%,transparent 12.5%),
-    radial-gradient(ellipse at 88% 42%,#8bc17d 0 14%,transparent 14.5%),
-    radial-gradient(ellipse at 48% 69%,#b9e6ef 0 10%,#91cee1 10.5% 13%,transparent 13.5%),
-    linear-gradient(155deg,transparent 0 59%,rgba(255,255,255,.55) 59.2% 63%,transparent 63.2%);
-}
-.board-center:after{
-  content:"🌸  🌿  🌼   🌷  🌿  🌸";position:absolute;left:5%;right:5%;bottom:4%;
-  color:#fff;font-size:.9rem;letter-spacing:5px;opacity:.9
-}
-.board-scenery{z-index:1}
-.scene-shop{left:4%;top:30%;font-size:3.25rem}.scene-house{right:4%;top:24%;font-size:3rem}
-.scene-tree{right:14%;bottom:22%;font-size:2.7rem}.scene-bench{right:5%;bottom:8%;font-size:2rem}
-.scene-sign{left:7%;bottom:10%;font-size:1.8rem}
-.board-center-title{
-  z-index:4;margin-top:-18px;padding:8px 16px;border:3px solid rgba(255,255,255,.85);border-radius:17px;
-  background:#f6d9c7;color:#9b4e6e;font-size:1.16rem;box-shadow:0 5px 0 rgba(151,94,112,.14);transform:rotate(-1deg)
-}
-.board-center-sub{z-index:4;margin-top:4px;font-size:.48rem}
-.board-dice{
-  z-index:7;width:72px;height:72px;margin-top:28px;border:4px solid #fff;border-radius:20px;
-  background:linear-gradient(145deg,#fff,#ffe6f0);box-shadow:0 8px 0 #d98bad,0 13px 20px rgba(82,63,91,.2);
-  transform:rotate(-12deg)
-}
-.board-dice:before{font-size:3rem;text-shadow:0 2px 0 #fff}
-.player-token{z-index:12;width:38px;height:45px;right:-8px;bottom:-8px}
-.player-token img{width:48px;height:54px}
-.roll-result{display:none!important}
-#rollButton{position:relative;z-index:8;width:78%;margin:-3px auto 3px;min-height:55px;border-radius:20px;font-size:1rem}
-.play-note{display:none}
-.landing-card{background:linear-gradient(180deg,#fffafd,#fff1f7);border-radius:30px}
-@media(max-width:390px){
- .game-board{aspect-ratio:.8;gap:3px;padding:5px}
- .board-tile{font-size:.37rem;border-radius:11px}
- .board-tile .tile-icon{font-size:.76rem}.board-tile .tile-name{font-size:.36rem}
- .board-dice{width:62px;height:62px}.board-dice:before{font-size:2.6rem}
-}
-
-/* FINAL BOARD — 36-SPACE STORYBOOK SAVOPOLY */
-.play-intro{align-items:center}.play-intro:after{display:none}.play-tools{display:flex;align-items:center;gap:7px}.points-pill,.sound-toggle{border:2px solid #fff;border-radius:999px;background:rgba(255,255,255,.82);color:#665f79;box-shadow:0 4px 10px rgba(95,75,105,.1);font:inherit;font-size:.55rem}.points-pill{padding:7px 10px}.sound-toggle{display:grid;width:34px;height:34px;place-items:center;cursor:pointer}.sound-toggle:active{transform:translateY(2px)}
-.game-board{overflow:visible;background:#f7d9e6;isolation:isolate}
-.board-center{overflow:hidden;background:url("pocketville-board-map.jpg") center/cover no-repeat!important}
-.board-center:before{content:"";position:absolute;inset:0;height:auto;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,242,248,.08) 52%,rgba(73,55,81,.08));opacity:1}
-.board-center:after{content:"";position:absolute;inset:0;border-radius:21px;box-shadow:inset 0 0 26px rgba(76,60,89,.11);pointer-events:none}
-.board-scenery,.board-clouds{display:none!important}
-.board-center-panel{position:relative;z-index:4;display:flex;width:72%;flex-direction:column;align-items:center;padding:9px 10px 12px;border:3px solid rgba(255,255,255,.88);border-radius:24px;background:rgba(255,250,247,.75);box-shadow:0 7px 18px rgba(81,63,91,.16);backdrop-filter:blur(2px)}
-.board-center-title{margin:0;padding:0;border:0;background:transparent;box-shadow:none;color:#914c6a;font-size:1.12rem;transform:none}.board-center-sub{margin-top:2px;color:#665a70;font-size:.47rem}.center-progress{width:90%;margin:7px auto 0}.center-progress-copy{display:flex;justify-content:space-between;color:#665a70;font-size:.42rem}.center-progress-track{height:7px;margin-top:4px;overflow:hidden;border:2px solid #fff;border-radius:99px;background:#e9e2ec}.center-progress-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#79caef,#ee79ad);transition:width .35s ease}
-.board-dice{margin-top:12px;cursor:pointer}.board-dice:focus-visible{outline:3px solid #ee78ad;outline-offset:4px}
-.board-tile{overflow:visible;transition:filter .18s,transform .18s;transform:rotate(var(--wiggle,0deg)) scale(var(--tileScale,1));outline:1px solid rgba(145,91,119,.12)}
-.board-tile:nth-child(4n+1){--wiggle:-2.5deg}.board-tile:nth-child(5n+2){--wiggle:2deg}.board-tile:nth-child(7n+3){--tileScale:1.09}.board-tile:nth-child(9n+4){--tileScale:.93}.board-tile.corner{--tileScale:1.12;border-radius:19px}.board-tile.landed{z-index:11;filter:brightness(1.08) saturate(1.2);animation:tileGlow .72s ease 2}
-.player-token{right:-11px;bottom:-13px;width:46px;height:58px}.player-token img{width:56px;height:64px}.player-token.walking{animation:ciciWalk .25s ease}.player-token.running{animation:ciciRun .22s ease}.player-token.jumping{animation:ciciJump .28s ease}
-.game-toast{position:absolute;top:14px;left:50%;z-index:80;width:calc(100% - 34px);max-width:430px;padding:12px 16px;border:3px solid #fff;border-radius:18px;background:linear-gradient(135deg,#dff7e5,#fff8cf);color:#5f596c;box-shadow:0 12px 28px rgba(67,58,79,.24);text-align:center;font-size:.72rem;opacity:0;pointer-events:none;transform:translate(-50%,-25px) scale(.94);transition:.25s}.game-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
-.confetti{position:absolute;inset:0;z-index:75;overflow:hidden;pointer-events:none}.confetti i{position:absolute;top:-15px;width:9px;height:15px;border-radius:3px;animation:confettiFall 1.25s ease-in forwards}
-.mission-chip{display:inline-flex;align-items:center;gap:5px;margin:-7px auto 12px;padding:6px 10px;border-radius:999px;background:#e7f6fd;color:#625d70;font-size:.55rem}.save-modal.game-save .modal-card{border-color:#fff0f7;background:linear-gradient(180deg,#fff,#fff2f8)}
-#rollButton:disabled{cursor:not-allowed;filter:grayscale(.25);opacity:.65;transform:none;box-shadow:0 4px 0 #c985a3}
-@keyframes ciciWalk{0%{transform:translateX(-7px) rotate(-6deg)}50%{transform:translateY(-8px) rotate(5deg)}100%{transform:translate(0) rotate(0)}}
-@keyframes ciciRun{0%{transform:translateX(-12px) rotate(-10deg) scale(.9)}45%{transform:translateY(-13px) rotate(8deg) scale(1.08)}100%{transform:translate(0) rotate(0) scale(1)}}
-@keyframes ciciJump{0%{transform:translateY(0)}45%{transform:translateY(-22px) rotate(-7deg) scale(1.12)}100%{transform:translateY(0)}}
-@keyframes tileGlow{50%{box-shadow:0 0 0 5px rgba(255,255,255,.8),0 0 22px #ffd46d}}
-@keyframes confettiFall{to{transform:translate(var(--drift),720px) rotate(680deg);opacity:0}}
-@media(max-width:390px){.board-center-panel{width:78%;padding:7px}.board-center-title{font-size:.96rem}.player-token{width:39px;height:50px}.player-token img{width:48px;height:56px}.points-pill{display:none}}
-@media(prefers-reduced-motion:reduce){.game-toast{transition:none}.player-token.walking,.player-token.running,.player-token.jumping{animation:none}.confetti{display:none}}
-
-/* POCKETLY BOARD V2 — MIXED-SIZE TRACK + 3D DICE */
-.game-board{display:block;position:relative;aspect-ratio:.78;padding:0;overflow:visible;border-radius:38px;background:#f6d8e4}
-.board-center{position:absolute;z-index:1;inset:15.5% 14.5%;display:flex;margin:0;border-radius:28px}
-.board-side{position:absolute;z-index:5;display:flex;gap:4px;pointer-events:none}
-.board-side .board-tile{pointer-events:auto;flex:var(--grow,1) 1 0;width:auto;height:auto;min-width:0;min-height:0;padding:3px 2px;border-radius:16px}
-.board-side.horizontal{left:12.5%;right:12.5%;height:15%;flex-direction:row;align-items:stretch}
-.board-side.top{top:0}.board-side.bottom{bottom:0}
-.board-side.vertical{top:13%;bottom:13%;width:13.5%;flex-direction:column;align-items:stretch}
-.board-side.left{left:0}.board-side.right{right:0}
-.board-side.horizontal .board-tile:nth-child(3n){transform:translateY(3px) rotate(var(--wiggle,0deg)) scale(var(--tileScale,1))}
-.board-side.horizontal .board-tile:nth-child(4n){transform:translateY(-2px) rotate(var(--wiggle,0deg)) scale(var(--tileScale,1))}
-.board-side.vertical .board-tile:nth-child(3n){transform:translateX(3px) rotate(var(--wiggle,0deg)) scale(var(--tileScale,1))}
-.board-side.vertical .board-tile:nth-child(4n){transform:translateX(-2px) rotate(var(--wiggle,0deg)) scale(var(--tileScale,1))}
-.board-side .board-tile.featured{z-index:7;border-radius:21px;--tileScale:1.035;box-shadow:0 5px 0 rgba(111,80,105,.18),0 8px 13px rgba(80,67,95,.12)}
-.board-side .board-tile .tile-number{position:absolute;left:5px;top:4px;color:#756c7e;font-size:.34rem}
-.board-side .board-tile .tile-name{white-space:normal;line-height:.95}.board-side .board-tile .tile-icon{font-size:.92rem}
-.board-center-panel{width:74%;padding:10px 8px 13px}
-.board-dice{position:relative;width:92px;height:88px;margin:12px 0 8px;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;transform:none!important;perspective:500px}
-.board-dice:before{content:none!important}.dice-cube{position:absolute;inset:5px 8px 12px 5px;transform:rotate(-9deg) skewY(1deg);transform-style:preserve-3d;filter:drop-shadow(0 10px 2px rgba(179,84,128,.34)) drop-shadow(0 13px 10px rgba(77,57,88,.2))}
-.dice-face{position:absolute;inset:0;border:4px solid #fff;border-radius:24px;background:linear-gradient(145deg,#fff,#fff4f8);box-shadow:inset -7px -7px 14px rgba(229,182,203,.32),inset 4px 4px 7px #fff}
-.dice-cube:before{content:"";position:absolute;left:9px;right:-8px;top:-10px;height:20px;border:3px solid #fff;border-bottom:0;border-radius:17px 18px 5px 5px;background:#fff8fb;transform:skewX(-38deg);transform-origin:bottom;opacity:.96}
-.dice-cube:after{content:"";position:absolute;right:-12px;top:9px;bottom:-8px;width:22px;border:3px solid #fff;border-left:0;border-radius:4px 17px 18px 5px;background:#edb1cc;transform:skewY(-40deg);transform-origin:left;z-index:-1}
-.pip{position:absolute;width:13px;height:13px;border-radius:50%;background:linear-gradient(145deg,#f28bb7,#cb4f87);box-shadow:inset 1px 1px 2px rgba(255,255,255,.65),0 1px 1px rgba(116,43,76,.2)}
-.pip.p1{left:17%;top:17%}.pip.p2{left:50%;top:17%;transform:translateX(-50%)}.pip.p3{right:17%;top:17%}.pip.p4{left:17%;top:50%;transform:translateY(-50%)}.pip.p5{left:50%;top:50%;transform:translate(-50%,-50%)}.pip.p6{right:17%;top:50%;transform:translateY(-50%)}.pip.p7{left:17%;bottom:17%}.pip.p8{left:50%;bottom:17%;transform:translateX(-50%)}.pip.p9{right:17%;bottom:17%}
-.board-dice.throwing .dice-cube{animation:diceTumble3d .9s cubic-bezier(.2,.75,.25,1)}
-#rollButton{width:88%;margin:3px auto 0;min-height:49px;font-size:.88rem}.turn-note{position:relative;z-index:8;margin-top:7px;color:#685f72;font-size:.48rem;line-height:1.2}.turn-note.locked{color:#bd5f86}
-@keyframes diceTumble3d{0%{transform:translate(-70px,-50px) rotateX(0) rotateY(0) rotateZ(-150deg) scale(.55)}35%{transform:translate(34px,-34px) rotateX(240deg) rotateY(190deg) rotateZ(80deg) scale(1.12)}68%{transform:translate(-12px,8px) rotateX(430deg) rotateY(350deg) rotateZ(250deg) scale(.92)}100%{transform:translate(0) rotateX(720deg) rotateY(540deg) rotateZ(351deg) scale(1)}}
-@media(max-width:390px){.game-board{aspect-ratio:.75}.board-side{gap:2px}.board-side.horizontal{left:12%;right:12%;height:15.5%}.board-side.vertical{top:13%;bottom:13%;width:13%}.board-side .board-tile{padding:2px 1px;border-radius:12px}.board-side .board-tile .tile-icon{font-size:.75rem}.board-side .board-tile .tile-name{font-size:.33rem}.board-side .board-tile .tile-number{font-size:.29rem;left:3px;top:3px}.board-center{inset:15.5% 14%}.board-center-panel{width:78%}.board-dice{width:78px;height:76px}}
-
-</style>
+  </style>
 </head>
 <body>
   <main class="shell">
     <div class="orb o1"></div><div class="orb o2"></div>
-    <section class="card" aria-live="polite">
+    <section class="card">
+      
+      <!-- 1. WELCOME VIEW -->
       <div class="welcome" id="welcome">
-        <div class="brand"><svg class="brand-cloud" viewBox="0 0 430 145" aria-hidden="true"><path class="cloud-halo" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/><path class="cloud-sketch" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/></svg><span class="spark">✦</span><h1 aria-label="Pocketly"><span class="letter-pink">P</span><span class="letter-pink">o</span><span class="letter-blue">c</span><span class="letter-blue">k</span><span class="letter-pink">e</span><span class="letter-pink">t</span><span class="letter-blue">l</span><span class="letter-blue">y</span></h1><p class="tagline">Save <span>•</span> Play <span>•</span> Build Your Little World</p></div>
+        <div class="brand">
+          <svg class="brand-cloud" viewBox="0 0 430 145" aria-hidden="true"><path class="cloud-halo" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/><path class="cloud-sketch" d="M54 119C24 119 13 91 31 72C18 45 42 20 70 30C89 5 125 6 143 27C167 4 205 5 224 29C249 5 290 11 303 39C329 18 369 31 371 63C401 68 408 102 384 119C305 137 124 138 54 119Z"/></svg>
+          <h1 aria-label="Pocketly"><span class="letter-pink">P</span><span class="letter-pink">o</span><span class="letter-blue">c</span><span class="letter-blue">k</span><span class="letter-pink">e</span><span class="letter-pink">t</span><span class="letter-blue">l</span><span class="letter-blue">y</span></h1>
+          <p class="tagline">Save • Play • Build Your Little World</p>
+        </div>
         <div class="stage">
-          <div class="cloud cl"></div><div class="cloud cr"></div>
-          <div class="mascot" role="img" aria-label="Cici sits by the window, cuddles her cat, and waves hello"><img class="wave-a" src="cici-wave-1.png" alt=""><img class="wave-b" src="cici-wave-2.png" alt=""></div>
+          <div class="mascot"><img class="wave-a" src="cici-wave-1.png" alt=""><img class="wave-b" src="cici-wave-2.png" alt=""></div>
         </div>
         <div class="actions">
-          <button class="btn primary" data-view="create">GET STARTED <span>→</span></button>
-          <button class="btn secondary" data-view="login">♙ &nbsp; I already have an account</button>
-          <button class="guest" data-view="guest">Continue as Guest</button>
+          <button class="btn primary" id="btnGetStarted">GET STARTED →</button>
+          <button class="guest" id="btnGuest">Continue as Guest</button>
         </div>
         <p class="dreams">Small saves. Big dreams. ✨</p>
       </div>
-      <div class="next" id="next">
-        <button class="back" id="back" aria-label="Back">←</button>
-        <div class="mini"><img src="cici-welcome.png" alt=""></div>
-        <p class="eyebrow" id="eyebrow"></p><h2 id="title"></h2><p class="body" id="body"></p>
-        <button class="btn primary" id="back2">BACK TO WELCOME</button>
-      </div>
+
+      <!-- 2. ONBOARDING VIEW -->
       <div class="onboarding" id="onboarding">
         <div class="onboard-card">
-          <div class="onboard-top"><button class="onboard-back" id="onboardBack" aria-label="Go back">←</button><div class="progress" aria-label="Onboarding progress"><i class="active"></i><i></i><i></i></div></div>
+          <div class="onboard-top"><button class="onboard-back" id="onboardBack">←</button><div class="progress"><i class="active"></i><i></i><i></i></div></div>
           <section class="step active" data-step="0">
-            <p class="step-kicker">Welcome to Pocketville</p><h2>Meet Cici!</h2>
+            <h2>Meet Cici!</h2>
             <img class="cici-intro" src="cici-welcome.png" alt="Cici">
-            <div class="speech">Hi! I’m Cici. I’ll help you save, play, and build your little world—one tiny pocket at a time.</div>
-            <div class="onboard-actions"><button class="btn primary next-step">LET’S BEGIN →</button></div>
+            <div class="speech">Hi! I’m Cici. I’ll help you save, play, and build your little world!</div>
+            <button class="btn primary next-step">LET’S BEGIN →</button>
           </section>
           <section class="step" data-step="1">
-            <p class="step-kicker">Step 2 of 3</p><h2>Choose Your First Dream</h2><p class="step-copy">Pick what you’d love to start saving for. You can always change it later.</p>
+            <h2>Choose Your Dream</h2>
             <div class="dream-grid">
               <button class="dream-option" data-goal="Cozy Home"><span>🏡</span><strong>Cozy Home</strong></button>
               <button class="dream-option" data-goal="Travel"><span>✈️</span><strong>Travel</strong></button>
-              <button class="dream-option" data-goal="Emergency Fund"><span>☂️</span><strong>Emergency Fund</strong></button>
-              <button class="dream-option" data-goal="Something Special"><span>🎁</span><strong>Something Special</strong></button>
-              <button class="dream-option wide" data-goal="My Dream"><span>✨</span><strong>Custom Goal</strong></button>
+              <button class="dream-option" data-goal="Emergency"><span>☂️</span><strong>Emergency</strong></button>
+              <button class="dream-option" data-goal="Something Special"><span>🎁</span><strong>Special</strong></button>
             </div>
-            <p class="form-error" id="goalError"></p>
-            <div class="onboard-actions"><button class="btn soft-btn prev-step">BACK</button><button class="btn primary next-step">NEXT →</button></div>
+            <button class="btn primary next-step">NEXT →</button>
           </section>
           <section class="step" data-step="2">
-            <p class="step-kicker">Step 3 of 3</p><h2>Create Your Pocket</h2><p class="step-copy">Give your first savings pocket a name and target.</p>
-            <form class="form" id="pocketForm">
-              <div class="field"><label for="goalName">Pocket name</label><input id="goalName" maxlength="40" placeholder="e.g. My Cozy Home" required></div>
-              <div class="amount-row"><div class="field"><label for="targetAmount">Target amount</label><input id="targetAmount" type="number" min="1" step="1" inputmode="decimal" placeholder="10000" required></div><div class="field"><label for="currency">Currency</label><select id="currency"><option>PHP</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option></select></div></div>
-              <div class="field"><label for="targetDate">Target date <span style="font-weight:400">(optional)</span></label><input id="targetDate" type="date"></div>
-              <p class="form-error" id="formError"></p>
+            <h2>Create Your Pocket</h2>
+            <form class="form" onsubmit="return false">
+              <div class="field"><label>Pocket Name</label><input id="goalName" placeholder="e.g. Dream Trip"></div>
+              <div class="amount-row">
+                <div class="field"><label>Target</label><input id="targetAmount" type="number" placeholder="5000"></div>
+                <div class="field"><label>Currency</label><select id="currency"><option>PHP</option><option>USD</option></select></div>
+              </div>
             </form>
-            <div class="onboard-actions"><button class="btn soft-btn prev-step">BACK</button><button class="btn primary" id="createPocket">CREATE POCKET ✨</button></div>
-          </section>
-          <section class="step" data-step="3">
-            <div class="success-badge">✓</div><p class="step-kicker">Tiny beginning, big dream</p><h2>Your First Pocket Is Ready!</h2><p class="step-copy">Cici will keep it safe while we build the rest of your Pocketville.</p>
-            <div class="pocket-summary"><strong id="summaryName">My Dream</strong><span id="summaryAmount">PHP 0</span></div>
-            <div class="onboard-actions"><button class="btn primary" id="finishOnboarding">DONE FOR NOW</button></div>
+            <button class="btn primary" id="createPocket">START POCKETVILLE ✨</button>
           </section>
         </div>
       </div>
+
+      <!-- 3. DASHBOARD VIEW -->
       <div class="dashboard" id="dashboard">
-        <header class="dash-head"><div><p>Welcome to</p><h2>Your Little World!</h2></div><button class="avatar" id="profileButton" aria-label="Open profile menu">☁️</button></header>
-        <section class="village-card" aria-label="Your growing Pocketville">
-          <span class="level-pill" id="levelPill">Tiny Beginning · Level 1</span><img class="tiny-cici" src="cici-welcome.png" alt="Cici beside your little home">
-        </section>
-        <section class="pocket-card">
-          <div class="pocket-top"><div><small>MY FIRST POCKET</small><h3 id="dashPocketName">My Dream</h3></div><div class="percent" id="dashPercent">0%</div></div>
-          <div class="money-line"><strong id="dashSaved">PHP 0</strong><span>of <b id="dashTarget">PHP 0</b></span></div>
-          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-          <p class="cici-note" id="ciciNote">Every little save is a tiny brick for your dream. Let’s begin!</p>
-          <button class="btn primary dash-add" id="openSaveModal">+ ADD SAVINGS</button>
-        </section>
-        <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item active"><span>🏠</span>Home</button><button class="nav-item" id="openPockets"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="bottomProfile"><span>🌸</span>Profile</button>
+        <header class="dash-head">
+          <div><p>Welcome to</p><h2>Pocketville</h2></div>
+          <button class="avatar" id="profileButton">☁️</button>
+        </header>
+        <div class="village-card">
+          <span class="level-pill" id="levelPill">Level 1 · Tiny Beginning</span>
+          <img class="tiny-cici" src="cici-welcome.png" alt="Cici">
+        </div>
+        <div class="pocket-card">
+          <h3 id="dashPocketName">My Dream</h3>
+          <div class="progress-track"><div class="progress-fill" id="dashProgressFill"></div></div>
+          <p id="dashProgressCopy" style="font-size:.78rem;margin:8px 0;color:#777">PHP 0 / PHP 0</p>
+          <button class="btn primary" id="openSaveModal">+ ADD SAVINGS</button>
+        </div>
+        <nav class="bottom-nav">
+          <button class="nav-btn active"><span>🏠</span>Home</button>
+          <button class="nav-btn" id="navPockets"><span>👛</span>Pockets</button>
+          <button class="nav-btn" id="navPlay"><span>🎲</span>Play</button>
+          <button class="nav-btn" id="navProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
-      <div class="pockets-view" id="pocketsView">
-        <header class="pockets-intro"><div><p>Save for every little dream</p><h2>My Pockets</h2></div><button class="add-pocket-mini" id="addPocketButton" aria-label="Create a new pocket">+</button></header>
-        <div class="pockets-list" id="pocketsList"></div>
-        <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
-        </nav>
-      </div>
+
+      <!-- 4. PLAY VIEW (THE 36 TILES BOARD) -->
       <div class="play-view" id="playView">
-        <div class="game-toast" id="gameToast" role="status" aria-live="polite"></div><div class="confetti" id="confetti" aria-hidden="true"></div>
-        <header class="play-intro"><div><p>Little steps, big dreams</p><h2>Pocketly</h2></div><div class="play-tools"><span class="points-pill">⭐ <b id="pointsCount">0</b> points</span><button class="sound-toggle" id="soundToggle" aria-label="Turn sound off" title="Sound on">🔊</button></div></header>
-        <section class="game-card">
-          <h3 id="playPocketName">Your active pocket</h3>
-          <p>Roll around Pocketville. What you land on decides your next tiny money mission.</p>
-          <div class="game-board" id="gameBoard"></div>
-          <div class="roll-result" id="rollResult">Cici is ready! ✨</div>
-          <button class="btn primary" id="rollButton">ROLL THE DICE 🎲</button>
-          <p class="play-note" id="playNote">Roll the dice to begin. Savings are only counted after you confirm them.</p>
-        </section>
-        <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
+        <header class="play-header">
+          <div><p>Little steps, big dreams</p><h2>Pocketly</h2></div>
+          <span class="badge-pill">⭐ <b id="pointsCount">0</b> pts</span>
+        </header>
+
+        <div class="board-container" id="boardArea">
+          <div class="board-art-bg">
+            <div class="center-panel">
+              <h3 class="center-title">Pocketville Track</h3>
+              <span class="center-sub" id="centerSub">Roll to visit your next dream stop!</span>
+            </div>
+
+            <!-- 3D Pink Tumbling Dice -->
+            <div class="dice-stage" id="diceStage">
+              <div class="dice-cube" id="diceCube">
+                <div class="dice-face face-1"><span class="dot d1"></span></div>
+                <div class="dice-face face-6"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="dot d4"></span><span class="dot d5"></span><span class="dot d6"></span></div>
+                <div class="dice-face face-2"><span class="dot d1"></span><span class="dot d2"></span></div>
+                <div class="dice-face face-5"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="dot d4"></span><span class="dot d5"></span></div>
+                <div class="dice-face face-3"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+                <div class="dice-face face-4"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="dot d4"></span></div>
+              </div>
+            </div>
+
+            <button class="roll-btn" id="rollButton">ROLL THE DICE 🎲</button>
+          </div>
+
+          <!-- Organic Sides -->
+          <div class="board-side horizontal bottom" id="sideBottom"></div>
+          <div class="board-side vertical right" id="sideRight"></div>
+          <div class="board-side horizontal top" id="sideTop"></div>
+          <div class="board-side vertical left" id="sideLeft"></div>
+
+          <!-- Walking Character -->
+          <div class="player-token face-right" id="ciciToken">
+            <img src="cici-welcome.png" alt="Cici">
+          </div>
+        </div>
+
+        <nav class="bottom-nav">
+          <button class="nav-btn" id="playNavHome"><span>🏠</span>Home</button>
+          <button class="nav-btn" id="playNavPockets"><span>👛</span>Pockets</button>
+          <button class="nav-btn active"><span>🎲</span>Play</button>
+          <button class="nav-btn" id="playNavProfile"><span>🌸</span>Profile</button>
+        </nav>
       </div>
+
+      <!-- MODALS (Landings & Savings) -->
       <div class="landing-modal" id="landingModal">
-        <div class="landing-card">
-          <div class="landing-icon" id="landingIcon">🪙</div>
+        <div class="modal-card">
           <h2 id="landingTitle">You landed here!</h2>
-          <p id="landingText">Every tiny step counts.</p>
-          <div class="landing-actions">
-            <button class="btn primary" id="landingAction">GOT IT! ✨</button>
-            <button class="landing-skip" id="landingSkip">Not now</button>
+          <p id="landingText">Keep up the tiny steps towards your dream!</p>
+          <button class="btn primary" id="landingAction">CLAIM ✨</button>
+        </div>
+      </div>
+
+      <div class="save-modal" id="saveModal">
+        <div class="modal-card">
+          <h2>Add Savings</h2>
+          <input id="saveAmount" type="number" placeholder="100" style="width:100%;height:44px;border:2px solid #ddd;border-radius:12px;padding:8px;font:inherit;margin:12px 0">
+          <div style="display:flex;gap:8px">
+            <button class="btn" style="background:#eee" id="closeSaveModal">CANCEL</button>
+            <button class="btn primary" id="confirmSave">CONFIRM ✨</button>
           </div>
         </div>
       </div>
-      <div class="save-modal" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
-        <div class="modal-card"><span class="mission-chip" id="saveMissionChip" hidden>🎲 Pocketly saving mission</span><h2 id="saveTitle">Add a Little Save</h2><p id="saveDescription">Small amounts count. Every coin helps your Pocketville grow!</p>
-          <div class="field"><label for="saveAmount">Amount to add</label><input id="saveAmount" type="number" min="1" step="1" inputmode="decimal" placeholder="100"></div><p class="form-error" id="saveError"></p>
-          <div class="modal-actions"><button class="btn soft-btn" id="closeSaveModal">CANCEL</button><button class="btn primary" id="confirmSave">SAVE ✨</button></div>
-        </div>
-      </div>
-      <div class="save-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
-        <div class="modal-card"><div class="profile-cloud">☁️</div><h2 id="profileTitle">Pocketville Profile</h2><p>Guest Dreamer</p>
-          <div class="profile-stats"><div class="profile-stat"><strong id="profileLevel">Level 1</strong><span>Current level</span></div><div class="profile-stat"><strong id="profileProgress">0%</strong><span>Dream progress</span></div></div>
-          <div class="modal-actions"><button class="btn soft-btn" id="profileHome">WELCOME PAGE</button><button class="btn primary" id="closeProfile">CLOSE</button></div>
-        </div>
-      </div>
-      <div class="save-modal" id="pocketModal" role="dialog" aria-modal="true" aria-labelledby="pocketModalTitle">
-        <div class="modal-card"><h2 id="pocketModalTitle">Create a New Pocket</h2><p>What little dream are you saving for?</p>
-          <div class="form"><div class="field"><label for="newPocketName">Pocket name</label><input id="newPocketName" maxlength="40" placeholder="e.g. Dream Trip"></div><div class="amount-row"><div class="field"><label for="newPocketTarget">Target amount</label><input id="newPocketTarget" type="number" min="1" step="1" inputmode="decimal" placeholder="10000"></div><div class="field"><label for="newPocketCurrency">Currency</label><select id="newPocketCurrency"><option>PHP</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option></select></div></div><div class="field"><label for="newPocketDate">Target date (optional)</label><input id="newPocketDate" type="date"></div></div><p class="form-error" id="pocketModalError"></p>
-          <div class="modal-actions"><button class="btn soft-btn" id="cancelPocketModal">CANCEL</button><button class="btn primary" id="savePocketButton">SAVE POCKET</button></div>
-        </div>
-      </div>
     </section>
-    <p class="phase">Pocketville · Phase 5</p>
   </main>
+
   <script>
-    const copy={
-      login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
-      guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
-    };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),playView=document.querySelector("#playView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
-    const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
-    let currentStep=0,selectedGoal="",editingPocketId=null,saveSource="dashboard",currentLandingType="start",currentLandingEvent="standard",bonusRollUsed=false,turnTimer=null;
-    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none";playView.style.display="none"}
-    function showWelcome(){hideViews();welcome.style.display="flex"}
-    function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
-    document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
-      if(b.dataset.view==="create"){showStep(0);return}
-      const c=copy[b.dataset.view];document.querySelector("#eyebrow").textContent=c[0];document.querySelector("#title").textContent=c[1];document.querySelector("#body").textContent=c[2];hideViews();next.style.display="flex"
-    });
-    document.querySelector("#onboardBack").onclick=()=>currentStep===0?showWelcome():showStep(currentStep-1);
-    document.querySelectorAll(".next-step").forEach(b=>b.onclick=()=>{
-      if(currentStep===1&&!selectedGoal){document.querySelector("#goalError").textContent="Choose one dream to continue.";return}
-      if(currentStep===1)document.querySelector("#goalName").value=selectedGoal;
-      showStep(currentStep+1)
-    });
-    document.querySelectorAll(".prev-step").forEach(b=>b.onclick=()=>showStep(currentStep-1));
-    document.querySelectorAll(".dream-option").forEach(b=>b.onclick=()=>{selectedGoal=b.dataset.goal;document.querySelectorAll(".dream-option").forEach(x=>x.classList.toggle("selected",x===b));document.querySelector("#goalError").textContent=""});
-    const targetDate=document.querySelector("#targetDate");targetDate.min=new Date().toISOString().split("T")[0];
-    document.querySelector("#createPocket").onclick=()=>{
-      const name=document.querySelector("#goalName").value.trim(),amount=Number(document.querySelector("#targetAmount").value),currency=document.querySelector("#currency").value,date=targetDate.value;
-      if(!name||!amount||amount<=0){document.querySelector("#formError").textContent="Add a pocket name and a target amount.";return}
-      const pocket={id:Date.now(),name,amount,currency,date,saved:0,active:true,archived:false,createdAt:new Date().toISOString()};
-      try{localStorage.setItem("pocketlyFirstPocket",JSON.stringify(pocket));localStorage.setItem("pocketlyPockets",JSON.stringify([pocket]))}catch(e){}
-      document.querySelector("#summaryName").textContent=name;document.querySelector("#summaryAmount").textContent=new Intl.NumberFormat(undefined,{style:"currency",currency,maximumFractionDigits:0}).format(amount);document.querySelector("#formError").textContent="";showStep(3)
-    };
-    function getPockets(){try{let pockets=JSON.parse(localStorage.getItem("pocketlyPockets"));if(Array.isArray(pockets)&&pockets.length)return pockets;const first=JSON.parse(localStorage.getItem("pocketlyFirstPocket"));if(first){first.id=first.id||Date.now();first.active=true;first.archived=false;pockets=[first];localStorage.setItem("pocketlyPockets",JSON.stringify(pockets));return pockets}return[]}catch(e){return[]}}
-    function savePockets(pockets){try{localStorage.setItem("pocketlyPockets",JSON.stringify(pockets));const active=pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived);if(active)localStorage.setItem("pocketlyFirstPocket",JSON.stringify(active))}catch(e){}}
-    function getPocket(){const pockets=getPockets();return pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived)||null}
-    function money(value,currency){try{return new Intl.NumberFormat(undefined,{style:"currency",currency,maximumFractionDigits:0}).format(value)}catch(e){return currency+" "+Number(value).toLocaleString()}}
-    function renderDashboard(){
-      const pocket=getPocket();if(!pocket){showStep(0);return}
-      pocket.saved=Number(pocket.saved)||0;const percent=Math.min(100,Math.round((pocket.saved/Number(pocket.amount))*100));
-      document.querySelector("#dashPocketName").textContent=pocket.name;document.querySelector("#dashSaved").textContent=money(pocket.saved,pocket.currency);document.querySelector("#dashTarget").textContent=money(pocket.amount,pocket.currency);document.querySelector("#dashPercent").textContent=percent+"%";document.querySelector("#progressFill").style.width=percent+"%";
-      const note=percent===0?"Every little save is a tiny brick for your dream. Let’s begin!":percent<25?"A tiny start is still a start. I’m proud of you!":percent<50?"Look! Your little world is starting to grow!":percent<75?"You’re more than halfway to something wonderful!":percent<100?"So close! Your dream is almost within reach!":"You did it! Your dream pocket is complete!";
-      const level=percent<25?1:percent<50?2:percent<75?3:percent<100?4:5;document.querySelector("#ciciNote").textContent=note;document.querySelector("#levelPill").textContent=level===1?"Tiny Beginning · Level 1":level===2?"Little Builder · Level 2":level===3?"Dream Grower · Level 3":level===4?"Cozy Creator · Level 4":"Dream Keeper · Level 5";document.querySelector("#profileLevel").textContent="Level "+level;document.querySelector("#profileProgress").textContent=percent+"%";
-    }
-    function showDashboard(){hideViews();renderDashboard();dashboard.style.display="block"}
-    document.querySelector("#finishOnboarding").textContent="ENTER POCKETVILLE →";document.querySelector("#finishOnboarding").onclick=showDashboard;
-    function openSave(source="dashboard"){
-      saveSource=source;const pocket=getPocket(),isGame=source==="game";document.querySelector("#saveAmount").value="";document.querySelector("#saveError").textContent="";
-      document.querySelector("#saveTitle").textContent=isGame?"Complete Your Save Mission":"Add a Little Save";
-      document.querySelector("#saveDescription").textContent=isGame&&pocket?`How much did you really set aside for ${pocket.name}? Nothing is added until you confirm.`:"Small amounts count. Every coin helps your Pocketville grow!";
-      document.querySelector("#saveMissionChip").hidden=!isGame;saveModal.classList.toggle("game-save",isGame);saveModal.classList.add("open");setTimeout(()=>document.querySelector("#saveAmount").focus(),50)
-    }
-    document.querySelector("#openSaveModal").onclick=()=>openSave("dashboard");
-    function cancelSave(){saveModal.classList.remove("open");if(saveSource==="game")setTimeout(()=>showLanding(currentLandingType),120)}
-    document.querySelector("#closeSaveModal").onclick=cancelSave;
-    document.querySelector("#confirmSave").onclick=()=>{const add=Number(document.querySelector("#saveAmount").value),pocket=getPocket();if(!add||add<=0){document.querySelector("#saveError").textContent="Enter an amount greater than zero.";return}const pockets=getPockets(),target=pockets.find(p=>p.id===pocket.id);target.saved=(Number(target.saved)||0)+add;savePockets(pockets);recordSaving(target,add,saveSource);saveModal.classList.remove("open");renderDashboard();if(saveSource==="game"){awardPoints(10);completeDailyTurn();renderPlayStats();showToast(`✨ ${money(add,target.currency)} saved to ${target.name}!`);celebrate();playChime()}saveSource="dashboard"};
-    saveModal.onclick=e=>{if(e.target===saveModal)cancelSave()};
-    document.querySelector("#profileButton").onclick=()=>profileModal.classList.add("open");document.querySelector("#closeProfile").onclick=()=>profileModal.classList.remove("open");document.querySelector("#profileHome").onclick=()=>{profileModal.classList.remove("open");showWelcome()};profileModal.onclick=e=>{if(e.target===profileModal)profileModal.classList.remove("open")};
-    function esc(value){return String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
-    function renderPockets(){
-      const pockets=getPockets().filter(p=>!p.archived),list=document.querySelector("#pocketsList");if(!pockets.length){list.innerHTML='<div class="empty-pockets"><span>☁️</span><h3>No pockets yet</h3><p>Create a little place for your next dream.</p></div>';return}
-      const icons=["🏡","✈️","☂️","🎁","🌸","📚"];
-      list.innerHTML=pockets.map((p,i)=>{const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));return `<article class="goal-card ${p.active?"active-pocket":""} ${percent>=100?"completed":""}" data-id="${p.id}">${p.active?'<span class="active-tag">ACTIVE</span>':""}<span class="goal-icon">${icons[i%icons.length]}</span><h3>${esc(p.name)}</h3><small>${percent>=100?"Dream completed!":"Saving in progress"}</small><div class="goal-progress"><div class="goal-money"><strong>${money(Number(p.saved)||0,p.currency)}</strong><span>of ${money(p.amount,p.currency)} · ${percent}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></div><div class="goal-actions">${p.active?'<button class="tiny-btn active-choice" disabled>ACTIVE</button>':`<button class="tiny-btn" data-action="active">USE THIS</button>`}<button class="tiny-btn" data-action="edit">EDIT</button><button class="tiny-btn danger" data-action="archive">ARCHIVE</button></div></article>`}).join("");if(pockets.length===1){const archive=list.querySelector("[data-action=archive]");if(archive){archive.disabled=true;archive.title="Create another pocket before archiving this one"}}
-    }
-    function showPockets(){hideViews();renderPockets();pocketsView.style.display="block"}
-    function openPocketEditor(pocket=null){editingPocketId=pocket?pocket.id:null;document.querySelector("#pocketModalTitle").textContent=pocket?"Edit Your Pocket":"Create a New Pocket";document.querySelector("#newPocketName").value=pocket?pocket.name:"";document.querySelector("#newPocketTarget").value=pocket?pocket.amount:"";document.querySelector("#newPocketCurrency").value=pocket?pocket.currency:"PHP";document.querySelector("#newPocketDate").value=pocket&&pocket.date?pocket.date:"";document.querySelector("#pocketModalError").textContent="";pocketModal.classList.add("open")}
-    document.querySelector("#openPockets").onclick=showPockets;document.querySelector("#pocketsHome").onclick=showDashboard;document.querySelector("#addPocketButton").onclick=()=>openPocketEditor();document.querySelector("#bottomProfile").onclick=()=>profileModal.classList.add("open");document.querySelector("#pocketsProfile").onclick=()=>profileModal.classList.add("open");
-    document.querySelector("#cancelPocketModal").onclick=()=>pocketModal.classList.remove("open");pocketModal.onclick=e=>{if(e.target===pocketModal)pocketModal.classList.remove("open")};
-    document.querySelector("#savePocketButton").onclick=()=>{const name=document.querySelector("#newPocketName").value.trim(),amount=Number(document.querySelector("#newPocketTarget").value),currency=document.querySelector("#newPocketCurrency").value,date=document.querySelector("#newPocketDate").value;if(!name||!amount||amount<=0){document.querySelector("#pocketModalError").textContent="Add a pocket name and target amount.";return}const pockets=getPockets();if(editingPocketId){const p=pockets.find(x=>x.id===editingPocketId);Object.assign(p,{name,amount,currency,date})}else{pockets.push({id:Date.now(),name,amount,currency,date,saved:0,active:pockets.filter(p=>!p.archived).length===0,archived:false,createdAt:new Date().toISOString()})}savePockets(pockets);pocketModal.classList.remove("open");renderPockets()};
-    document.querySelector("#pocketsList").onclick=e=>{const btn=e.target.closest("[data-action]");if(!btn)return;const card=btn.closest("[data-id]"),id=Number(card.dataset.id),pockets=getPockets(),pocket=pockets.find(p=>p.id===id);if(btn.dataset.action==="active"){pockets.forEach(p=>p.active=p.id===id);savePockets(pockets);renderPockets()}if(btn.dataset.action==="edit")openPocketEditor(pocket);if(btn.dataset.action==="archive"){if(pockets.filter(p=>!p.archived).length===1)return;pocket.archived=true;if(pocket.active){const replacement=pockets.find(p=>!p.archived);if(replacement)replacement.active=true}savePockets(pockets);renderPockets()}};
-    
-    const boardSpaces=[
-      ["start","🌱","START"],["save","💧","Save"],["mystery","❓","Mystery"],["bonus","⭐","Bonus"],["save","🪙","Save"],["challenge","🛒","No-Spend"],["treat","🧁","Treat"],["save","💗","Save"],["boost","🌿","Boost"],["corner mystery","🎁","Mystery"],
-      ["save","🪙","Save"],["rest","☁️","Rest"],["mystery","💌","Mystery"],["save","💧","Save"],["bonus","✨","Bonus"],["challenge","🍳","Challenge"],["save","🪙","Save"],["chaos","🎲","Chaos"],["corner treat","🌈","Reward"],
-      ["save","💗","Save"],["mystery","🔮","Mystery"],["boost","🌱","Boost"],["save","💧","Save"],["challenge","📵","No-Spend"],["bonus","⭐","Bonus"],["save","🪙","Save"],["mystery","🎀","Mystery"],["corner rest","🌙","Rest"],
-      ["save","💗","Save"],["treat","☕","Treat"],["mystery","❓","Mystery"],["save","💧","Save"],["boost","🌿","Boost"],["chaos","🌀","Chaos"],["bonus","✨","Bonus"],["save","🪙","Save"]
+    // 36 Cute Tiles Configuration (Matches the storybook illustration)
+    const tilesData = [
+      { t:"START", i:"🏡", c:"mint", w:1.45, r:"18px 24px 14px 22px" },
+      { t:"Save", i:"🪙", c:"pink", w:0.95, r:"20px 14px 18px 15px" },
+      { t:"Mystery", i:"🎁", c:"lavender", w:1.15, r:"15px 22px 14px 20px" },
+      { t:"Bonus", i:"⭐", c:"yellow", w:0.85, r:"18px 16px 22px 14px" },
+      { t:"No-Spend", i:"📵", c:"peach", w:1.1, r:"22px 14px 16px 20px" },
+      { t:"Treat", i:"🧁", c:"pink", w:0.9, r:"14px 20px 15px 22px" },
+      { t:"Boost", i:"🌿", c:"mint", w:1.2, r:"20px 15px 22px 14px" },
+      { t:"Mystery", i:"🎀", c:"lavender", w:0.85, r:"16px 20px 14px 18px" },
+      { t:"Save", i:"🪙", c:"yellow", w:1.35, r:"22px 18px 20px 14px" },
+
+      { t:"Shop", i:"🏠", c:"pink", w:1.3, r:"18px 22px 14px 20px" },
+      { t:"Bonus", i:"✨", c:"yellow", w:0.85, r:"14px 20px 16px 22px" },
+      { t:"Treat", i:"💗", c:"pink", w:1.15, r:"20px 15px 22px 14px" },
+      { t:"Challenge",i:"🔍", c:"peach", w:0.95, r:"16px 22px 14px 18px" },
+      { t:"Save", i:"💧", c:"blue", w:1.1, r:"22px 14px 18px 20px" },
+      { t:"Travel", i:"🏝️", c:"blue", w:1.3, r:"15px 20px 22px 14px" },
+      { t:"Rest", i:"🌙", c:"yellow", w:0.85, r:"20px 14px 16px 22px" },
+      { t:"Boost", i:"🌱", c:"mint", w:1.0, r:"14px 22px 18px 15px" },
+      { t:"Reward", i:"🌈", c:"lavender", w:1.4, r:"22px 16px 20px 18px" },
+
+      { t:"Save", i:"💗", c:"pink", w:0.95, r:"16px 20px 14px 22px" },
+      { t:"Mystery", i:"🔮", c:"lavender", w:1.1, r:"20px 14px 22px 16px" },
+      { t:"Boost", i:"🌿", c:"mint", w:0.9, r:"15px 22px 16px 18px" },
+      { t:"Treat", i:"🧁", c:"yellow", w:1.05, r:"22px 15px 18px 20px" },
+      { t:"No-Spend", i:"🚫", c:"peach", w:1.1, r:"16px 20px 14px 22px" },
+      { t:"Bonus", i:"⭐", c:"yellow", w:0.85, r:"20px 16px 22px 14px" },
+      { t:"Mystery", i:"💌", c:"lavender", w:1.15, r:"14px 22px 18px 15px" },
+      { t:"Save", i:"🪙", c:"pink", w:0.95, r:"22px 14px 16px 20px" },
+      { t:"Rest", i:"🌙", c:"blue", w:1.35, r:"18px 24px 15px 20px" },
+
+      { t:"Save", i:"💧", c:"blue", w:0.9, r:"20px 14px 18px 16px" },
+      { t:"Challenge",i:"💪", c:"peach", w:1.1, r:"15px 22px 14px 20px" },
+      { t:"Treat", i:"💗", c:"pink", w:0.85, r:"22px 16px 20px 14px" },
+      { t:"Boost", i:"🌱", c:"mint", w:1.15, r:"16px 20px 15px 22px" },
+      { t:"Rest", i:"🐾", c:"lavender", w:0.95, r:"20px 15px 22px 16px" },
+      { t:"Save", i:"🪙", c:"pink", w:1.1, r:"14px 22px 16px 18px" },
+      { t:"Mystery", i:"🎁", c:"lavender", w:0.85, r:"22px 14px 18px 20px" },
+      { t:"Treat", i:"💗", c:"pink", w:1.05, r:"16px 20px 14px 22px" },
+      { t:"Rest", i:"🪑", c:"peach", w:1.25, r:"20px 18px 22px 14px" }
     ];
-    const boardCoords=[];
-    for(let c=1;c<=10;c++)boardCoords.push([10,c]);
-    for(let r=9;r>=1;r--)boardCoords.push([r,10]);
-    for(let c=9;c>=1;c--)boardCoords.push([1,c]);
-    for(let r=2;r<=9;r++)boardCoords.push([r,1]);
-    const TURN_WAIT_MS=24*60*60*1000;
-    let playerPosition=Math.min(35,Math.max(0,Number(localStorage.getItem("pocketlyBoardPosition"))||0)),rolling=false,soundOn=localStorage.getItem("pocketlySound")!=="off";
-    function getPoints(){return Number(localStorage.getItem("pocketlyPoints"))||0}
-    function awardPoints(value){localStorage.setItem("pocketlyPoints",String(getPoints()+value))}
-    function recordSaving(pocket,amount,source){try{const items=JSON.parse(localStorage.getItem("pocketlySavingsHistory")||"[]");items.unshift({id:Date.now(),pocketId:pocket.id,pocketName:pocket.name,amount,currency:pocket.currency,source,date:new Date().toISOString()});localStorage.setItem("pocketlySavingsHistory",JSON.stringify(items.slice(0,100)))}catch(e){}}
-    function renderPlayStats(){const p=getPocket();document.querySelector("#pointsCount").textContent=getPoints();if(!p)return;const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));const name=document.querySelector("#centerPocketName"),copy=document.querySelector("#centerPocketProgress"),fill=document.querySelector("#centerProgressFill");if(name)name.textContent=p.name;if(copy)copy.textContent=`${money(Number(p.saved)||0,p.currency)} / ${money(p.amount,p.currency)}`;if(fill)fill.style.width=percent+"%"}
-    function renderBoard(){
-      const board=document.querySelector("#gameBoard");board.innerHTML='<div class="board-center"><div class="board-center-panel"><strong class="board-center-title">Welcome to Pocketville</strong><span class="board-center-sub" id="centerPocketName">Your little dream</span><div class="center-progress"><div class="center-progress-copy"><span>Active pocket</span><span id="centerPocketProgress">₱0 / ₱0</span></div><div class="center-progress-track"><div class="center-progress-fill" id="centerProgressFill"></div></div></div><button class="board-dice" id="boardDice" aria-label="Roll the dice"><span class="dice-cube"><span class="dice-face" id="diceFace"></span></span></button><small class="turn-note" id="turnNote">One roll = one saving turn</small></div></div><div class="board-side horizontal bottom" data-side="bottom"></div><div class="board-side vertical right" data-side="right"></div><div class="board-side horizontal top" data-side="top"></div><div class="board-side vertical left" data-side="left"></div>';
-      const sideIndexes={bottom:[0,1,2,3,4,5,6,7,8],right:[17,16,15,14,13,12,11,10,9],top:[26,25,24,23,22,21,20,19,18],left:[27,28,29,30,31,32,33,34,35]};
-      const sideWeights={bottom:[1.45,.92,.8,1.1,.9,1.05,.9,.85,1.35],right:[1.25,.78,1.05,.86,1.18,.82,1.15,.8,1.3],top:[1.35,.84,1.08,.78,1.18,.85,1.08,.82,1.4],left:[1.3,.8,1.12,.78,1.2,.84,1.08,.8,1.35]};
-      Object.entries(sideIndexes).forEach(([side,indexes])=>{const track=board.querySelector(`[data-side="${side}"]`);indexes.forEach((i,order)=>{const space=boardSpaces[i],tile=document.createElement("div"),weight=sideWeights[side][order];tile.className=`board-tile ${space[0]} ${weight>=1.25?"featured":""}`;tile.dataset.index=i;tile.style.setProperty("--grow",weight);tile.innerHTML=`<small class="tile-number">${i+1}</small><span class="tile-icon">${space[1]}</span><span class="tile-name">${space[2]}</span>`;track.appendChild(tile)})});
-      updateToken();
-      const panel=board.querySelector(".board-center-panel"),roll=document.querySelector("#rollButton");if(panel&&roll)panel.appendChild(roll);
-      setDiceFace(Number(localStorage.getItem("pocketlyLastDice"))||1);document.querySelector("#boardDice").onclick=()=>document.querySelector("#rollButton").click();renderPlayStats();syncTurnState();
+
+    // Build the board track
+    const tileElements = [];
+    const sideBottom = document.querySelector("#sideBottom"), sideRight = document.querySelector("#sideRight"), sideTop = document.querySelector("#sideTop"), sideLeft = document.querySelector("#sideLeft");
+
+    tilesData.forEach((d, i) => {
+      const el = document.createElement("div");
+      el.className = `board-tile ${d.c} ${d.w >= 1.25 ? "featured" : ""}`;
+      el.style.setProperty("--w", d.w);
+      el.style.setProperty("--r", d.r);
+      el.style.setProperty("--rot", (i % 2 === 0 ? "1.5deg" : "-1.5deg"));
+      el.innerHTML = `<span class="t-num">${i + 1}</span><span class="t-icon">${d.i}</span><span class="t-txt">${d.t}</span>`;
+      if (i <= 8) sideBottom.appendChild(el);
+      else if (i <= 17) sideRight.appendChild(el);
+      else if (i <= 26) sideTop.appendChild(el);
+      else sideLeft.appendChild(el);
+      tileElements.push(el);
+    });
+
+    // Navigation & State
+    let currentTile = Number(localStorage.getItem("pocketlyTile")) || 0;
+    const cici = document.querySelector("#ciciToken"), boardArea = document.querySelector("#boardArea");
+    const welcome = document.querySelector("#welcome"), onboarding = document.querySelector("#onboarding"), dashboard = document.querySelector("#dashboard"), playView = document.querySelector("#playView");
+
+    function showView(v) {
+      [welcome, onboarding, dashboard, playView].forEach(s => s.style.display = "none");
+      v.style.display = (v === playView || v === welcome) ? "flex" : "block";
+      if (v === playView) setTimeout(() => positionCharacter(currentTile), 50);
     }
-    function updateToken(move=""){
-      document.querySelectorAll(".player-token").forEach(x=>x.remove());document.querySelectorAll(".board-tile.landed").forEach(x=>x.classList.remove("landed"));const tile=document.querySelector(`.board-tile[data-index="${playerPosition}"]`);if(tile){const token=document.createElement("span");token.className="player-token "+move;token.innerHTML='<img src="cici-welcome.png" alt="Cici">';tile.appendChild(token);if(move)tile.classList.add("landed")}
+
+    function positionCharacter(tileIdx) {
+      const target = tileElements[tileIdx];
+      const bRect = boardArea.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      cici.style.left = `${tRect.left - bRect.left + (tRect.width / 2) - 20}px`;
+      cici.style.top = `${tRect.top - bRect.top + (tRect.height / 2) - 40}px`;
+      
+      // Face Left along the top row (tiles 18 to 26), Face Right elsewhere
+      if (tileIdx >= 18 && tileIdx <= 26) {
+        cici.classList.remove("face-right"); cici.classList.add("face-left");
+      } else {
+        cici.classList.remove("face-left"); cici.classList.add("face-right");
+      }
     }
-    function showPlay(){hideViews();const p=getPocket();document.querySelector("#playPocketName").textContent=p?p.name:"Create a pocket first";playView.style.display="block";bonusRollUsed=localStorage.getItem("pocketlyBonusRollUsed")==="true";renderBoard();renderPlayStats();const pending=getPendingLanding();if(pending)setTimeout(()=>showLanding(pending.type,pending.event),220)}
-    const landingCopy={save:"A little Save space! Choose an amount you can really put aside, then add it from your pocket.",mystery:"Mystery time! 🎀 A Pocketly card will open here in the next step.",bonus:"Lucky landing! ⭐ You earned a little game bonus — no money added automatically.",challenge:"Tiny challenge! Try a no-spend or mindful-money mission. You can always skip.",treat:"Treat space! 🧁 Celebrate your progress without guilt.",boost:"Savings Boost! 🌿 Your next confirmed save can earn extra Pocket Points.",rest:"Cozy rest stop. ☁️ Nothing to do — just enjoy the landing.",chaos:"Chaos! 🌀 A silly Pocketly twist is coming here.",start:"Back at START! 🌱 Another little lap around your dream."};
-    document.querySelectorAll(".coming").forEach(b=>b.onclick=showPlay);
-    document.querySelector("#playHome").onclick=showDashboard;document.querySelector("#playPockets").onclick=showPockets;document.querySelector("#playProfile").onclick=()=>profileModal.classList.add("open");
-    const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
-    const pipMap={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
-    function setDiceFace(number){const face=document.querySelector("#diceFace");if(face)face.innerHTML=(pipMap[number]||pipMap[1]).map(p=>`<i class="pip p${p}"></i>`).join("")}
-    function getPendingLanding(){try{return JSON.parse(localStorage.getItem("pocketlyPendingLanding")||"null")}catch(e){return null}}
-    function nextRollAt(){return Number(localStorage.getItem("pocketlyNextRollAt"))||0}
-    function turnLocked(){return nextRollAt()>Date.now()}
-    function countdownText(){const left=Math.max(0,nextRollAt()-Date.now()),hours=Math.floor(left/3600000),minutes=Math.floor(left%3600000/60000),seconds=Math.floor(left%60000/1000);return `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`}
-    function completeDailyTurn(){localStorage.setItem("pocketlyNextRollAt",String(Date.now()+TURN_WAIT_MS));localStorage.removeItem("pocketlyPendingLanding");localStorage.removeItem("pocketlyBonusRollUsed");bonusRollUsed=false;syncTurnState()}
-    function syncTurnState(){const button=document.querySelector("#rollButton"),note=document.querySelector("#turnNote"),pending=getPendingLanding(),locked=turnLocked();if(!button||!note)return;clearInterval(turnTimer);if(pending){button.disabled=true;button.textContent="FINISH TODAY’S MISSION";note.textContent="Resolve your landing before another roll.";note.classList.add("locked")}else if(locked){button.disabled=true;button.textContent="TURN COMPLETE ✓";note.textContent=`Next Pocketly roll in ${countdownText()}`;note.classList.add("locked");turnTimer=setInterval(()=>{if(!turnLocked()){clearInterval(turnTimer);syncTurnState()}else note.textContent=`Next Pocketly roll in ${countdownText()}`},1000)}else{button.disabled=false;button.textContent="ROLL THE DICE 🎲";note.textContent="One roll = one real-life saving turn";note.classList.remove("locked")}}
-    const landingDetails={
-      save:["🪙","You landed on Save!","Set aside a little amount today. Every bit counts!","I SAVED IT!"],
-      mystery:["🎁","Mystery time!","A surprise Pocketly card is waiting for you.","OPEN CARD"],
-      bonus:["⭐","Bonus!","Lucky landing! You earned a tiny Pocketly bonus.","YAY!"],
-      challenge:["💪","Tiny Challenge!","Try a mindful-money mission. You can always skip it.","I'LL TRY IT"],
-      treat:["💗","Treat Yourself!","Celebrate your progress with a small guilt-free treat.","THANK YOU!"],
-      boost:["🌱","Savings Boost!","Your next confirmed save can earn extra Pocket Points.","BOOST IT!"],
-      rest:["🌙","Cozy Rest Stop","Nothing to do here. Cici gets a tiny break too!","REST"],
-      chaos:["🌀","Plot Twist!","Pocketville has a silly surprise for this turn.","SHOW ME"],
-      start:["🏡","Welcome Back!","You made another little trip around Pocketville.","LET'S GO!"]
+
+    // 3D Pink Rolling Dice Logic
+    const diceCube = document.querySelector("#diceCube"), rollBtn = document.querySelector("#rollButton");
+    let isRolling = false;
+    const diceAngles = {
+      1: "rotateX(0deg) rotateY(0deg)", 6: "rotateX(180deg) rotateY(0deg)",
+      2: "rotateX(0deg) rotateY(-90deg)", 5: "rotateX(0deg) rotateY(90deg)",
+      3: "rotateX(-90deg) rotateY(0deg)", 4: "rotateX(90deg) rotateY(0deg)"
     };
-    function chooseLandingEvent(type){if(bonusRollUsed)return "standard";const chance={bonus:.6,mystery:.2,chaos:.35}[type]||0;return Math.random()<chance?"reroll":"standard"}
-    function showLanding(type,event="standard"){
-      currentLandingType=type;currentLandingEvent=event||"standard";
-      const d=currentLandingEvent==="reroll"?["🎲",type==="bonus"?"Bonus Re-Roll!":type==="mystery"?"Mystery Re-Roll!":"Chaos Re-Roll!","Lucky Cici! You earned one extra dice roll for this turn.","ROLL AGAIN"]:(landingDetails[type]||["✨","Tiny step!","Every little step counts.","GOT IT!"]);
-      document.querySelector("#landingIcon").textContent=d[0];document.querySelector("#landingTitle").textContent=d[1];document.querySelector("#landingText").textContent=d[2];document.querySelector("#landingAction").textContent=d[3]+" ✨";document.querySelector("#landingModal").classList.add("open")
-    }
-    document.querySelector("#landingAction").onclick=()=>{document.querySelector("#landingModal").classList.remove("open");if(currentLandingEvent==="reroll"&&!bonusRollUsed){bonusRollUsed=true;localStorage.setItem("pocketlyBonusRollUsed","true");localStorage.removeItem("pocketlyPendingLanding");awardPoints(3);showToast("🎲 Bonus roll unlocked! +3 Pocket Points");setTimeout(()=>performRoll(true),320);return}if(currentLandingType==="save"){openSave("game");return}const reward=currentLandingType==="bonus"?10:currentLandingType==="challenge"||currentLandingType==="boost"?7:3;awardPoints(reward);completeDailyTurn();renderPlayStats();showToast(`⭐ Mission complete! +${reward} Pocket Points`);playChime()};
-    document.querySelector("#landingSkip").onclick=()=>{document.querySelector("#landingModal").classList.remove("open");completeDailyTurn();showToast("☁️ No pressure—today’s turn is complete.")};
-    document.querySelector("#landingModal").onclick=e=>{if(e.target.id==="landingModal")showToast("Finish or skip the mission to complete today’s turn.")};
-    async function performRoll(isBonus=false){
-      if(rolling)return;if(!isBonus&&getPendingLanding()){const pending=getPendingLanding();showLanding(pending.type,pending.event);return}if(!isBonus&&turnLocked()){showToast(`🌙 Next Pocketly roll in ${countdownText()}`);syncTurnState();return}const p=getPocket();if(!p){document.querySelector("#playNote").textContent="Create a pocket first.";return}if(!isBonus){bonusRollUsed=false;localStorage.removeItem("pocketlyBonusRollUsed")}
-      rolling=true;const rollButton=document.querySelector("#rollButton");rollButton.disabled=true;rollButton.textContent="ROLLING… 🎲";const n=Math.floor(Math.random()*6)+1,dice=document.querySelector("#boardDice");dice.classList.remove("throwing");void dice.offsetWidth;dice.classList.add("throwing");
-      let flick=0;const flicker=setInterval(()=>setDiceFace(flick++%6+1),85);
-      document.querySelector("#rollResult").textContent="Rolling... 🎲";
-      await new Promise(r=>setTimeout(r,900));clearInterval(flicker);setDiceFace(n);localStorage.setItem("pocketlyLastDice",String(n));document.querySelector("#rollResult").textContent="You rolled "+n+"! 🎲";
-      for(let i=0;i<n;i++){await new Promise(r=>setTimeout(r,240));playerPosition=(playerPosition+1)%36;updateToken(i===n-1?"jumping":i%2?"running":"walking")}
-      localStorage.setItem("pocketlyBoardPosition",playerPosition);const type=boardSpaces[playerPosition][0].split(" ")[0];document.querySelector("#playNote").textContent=landingCopy[type]||"Tiny steps count!";
-      const event=chooseLandingEvent(type);localStorage.setItem("pocketlyPendingLanding",JSON.stringify({type,event,position:playerPosition,rolled:n,createdAt:Date.now(),bonusRollUsed}));await new Promise(r=>setTimeout(r,380));showLanding(type,event);rolling=false;syncTurnState()
-    }
-    document.querySelector("#rollButton").onclick=()=>performRoll(false);
 
-    function showToast(message){const toast=document.querySelector("#gameToast");toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),3200)}
-    function celebrate(){const box=document.querySelector("#confetti"),colors=["#ef78ad","#7bcff2","#ffd469","#9bd48a","#b995e5"];box.innerHTML="";for(let i=0;i<28;i++){const bit=document.createElement("i");bit.style.left=Math.random()*100+"%";bit.style.background=colors[i%colors.length];bit.style.setProperty("--drift",(Math.random()*120-60)+"px");bit.style.animationDelay=Math.random()*.35+"s";box.appendChild(bit)}setTimeout(()=>box.innerHTML="",1800)}
-    function playChime(){if(!soundOn)return;try{const AudioCtx=window.AudioContext||window.webkitAudioContext,ctx=new AudioCtx();[523.25,659.25,783.99].forEach((frequency,i)=>{const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.type="sine";oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.0001,ctx.currentTime+i*.11);gain.gain.exponentialRampToValueAtTime(.11,ctx.currentTime+i*.11+.02);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+i*.11+.25);oscillator.connect(gain).connect(ctx.destination);oscillator.start(ctx.currentTime+i*.11);oscillator.stop(ctx.currentTime+i*.11+.27)})}catch(e){}}
-    function syncSoundButton(){const b=document.querySelector("#soundToggle");b.textContent=soundOn?"🔊":"🔇";b.title=soundOn?"Sound on":"Sound off";b.setAttribute("aria-label",soundOn?"Turn sound off":"Turn sound on")}
-    document.querySelector("#soundToggle").onclick=()=>{soundOn=!soundOn;localStorage.setItem("pocketlySound",soundOn?"on":"off");syncSoundButton();if(soundOn)playChime()};syncSoundButton();
+    async function rollDice() {
+      if (isRolling) return;
+      isRolling = true;
+      rollBtn.disabled = true;
+      rollBtn.textContent = "ROLLING... 🎲";
 
-    const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
-    function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
+      const roll = Math.floor(Math.random() * 6) + 1;
+      diceCube.classList.remove("rolling");
+      void diceCube.offsetWidth;
+      diceCube.style.setProperty("--target-rotation", diceAngles[roll]);
+      diceCube.classList.add("rolling");
+
+      await new Promise(r => setTimeout(r, 1000));
+      diceCube.style.transform = diceAngles[roll];
+      rollBtn.textContent = `ROLLED ${roll}! ✨`;
+
+      // Step-by-step cartoon walk animation
+      cici.classList.add("walking");
+      for (let s = 0; s < roll; s++) {
+        currentTile = (currentTile + 1) % 36;
+        positionCharacter(currentTile);
+        await new Promise(r => setTimeout(r, 340));
+      }
+      cici.classList.remove("walking");
+      localStorage.setItem("pocketlyTile", currentTile);
+
+      // Trigger landing popup
+      const landed = tilesData[currentTile];
+      document.querySelector("#landingTitle").textContent = `${landed.i} Landed on ${landed.t}!`;
+      document.querySelector("#landingText").textContent = `Every tiny step brings you closer to your goal.`;
+      document.querySelector("#landingModal").classList.add("open");
+
+      rollBtn.disabled = false;
+      rollBtn.textContent = "ROLL THE DICE 🎲";
+      isRolling = false;
+    }
+
+    rollBtn.onclick = rollDice;
+    document.querySelector("#diceStage").onclick = rollDice;
+    document.querySelector("#landingAction").onclick = () => document.querySelector("#landingModal").classList.remove("open");
+
+    // Connect Onboarding & Dashboard buttons
+    document.querySelector("#btnGetStarted").onclick = () => showView(onboarding);
+    document.querySelector("#btnGuest").onclick = () => showView(dashboard);
+    document.querySelectorAll(".next-step").forEach(b => b.onclick = () => {
+      document.querySelectorAll(".step")[0].classList.remove("active");
+      document.querySelectorAll(".step")[1].classList.add("active");
+    });
+    document.querySelector("#createPocket").onclick = () => {
+      const name = document.querySelector("#goalName").value || "My Dream";
+      const target = document.querySelector("#targetAmount").value || "5000";
+      document.querySelector("#dashPocketName").textContent = name;
+      document.querySelector("#dashProgressCopy").textContent = `PHP 0 / PHP ${Number(target).toLocaleString()}`;
+      showView(dashboard);
+    };
+
+    // Navigation switches
+    document.querySelector("#navPlay").onclick = () => showView(playView);
+    document.querySelector("#playNavHome").onclick = () => showView(dashboard);
+    document.querySelector("#openSaveModal").onclick = () => document.querySelector("#saveModal").classList.add("open");
+    document.querySelector("#closeSaveModal").onclick = () => document.querySelector("#saveModal").classList.remove("open");
+    document.querySelector("#confirmSave").onclick = () => {
+      document.querySelector("#saveModal").classList.remove("open");
+      alert("Savings recorded! ✨");
+    };
+
+    window.addEventListener("resize", () => positionCharacter(currentTile));
   </script>
 </body>
 </html>
