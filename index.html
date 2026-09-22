@@ -352,7 +352,8 @@
 @media(max-width:390px){.character-layer .player-token{width:40px!important;height:51px!important}.character-layer .player-token img{width:49px!important;height:58px!important}.dice-cube{--d:55px}.board-dice{width:80px;height:80px}.dice-3d-face{border-radius:14px}.dice-3d-face .pip{width:9px;height:9px}}
 @media(prefers-reduced-motion:reduce){.player-token[data-state="idle"] img{animation:none}.board-tile.step-contact,.board-tile.final-contact{animation:none}}
 
-</style>
+.production-cici-sprite{display:block;width:100%;height:100%;background:url("cici-walk-atlas-v2.webp") 0 0/400% 200% no-repeat;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%}
+    </style>
 </head>
 <body>
   <main class="shell">
@@ -558,12 +559,11 @@
     document.querySelector("#pocketsList").onclick=e=>{const btn=e.target.closest("[data-action]");if(!btn)return;const card=btn.closest("[data-id]"),id=Number(card.dataset.id),pockets=getPockets(),pocket=pockets.find(p=>p.id===id);if(btn.dataset.action==="active"){pockets.forEach(p=>p.active=p.id===id);savePockets(pockets);playerPosition=loadPocketPosition();resetMotionRuntime();renderPockets()}if(btn.dataset.action==="edit")openPocketEditor(pocket);if(btn.dataset.action==="archive"){if(pockets.filter(p=>!p.archived).length===1)return;pocket.archived=true;if(pocket.active){const replacement=pockets.find(p=>!p.archived);if(replacement)replacement.active=true}savePockets(pockets);playerPosition=loadPocketPosition();resetMotionRuntime();renderPockets()}};
     
     const boardSpaces=[
-      ["start","🌱","START"],["save","💧","Save"],["mystery","❓","Mystery"],["bonus","⭐","Bonus"],["save","🪙","Save"],["challenge","🛒","No-Spend"],["treat","🧁","Treat"],["save","💗","Save"],["boost","🌿","Boost"],["corner mystery","🎁","Mystery"],
-      ["save","🪙","Save"],["rest","☁️","Rest"],["mystery","💌","Mystery"],["save","💧","Save"],["bonus","✨","Bonus"],["challenge","🍳","Challenge"],["save","🪙","Save"],["chaos","🎲","Chaos"],["corner treat","🌈","Reward"],
-      ["save","💗","Save"],["mystery","🔮","Mystery"],["boost","🌱","Boost"],["save","💧","Save"],["challenge","📵","No-Spend"],["bonus","⭐","Bonus"],["save","🪙","Save"],["mystery","🎀","Mystery"],["corner rest","🌙","Rest"],
-      ["save","💗","Save"],["treat","☕","Treat"],["mystery","❓","Mystery"],["save","💧","Save"],["boost","🌿","Boost"],["chaos","🌀","Chaos"],["bonus","✨","Bonus"],["save","🪙","Save"]
-    ];
-    const boardCoords=[];
+      ["start","🏡","START"],["save","🪙","Save"],["mystery","🎁","Mystery"],["save","🪙","Save"],["challenge","📵","No-Spend"],["save","🪙","Save"],["boost","🌿","Boost"],["save","🪙","Save"],
+      ["save","🪙","Save"],["rest","🏡","Mini Shop"],["save","🪙","Save"],["treat","💗","Treat"],["challenge","🔎","Challenge"],["save","🪙","Save"],["rest","🏝️","Travel Spot"],["save","🪙","Save"],["bonus","⭐","Bonus"],
+      ["mystery","🎁","Mystery"],["treat","🌈","Reward"],["save","🪙","Save"],["mystery","🎀","Mystery"],["save","🪙","Save"],["treat","💗","Treat"],["bonus","🌈","Lucky Day!"],["save","🪙","Save"],["bonus","⭐","Bonus"],["save","🪙","Save"],
+      ["rest","🐾","Rest"],["save","🪙","Save"],["challenge","🔎","Challenge"],["save","🪙","Save"],["treat","💗","Treat"],["save","🪙","Save"],["boost","🌿","Boost"],["save","🪙","Save"],["rest","🪑","Rest"]
+    ];    const boardCoords=[];
     for(let c=1;c<=10;c++)boardCoords.push([10,c]);
     for(let r=9;r>=1;r--)boardCoords.push([r,10]);
     for(let c=9;c>=1;c--)boardCoords.push([1,c]);
@@ -575,18 +575,15 @@
     function recordSaving(pocket,amount,source){try{const items=JSON.parse(localStorage.getItem("pocketlySavingsHistory")||"[]");items.unshift({id:Date.now(),pocketId:pocket.id,pocketName:pocket.name,amount,currency:pocket.currency,source,date:new Date().toISOString()});localStorage.setItem("pocketlySavingsHistory",JSON.stringify(items.slice(0,100)))}catch(e){}}
     function renderPlayStats(){const p=getPocket();document.querySelector("#pointsCount").textContent=getPoints();if(!p)return;const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));const name=document.querySelector("#centerPocketName"),copy=document.querySelector("#centerPocketProgress"),fill=document.querySelector("#centerProgressFill");if(name)name.textContent=p.name;if(copy)copy.textContent=`${money(Number(p.saved)||0,p.currency)} / ${money(p.amount,p.currency)}`;if(fill)fill.style.width=percent+"%"}
     function buildTileLayouts(){
-      const layouts=Array(36),radii=["22px 29px 17px 25px","29px 18px 25px 16px","18px 27px 21px 30px","26px 17px 29px 20px"],rots=[-2.2,1.4,-1.1,2.1,-1.7,.8];
-      const set=(i,x,y,w,h,n=0)=>layouts[i]={x,y,w,h,r:radii[n%radii.length],rot:rots[n%rots.length]};
-      set(0,0,84.5,15.5,15.5,0);set(9,84.5,83.8,15.5,16.2,1);set(18,84,0,16,15.5,2);set(27,0,0,16,15.5,3);
-      const horizontal=(indexes,start,end,weights,ys,hs,seed)=>{const total=weights.reduce((a,b)=>a+b,0);let x=start;indexes.forEach((i,n)=>{const w=(end-start)*weights[n]/total;set(i,x,ys[n],w+.45,hs[n],seed+n);x+=w})};
-      const vertical=(indexes,start,end,weights,xs,ws,seed)=>{const total=weights.reduce((a,b)=>a+b,0);let y=start;indexes.forEach((i,n)=>{const h=(end-start)*weights[n]/total;set(i,xs[n],y,ws[n],h+.35,seed+n);y+=h})};
-      horizontal([1,2,3,4,5,6,7,8],14.5,85.5,[1.14,.82,1.18,.9,1.08,.84,1.16,1.02],[86,84.8,85.7,84.4,85.5,84.7,85.8,84.6],[13.7,15.1,13.9,15.2,14,15,13.7,15.1],4);
-      horizontal([26,25,24,23,22,21,20,19],14.5,85,[1.06,.82,1.17,.88,1.1,.84,1.14,1.03],[1.4,.2,1.1,0,1.3,.3,1.2,.1],[13.8,15.1,14,15.3,13.9,15,13.8,15.2],12);
-      vertical([17,16,15,14,13,12,11,10],14,85,[1.04,.83,1.18,.88,1.1,.82,1.16,1.02],[85.7,84.5,85.8,84.4,85.5,84.6,85.8,84.5],[14.3,15.5,14.1,15.6,14.4,15.3,14.1,15.5],20);
-      vertical([28,29,30,31,32,33,34,35],14,85,[1.08,.82,1.15,.88,1.1,.84,1.14,1.01],[.2,1.4,.1,1.5,.3,1.3,.1,1.4],[15.3,14.1,15.5,14,15.3,14.2,15.5,14.1],28);
-      return layouts
+      const L=(x,y,w,h,rot,r)=>({x,y,w,h,rot,r});
+      return [
+        L(1,1,18,15.8,-2,"28px 35px 24px 31px"),L(18.2,2,11.5,14,1.4,"22px 29px 18px 25px"),L(29,3,10.8,13,-1.5,"27px 18px 25px 17px"),L(39.1,2,11.3,14,1,"18px 27px 20px 30px"),L(49.8,3,11.4,13,-1.3,"26px 18px 29px 20px"),L(60.5,1.8,10.8,14.6,1.7,"20px 31px 18px 27px"),L(70.7,2.7,11.5,13.5,-1,"29px 19px 26px 17px"),L(81.5,1.4,17.5,15.5,1.2,"24px 34px 27px 31px"),
+        L(85.7,15.3,13.3,8.6,1.1,"24px 18px 28px 20px"),L(82.6,22.9,16.4,12.6,-1.5,"31px 23px 30px 21px"),L(85.2,34.8,13.7,8.5,1,"19px 29px 20px 27px"),L(84.1,42.5,14.8,8.5,-1,"27px 18px 28px 21px"),L(85.1,50.2,13.8,8.6,1.5,"20px 28px 19px 30px"),L(84,57.9,14.9,8.4,-1.2,"29px 18px 26px 21px"),L(82.5,65.4,16.5,11.9,1.3,"26px 33px 29px 22px"),L(84.5,76.5,14.4,8.4,-1,"24px 18px 28px 20px"),L(82.8,83.9,16.2,14,1.4,"28px 33px 24px 30px"),
+        L(75.2,84.3,9,13.4,-1.4,"24px 17px 27px 20px"),L(62.5,83.4,13.6,14.9,1,"29px 20px 31px 22px"),L(52.6,85.1,10.5,12.7,-1.2,"19px 28px 20px 30px"),L(42.7,84.1,10.5,13.7,1.4,"28px 19px 27px 21px"),L(32.8,85.2,10.5,12.5,-1,"21px 29px 19px 27px"),L(22.9,84.2,10.5,13.5,1.2,"29px 18px 26px 22px"),L(9.2,83.2,14.4,15.1,-1.5,"31px 24px 29px 22px"),L(.8,84.4,9.1,13.5,1.2,"21px 29px 18px 27px"),
+        L(.9,78.4,13.7,6.7,-1.2,"28px 19px 27px 20px"),L(1.5,72.3,12.7,6.7,1.1,"20px 29px 19px 27px"),L(.6,63,15.7,10,-1.4,"31px 22px 29px 20px"),L(1.4,57.2,12.7,6.4,1,"21px 29px 19px 27px"),L(.8,51.4,13.8,6.4,-1.1,"29px 18px 26px 21px"),L(1.5,45.6,12.7,6.4,1.3,"20px 28px 19px 30px"),L(.8,39.8,13.8,6.4,-1.3,"28px 19px 27px 21px"),L(1.4,34,12.7,6.4,1,"21px 29px 18px 27px"),L(.7,28.2,13.8,6.4,-1.1,"29px 18px 27px 20px"),L(1.2,22.4,13.2,6.4,1.3,"20px 28px 19px 29px"),L(.7,16.5,15.6,6.6,-1.2,"30px 22px 32px 24px")
+      ]
     }
-    function diceFaceMarkup(number){return `<span class="dice-3d-face face-${number}" aria-hidden="true">${(pipMap[number]||[]).map(p=>`<i class="pip p${p}"></i>`).join("")}</span>`}
+        function diceFaceMarkup(number){return `<span class="dice-3d-face face-${number}" aria-hidden="true">${(pipMap[number]||[]).map(p=>`<i class="pip p${p}"></i>`).join("")}</span>`}
     const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
     const TURN_STATE=Object.freeze({IDLE:"IDLE",ROLLING:"ROLLING",DICE_LANDED:"DICE_LANDED",MOVING:"MOVING",LANDING:"LANDING",RESOLVING_TILE:"RESOLVING_TILE"});
     const DICE_SKINS=Object.freeze({classic:{id:"classic",unlocked:true},"pink-heart":{id:"pink-heart",unlocked:false}});
@@ -604,7 +601,7 @@
     }
 
     class CharacterController{
-      constructor(board,layer,coordinates){this.board=board;this.layer=layer;this.coordinates=coordinates;this.token=layer.querySelector("#playerToken");this.image=this.token.querySelector("img");this.facing=1;this.runId=0;this.setCharacterState("idle")}
+      constructor(board,layer,coordinates){this.board=board;this.layer=layer;this.coordinates=coordinates;this.token=layer.querySelector("#playerToken");this.image=this.token.querySelector(".production-cici-sprite")||this.token.querySelector("img");this.facing=1;this.runId=0;this.setCharacterState("idle")}
       setCharacterState(state){this.token.dataset.state=state;this.token.setAttribute("aria-label",`Cici ${state}`)}
       pose(point,facing=this.facing,bob=0,rotation=0,squashX=1,squashY=1){return `translate3d(${point.x}px,${point.y+bob}px,0) rotate(${rotation}deg) scaleX(${facing*squashX}) scaleY(${squashY})`}
       place(index){this.coordinates.recalculate();const point=this.coordinates.get(index),next=this.coordinates.get((index+1)%36),dx=next.x-point.x;if(Math.abs(dx)>4)this.facing=dx<0?-1:1;this.token.style.transform=this.pose(point,this.facing);this.token.dataset.tile=String(index);this.setCharacterState("idle")}
@@ -659,7 +656,7 @@
     function renderBoard(){
       const board=document.querySelector("#gameBoard"),faces=[1,2,3,4,5,6].map(diceFaceMarkup).join("");resetMotionRuntime();board.innerHTML=`<div class="board-center"><div class="board-center-panel"><strong class="board-center-title">Welcome to Pocketville</strong><span class="board-center-sub" id="centerPocketName">Your little dream</span><div class="center-progress"><div class="center-progress-copy"><span>Active pocket</span><span id="centerPocketProgress">₱0 / ₱0</span></div><div class="center-progress-track"><div class="center-progress-fill" id="centerProgressFill"></div></div></div><button class="board-dice" id="boardDice" type="button" data-skin="classic" aria-label="Roll the Pocketly dice"><span class="dice-shadow" id="diceShadow"></span><span class="dice-cube" id="diceCube">${faces}</span></button><small class="turn-note" id="turnNote">One roll = one saving turn</small></div></div>`;
       const layouts=buildTileLayouts();boardSpaces.forEach((space,i)=>{const tile=document.createElement("div"),l=layouts[i],featured=[0,9,18,27,3,15,24,33].includes(i);tile.className=`board-tile ${space[0]} ${featured?"featured":""}`;tile.dataset.index=i;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--r:${l.r};--rot:${l.rot}deg`;tile.innerHTML=`<small class="tile-number">${i+1}</small><span class="tile-icon">${space[1]}</span><span class="tile-name">${space[2]}</span>`;board.appendChild(tile)});
-      const layer=document.createElement("div");layer.className="character-layer";layer.id="character-layer";layer.setAttribute("aria-hidden","true");layer.innerHTML='<span class="player-token" id="playerToken" data-state="idle"><img src="cici-welcome.png" alt=""></span>';board.appendChild(layer);
+      const layer=document.createElement("div");layer.className="character-layer";layer.id="character-layer";layer.setAttribute("aria-hidden","true");layer.innerHTML='<span class="player-token" id="playerToken" data-state="idle"><span class="production-cici-sprite" aria-hidden="true"></span></span>';board.appendChild(layer);
       const panel=board.querySelector(".board-center-panel"),roll=document.querySelector("#rollButton");if(panel&&roll)panel.appendChild(roll);
       coordinateManager=new BoardCoordinateManager(board,layer);coordinateManager.start();characterController=new CharacterController(board,layer,coordinateManager);diceController=new DiceController(document.querySelector("#boardDice"));turnController=turnController||new TurnController();turnController.state=TURN_STATE.IDLE;
       requestAnimationFrame(()=>{coordinateManager.recalculate();characterController.place(playerPosition)});document.querySelector("#boardDice").onclick=()=>performRoll(false);renderPlayStats();syncTurnState()
