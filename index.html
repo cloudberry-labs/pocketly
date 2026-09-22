@@ -284,7 +284,7 @@
       });
       landingSkip.addEventListener("click",()=>closeLanding("SKIPPED"));
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
-      function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});updateProgress()});updateProgress()}
+      function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
       refreshCurrency();
       setBusy(false);
       diceButton.addEventListener("click",takeTurn);
