@@ -18,6 +18,8 @@
     .preview-button{min-height:42px;padding:7px 13px;border:3px solid #fff;border-radius:16px;background:linear-gradient(#f38ab5,#e66fa5);box-shadow:0 5px 0 var(--pink-deep),0 9px 16px rgba(94,65,88,.17);color:#fff;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation}
     .preview-button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pink-deep)}
     .preview-button:disabled{cursor:wait;opacity:.65}
+.currency-select{min-height:42px;padding:7px 9px;border:3px solid #fff;border-radius:16px;background:#fff8fc;box-shadow:0 5px 0 #d7a4bc;color:#6d4961;font:inherit;font-size:11px;outline:none;cursor:pointer}
+.head-actions{display:flex;gap:7px;align-items:center}
 
     .storybook-board{position:relative;width:100%;aspect-ratio:2/3;container-type:inline-size;overflow:hidden;border:5px solid #fff;border-radius:38px;background:url("pocketville-board-map.jpg") center/cover no-repeat;box-shadow:0 24px 50px rgba(87,67,101,.23),inset 0 0 0 3px rgba(230,144,181,.5);isolation:isolate}
     .storybook-board:before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(222,242,255,.12),rgba(255,234,243,.08) 55%,rgba(82,61,86,.08));pointer-events:none}
@@ -107,7 +109,7 @@
   <main class="lab">
     <header class="lab-head">
       <div><small>Pocketly · Board Lab</small><h1>Organic Tile Study</h1></div>
-      <button class="preview-button" id="previewButton" type="button">PREVIEW STEPS</button>
+      <div class="head-actions"><select class="currency-select" id="currencySelect" aria-label="Savings currency"><option value="PHP">₱ PHP</option><option value="CNY">¥ CNY</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option><option value="JPY">¥ JPY</option></select><button class="preview-button" id="previewButton" type="button">PREVIEW STEPS</button></div>
     </header>
     <section class="storybook-board" id="board" aria-label="Pocketly 36-space board layout preview">
       <i class="foliage f1">🌿🌸</i><i class="foliage f2">🌼🌿</i><i class="foliage f3">🌸🌱</i><i class="foliage f4">🌿🌷</i><i class="foliage f5">🌸</i><i class="foliage f6">🌼</i>
@@ -126,11 +128,23 @@
     (()=>{
       "use strict";
       const spaces=[
-["🏡","START","mint",1],["🪙","Save ₱20","pink"],["🎁","Mystery","lavender"],["🪙","Save ₱50","pink"],["📵","No-Spend","peach"],["🪙","Save ₱100","pink"],["🌿","Boost","mint"],["🪙","Save ₱150","pink"],
-["🪙","Save ₱50","pink"],["🏡","Mini Shop","blue",1],["🪙","Save ₱200","pink"],["💗","Treat","yellow"],["🔎","Challenge","peach"],["🪙","Save ₱100","pink"],["🏝️","Travel Spot","blue",1],["🪙","Save ₱20","pink"],["⭐","Bonus","blue"],
-["🎁","Mystery","lavender"],["🌈","Reward","pink",1],["🪙","Save ₱150","pink"],["🎀","Mystery","lavender"],["🪙","Save ₱50","pink"],["💗","Treat","yellow"],["🌈","Lucky Day!","pink",1],["🪙","Save ₱100","pink"],["⭐","Bonus","blue"],["🪙","Save ₱200","pink"],
-["🐾","Rest","lavender",1],["🪙","Save ₱50","pink"],["🔎","Challenge","peach"],["🪙","Save ₱150","pink"],["💗","Treat","yellow"],["🪙","Save ₱100","pink"],["🌿","Boost","mint"],["🪙","Save ₱20","pink"],["🪑","Rest","lavender"]
+["🏡","START","mint",1],["🪙","Save","pink",0,0],["🎁","Mystery","lavender"],["🪙","Save","pink",0,1],["📵","No-Spend","peach"],["🪙","Save","pink",0,2],["🌿","Boost","mint"],["🪙","Save","pink",0,3],
+["🪙","Save","pink",0,1],["🏡","Mini Shop","blue",1],["🪙","Save","pink",0,4],["💗","Treat","yellow"],["🔎","Challenge","peach"],["🪙","Save","pink",0,2],["🏝️","Travel Spot","blue",1],["🪙","Save","pink",0,0],["⭐","Bonus","blue"],
+["🎁","Mystery","lavender"],["🌈","Reward","pink",1],["🪙","Save","pink",0,3],["🎀","Mystery","lavender"],["🪙","Save","pink",0,1],["💗","Treat","yellow"],["🌈","Lucky Day!","pink",1],["🪙","Save","pink",0,2],["⭐","Bonus","blue"],["🪙","Save","pink",0,4],
+["🐾","Rest","lavender",1],["🪙","Save","pink",0,1],["🔎","Challenge","peach"],["🪙","Save","pink",0,3],["💗","Treat","yellow"],["🪙","Save","pink",0,2],["🌿","Boost","mint"],["🪙","Save","pink",0,0],["🪑","Rest","lavender"]
 ];
+      const currencySets={
+        PHP:{symbol:"₱",amounts:[20,50,100,150,200]},
+        CNY:{symbol:"¥",amounts:[2,5,10,15,20]},
+        USD:{symbol:"$",amounts:[1,2,3,5,10]},
+        EUR:{symbol:"€",amounts:[1,2,3,5,10]},
+        GBP:{symbol:"£",amounts:[1,2,3,5,10]},
+        JPY:{symbol:"¥",amounts:[100,200,300,500,1000]}
+      };
+      let selectedCurrency=localStorage.getItem("pocketlyCurrency")||"PHP";
+      if(!currencySets[selectedCurrency])selectedCurrency="PHP";
+      const formatAmount=(tier)=>{const cfg=currencySets[selectedCurrency],n=cfg.amounts[tier];return cfg.symbol+n.toLocaleString("en-US")};
+      const displayName=(space)=>space[1]==="Save"?"Save "+formatAmount(space[4]):space[1];
       const L=(x,y,w,h,rot,radius)=>({x,y,w,h,rot,radius});
       const layouts=[
         L(1,1,18,15.8,-2,"28px 35px 24px 31px"),L(18.2,2,11.5,14,1.4,"22px 29px 18px 25px"),L(29,3,10.8,13,-1.5,"27px 18px 25px 17px"),L(39.1,2,11.3,14,1,"18px 27px 20px 30px"),L(49.8,3,11.4,13,-1.3,"26px 18px 29px 20px"),L(60.5,1.8,10.8,14.6,1.7,"20px 31px 18px 27px"),L(70.7,2.7,11.5,13.5,-1,"29px 19px 26px 17px"),L(81.5,1.4,17.5,15.5,1.2,"24px 34px 27px 31px"),
@@ -138,10 +152,10 @@
         L(75.2,84.3,9,13.4,-1.4,"24px 17px 27px 20px"),L(62.5,83.4,13.6,14.9,1,"29px 20px 31px 22px"),L(52.6,85.1,10.5,12.7,-1.2,"19px 28px 20px 30px"),L(42.7,84.1,10.5,13.7,1.4,"28px 19px 27px 21px"),L(32.8,85.2,10.5,12.5,-1,"21px 29px 19px 27px"),L(22.9,84.2,10.5,13.5,1.2,"29px 18px 26px 22px"),L(9.2,83.2,14.4,15.1,-1.5,"31px 24px 29px 22px"),L(.8,84.4,9.1,13.5,1.2,"21px 29px 18px 27px"),
         L(.9,78.4,13.7,6.7,-1.2,"28px 19px 27px 20px"),L(1.5,72.3,12.7,6.7,1.1,"20px 29px 19px 27px"),L(.6,63,15.7,10,-1.4,"31px 22px 29px 20px"),L(1.4,57.2,12.7,6.4,1,"21px 29px 19px 27px"),L(.8,51.4,13.8,6.4,-1.1,"29px 18px 26px 21px"),L(1.5,45.6,12.7,6.4,1.3,"20px 28px 19px 30px"),L(.8,39.8,13.8,6.4,-1.3,"28px 19px 27px 21px"),L(1.4,34,12.7,6.4,1,"21px 29px 18px 27px"),L(.7,28.2,13.8,6.4,-1.1,"29px 18px 27px 20px"),L(1.2,22.4,13.2,6.4,1.3,"20px 28px 19px 29px"),L(.7,16.5,15.6,6.6,-1.2,"30px 22px 32px 24px")
       ];
-      const board=document.querySelector("#board"),overlay=document.querySelector("#landingOverlay"),landingEmoji=document.querySelector("#landingEmoji"),landingType=document.querySelector("#landingType"),landingTitle=document.querySelector("#landingTitle"),landingMessage=document.querySelector("#landingMessage"),landingAction=document.querySelector("#landingAction"),preview=document.querySelector("#previewButton"),die=document.querySelector("#die"),dieScene=document.querySelector("#dieScene"),diceShadow=document.querySelector("#diceShadow"),diceButton=document.querySelector("#diceButton"),rollLabel=document.querySelector("#rollLabel"),cici=document.querySelector("#cici"),sprite=document.querySelector("#ciciSprite"),status=document.querySelector("#motionStatus"),controls=[...document.querySelectorAll("#devControls button")],reduced=matchMedia("(prefers-reduced-motion: reduce)");
+      const board=document.querySelector("#board"),currencySelect=document.querySelector("#currencySelect"),overlay=document.querySelector("#landingOverlay"),landingEmoji=document.querySelector("#landingEmoji"),landingType=document.querySelector("#landingType"),landingTitle=document.querySelector("#landingTitle"),landingMessage=document.querySelector("#landingMessage"),landingAction=document.querySelector("#landingAction"),preview=document.querySelector("#previewButton"),die=document.querySelector("#die"),dieScene=document.querySelector("#dieScene"),diceShadow=document.querySelector("#diceShadow"),diceButton=document.querySelector("#diceButton"),rollLabel=document.querySelector("#rollLabel"),cici=document.querySelector("#cici"),sprite=document.querySelector("#ciciSprite"),status=document.querySelector("#motionStatus"),controls=[...document.querySelectorAll("#devControls button")],reduced=matchMedia("(prefers-reduced-motion: reduce)");
       let points=[],position=0,state="IDLE",facing=1,resizeFrame=0;const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       const wait=ms=>new Promise(r=>setTimeout(r,ms));
-      spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${name}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
+      spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${displayName(space)}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
       function measure(){const br=board.getBoundingClientRect(),tw=cici.offsetWidth,th=cici.offsetHeight;points=[...board.querySelectorAll(".tile")].sort((a,b)=>+a.dataset.index-+b.dataset.index).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-br.left+r.width/2-tw/2,y:r.top-br.top+r.height*.58-th*.82,cx:r.left-br.left+r.width/2,cy:r.top-br.top+r.height/2,tile}})}
       function setSpriteFrame(frame){const safe=((frame%8)+8)%8,col=safe%4,row=Math.floor(safe/4);sprite.style.backgroundPosition=`${col*(100/3)}% ${row*100}%`}
       function transform(p,face=facing,bob=0,rot=0,sx=1,sy=1){return `translate3d(${p.x}px,${p.y+bob}px,0) rotate(${rot}deg) scaleX(${face*sx}) scaleY(${sy})`}
@@ -169,10 +183,14 @@
         "Reward":["🌈","REWARD","You found a reward!","A happy little win for making progress in Pocketville.","CLAIM!"],
         "Lucky Day!":["🌈","LUCKY DAY!","It’s your lucky day!","Something extra-special will happen here once rewards are connected.","LUCKY ME!"]
       };
-      function showLanding(index){const [icon,name]=spaces[index];let m;if(name.startsWith("Save ₱")){const amount=name.replace("Save ","");m=["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+amount+" for this landing. 💗","SAVE "+amount]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4];overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
+      function showLanding(index){const space=spaces[index],[icon,name]=space;let m;if(name==="Save"){const amount=formatAmount(space[4]);m=["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+amount+" for this landing. 💗","SAVE "+amount]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4];overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");state="IDLE";status.innerHTML=`<strong>READY</strong> · Cici is on tile ${position+1}`;setBusy(false)}
       landingAction.addEventListener("click",closeLanding);
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
+      function refreshCurrency(){currencySelect.value=selectedCurrency;[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])})}
+      currencySelect.value=selectedCurrency;
+      currencySelect.addEventListener("change",()=>{selectedCurrency=currencySelect.value;localStorage.setItem("pocketlyCurrency",selectedCurrency);refreshCurrency()});
+      refreshCurrency();
       diceButton.addEventListener("click",takeTurn);
       setDieFace(1);
       document.querySelectorAll("[data-move]").forEach(b=>b.addEventListener("click",()=>move(+b.dataset.move)));
