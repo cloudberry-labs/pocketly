@@ -11,7 +11,7 @@
     html,body{margin:0;min-height:100%;font-family:"Darumadrop One",ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:var(--ink)}
     body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 13% 10%,#fff 0 7%,transparent 7.2%),radial-gradient(circle at 92% 12%,#cfefff 0 17%,transparent 17.2%),linear-gradient(145deg,#fff0f7,#edf8ff)}
     button{font:inherit}
-    .lab{width:min(100%,500px);padding:20px 16px 18px;border-radius:34px;background:linear-gradient(180deg,rgba(246,252,255,.9),rgba(255,242,248,.9));box-shadow:0 14px 38px rgba(88,76,105,.12)}
+    .lab{width:min(100%,460px);padding:20px 16px 18px;border-radius:34px;background:linear-gradient(180deg,rgba(246,252,255,.9),rgba(255,242,248,.9));box-shadow:0 14px 38px rgba(88,76,105,.12)}
     .lab-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 5px 11px}
     .lab-head small{display:block;color:#887c91;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
     .lab-head h1{margin:2px 0 0;font-size:27px;line-height:1}
@@ -120,15 +120,15 @@
   
     .production-nav{position:relative;bottom:auto;z-index:100;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:100%;margin:10px auto 0;padding:7px;border:3px solid rgba(255,255,255,.92);border-radius:22px;background:rgba(255,250,253,.93);box-shadow:0 9px 24px rgba(74,54,82,.18);backdrop-filter:blur(12px)}
     .production-nav button{min-width:0;padding:7px 3px;border:0;border-radius:15px;background:transparent;color:#7a6c7e;font:10px "Darumadrop One",sans-serif;cursor:pointer}.production-nav button span{display:block;font-size:19px}.production-nav button.active{background:#ffe4ef;color:#bd5684}
-    </style>
+    .pocket-game-progress{display:grid;gap:3px;width:min(88%,250px);margin:7px auto 0;font-family:"Darumadrop One",sans-serif}.pocket-game-progress b{font-size:12px;color:#d15f8e}.pocket-game-progress span,.pocket-game-progress small{font-size:8px;color:#746b7e}.pocket-game-progress i{display:block;height:6px;overflow:hidden;border-radius:99px;background:#eadfe8}.pocket-game-progress em{display:block;width:0;height:100%;border-radius:inherit;background:#ef8caf;transition:width .3s}</style>
 </head>
 <body>
   <main class="lab">
-    <header class="lab-head"><div><small>Pocketly</small><h1>Pocketville</h1></div><div class="head-actions"><select class="currency-select" id="currencySelect" aria-label="Savings currency"><option value="PHP">₱ PHP</option><option value="CNY">¥ CNY</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option><option value="JPY">¥ JPY</option></select></div></header>
+    <header class="lab-head"><div><small>Pocketly</small><h1>Pocketville</h1></div><div class="head-actions"><span class="currency-select" id="currencySelect">Active Pocket</span></div></header>
     <div class="progress-strip"><div class="progress-pill"><small>Savings Total</small><strong id="savingsTotal">₱0</strong></div><div class="progress-pill challenge-pill" id="challengePill" role="button" tabindex="0"><small>Active Challenges · Tap to view</small><strong id="challengeCount">0</strong></div></div>
     <section class="storybook-board" id="board" aria-label="Pocketly 36-space board layout preview">
       <i class="foliage f1">🌿🌸</i><i class="foliage f2">🌼🌿</i><i class="foliage f3">🌸🌱</i><i class="foliage f4">🌿🌷</i><i class="foliage f5">🌸</i><i class="foliage f6">🌼</i>
-      <div class="center-world"><div class="welcome-sign"><small>Welcome to</small><strong>Pocketville</strong><span>Save · Play · Build Your Little World</span></div></div>
+      <div class="center-world"><div class="welcome-sign"><small>Welcome to</small><strong>Pocketville</strong><span id="activePocketName">No active pocket</span><div class="pocket-game-progress"><b id="activePocketSaved">—</b><span id="activePocketRemaining">Create a pocket to play</span><i><em id="activePocketFill"></em></i><small id="activePocketPercent">0% saved</small></div></div></div>
       <div class="dice-zone"><button class="dice-button" id="diceButton" type="button" aria-label="Roll dice"><span class="dice-shadow" id="diceShadow"></span><span class="die-scene" id="dieScene"><span class="die" id="die"><span class="face f1"><i class="pip p5"></i></span><span class="face f2"><i class="pip p1"></i><i class="pip p9"></i></span><span class="face f3"><i class="pip p1"></i><i class="pip p5"></i><i class="pip p9"></i></span><span class="face f4"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p7"></i><i class="pip p9"></i></span><span class="face f5"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p5"></i><i class="pip p7"></i><i class="pip p9"></i></span><span class="face f6"><i class="pip p1"></i><i class="pip p3"></i><i class="pip p4"></i><i class="pip p6"></i><i class="pip p7"></i><i class="pip p9"></i></span></span></span><span class="roll-label" id="rollLabel">ROLL 🎲</span></button></div>
       <div class="landing-overlay" id="landingOverlay" aria-hidden="true"><div class="landing-card"><div class="landing-emoji" id="landingEmoji">🎁</div><p class="landing-type" id="landingType">MYSTERY</p><h2 class="landing-title" id="landingTitle">A little surprise!</h2><p class="landing-message" id="landingMessage"></p><div class="landing-actions"><button class="landing-action" id="landingAction" type="button">OKAY!</button><button class="landing-skip" id="landingSkip" type="button">NOT NOW</button></div></div></div>
       <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><span class="cici-sprite" id="ciciSprite"></span></span></div>
@@ -152,8 +152,12 @@
         GBP:{symbol:"£",amounts:[1,2,3,5,10]},
         JPY:{symbol:"¥",amounts:[100,200,300,500,1000]}
       };
-      let selectedCurrency=localStorage.getItem("pocketlyCurrency")||"PHP";
+      function getPockets(){try{const a=JSON.parse(localStorage.getItem("pocketlyPockets")||"[]");return Array.isArray(a)?a:[]}catch{return[]}}
+      function getActivePocket(){const a=getPockets();return a.find(p=>p.active&&!p.archived)||a.find(p=>!p.archived)||null}
+      let activePocket=getActivePocket();
+      let selectedCurrency=activePocket?.currency||"PHP";
       if(!currencySets[selectedCurrency])selectedCurrency="PHP";
+      const formatMoney=(n,c=selectedCurrency)=>new Intl.NumberFormat(undefined,{style:"currency",currency:c,maximumFractionDigits:0}).format(Number(n)||0);
       const formatAmount=(tier)=>{const cfg=currencySets[selectedCurrency],n=cfg.amounts[tier];return cfg.symbol+n.toLocaleString("en-US")};
       const displayName=(space)=>space[1]==="Save"?"Save "+formatAmount(space[4]):space[1];
       const L=(x,y,w,h,rot,radius)=>({x,y,w,h,rot,radius});
@@ -165,12 +169,21 @@
       ];
       const board=document.querySelector("#board"),currencySelect=document.querySelector("#currencySelect"),savingsTotalEl=document.querySelector("#savingsTotal"),challengeCountEl=document.querySelector("#challengeCount"),challengePill=document.querySelector("#challengePill"),overlay=document.querySelector("#landingOverlay"),landingEmoji=document.querySelector("#landingEmoji"),landingType=document.querySelector("#landingType"),landingTitle=document.querySelector("#landingTitle"),landingMessage=document.querySelector("#landingMessage"),landingAction=document.querySelector("#landingAction"),landingSkip=document.querySelector("#landingSkip"),preview=document.querySelector("#previewButton"),die=document.querySelector("#die"),dieScene=document.querySelector("#dieScene"),diceShadow=document.querySelector("#diceShadow"),diceButton=document.querySelector("#diceButton"),rollLabel=document.querySelector("#rollLabel"),cici=document.querySelector("#cici"),sprite=document.querySelector("#ciciSprite"),status=document.querySelector("#motionStatus"),controls=[],reduced=matchMedia("(prefers-reduced-motion: reduce)");
       let points=[],position=0,state="IDLE",facing=1,resizeFrame=0,currentLanding=null;
-      const saveKey=()=>`pocketlySavings_${selectedCurrency}`;
       const dayKey=()=>new Date().toLocaleDateString("en-CA");
-      const completedToday=()=>localStorage.getItem("pocketlyDailySaveDate")===dayKey();
-      const getSavings=()=>Number(localStorage.getItem(saveKey())||0);
+      const dailyKey=()=>`pocketlyDailySaveDate_${activePocket?.id||"guest"}`;
+      const completedToday=()=>!!activePocket&&localStorage.getItem(dailyKey())===dayKey();
+      const getSavings=()=>Number(activePocket?.saved||0);
+      function savePockets(a){localStorage.setItem("pocketlyPockets",JSON.stringify(a));const p=a.find(x=>x.active&&!x.archived)||a.find(x=>!x.archived);if(p)localStorage.setItem("pocketlyFirstPocket",JSON.stringify(p))}
+      function syncActivePocket(){
+        activePocket=getActivePocket();selectedCurrency=activePocket?.currency||"PHP";if(!currencySets[selectedCurrency])selectedCurrency="PHP";
+        currencySelect.textContent=activePocket?selectedCurrency:"No Pocket";
+        const name=document.querySelector("#activePocketName"),saved=document.querySelector("#activePocketSaved"),rem=document.querySelector("#activePocketRemaining"),pct=document.querySelector("#activePocketPercent"),fill=document.querySelector("#activePocketFill");
+        if(!activePocket){name.textContent="No active pocket";saved.textContent="—";rem.textContent="Create a pocket to play";pct.textContent="0% saved";fill.style.width="0%";return}
+        const s=Number(activePocket.saved)||0,t=Number(activePocket.amount)||0,p=t?Math.min(100,Math.round(s/t*100)):0;
+        name.textContent=activePocket.name;saved.textContent=`${formatMoney(s)} saved`;rem.textContent=`${formatMoney(Math.max(0,t-s))} remaining`;pct.textContent=`${p}% of ${formatMoney(t)}`;fill.style.width=p+"%";
+      }
       const getChallenges=()=>{try{return JSON.parse(localStorage.getItem("pocketlyChallenges")||"[]")}catch{return[]}};
-      const updateProgress=()=>{savingsTotalEl.textContent=currencySets[selectedCurrency].symbol+getSavings().toLocaleString("en-US");challengeCountEl.textContent=getChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
+      const updateProgress=()=>{syncActivePocket();savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       const wait=ms=>new Promise(r=>setTimeout(r,ms));
       spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${displayName(space)}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
       function measure(){const br=board.getBoundingClientRect(),tw=cici.offsetWidth,th=cici.offsetHeight;points=[...board.querySelectorAll(".tile")].sort((a,b)=>+a.dataset.index-+b.dataset.index).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-br.left+r.width/2-tw/2,y:r.top-br.top+r.height*.58-th*.82,cx:r.left-br.left+r.width/2,cy:r.top-br.top+r.height/2,tile}})}
@@ -241,7 +254,16 @@
       challengePill.addEventListener("click",showChallengePanel);
       challengePill.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showChallengePanel()}});
       function showSpecialResult(pool){const r=pool[Math.floor(Math.random()*pool.length)];currentLanding.result=r;transitionPopup([r[0],r[1],r[2],r[3],r[4]]);landingSkip.hidden=true}
-      function completeDailySave(tier){const amount=currencySets[selectedCurrency].amounts[tier],total=getSavings()+amount;localStorage.setItem(saveKey(),String(total));localStorage.setItem("pocketlyDailySaveDate",dayKey());updateProgress();currentLanding.name="DailyComplete";transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your little save is tucked away!","You saved "+formatAmount(tier)+" today. Come back tomorrow for another little step toward your dream. 💗","SEE YOU TOMORROW"]);landingSkip.hidden=true;return amount}
+      function completeDailySave(tier){
+        if(!activePocket)return 0;
+        const amount=currencySets[selectedCurrency].amounts[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
+        if(i<0)return 0;
+        pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,(Number(pockets[i].saved)||0)+amount);
+        savePockets(pockets);activePocket=pockets[i];localStorage.setItem(dailyKey(),dayKey());updateProgress();
+        currentLanding.name="DailyComplete";
+        transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete. 💗`,"SEE YOU TOMORROW"]);
+        landingSkip.hidden=true;return amount
+      }
       landingAction.addEventListener("click",()=>{
         if(!currentLanding)return closeLanding();
         if(currentLanding.name==="Mystery"&&!currentLanding.result){showSpecialResult(mysteries);return}
@@ -262,9 +284,7 @@
       });
       landingSkip.addEventListener("click",()=>closeLanding("SKIPPED"));
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
-      function refreshCurrency(){currencySelect.value=selectedCurrency;[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});updateProgress()}
-      currencySelect.value=selectedCurrency;
-      currencySelect.addEventListener("change",()=>{selectedCurrency=currencySelect.value;localStorage.setItem("pocketlyCurrency",selectedCurrency);refreshCurrency()});
+      function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});updateProgress()});updateProgress()}
       refreshCurrency();
       setBusy(false);
       diceButton.addEventListener("click",takeTurn);
