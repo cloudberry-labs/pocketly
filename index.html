@@ -211,7 +211,13 @@
         const n=Math.floor(Math.random()*6)+1;
         try{await rollDie(n)}catch(e){setDieFace(n)}
         state="IDLE";await wait(180);
-        try{await move(n)}catch(e){state="IDLE";setBusy(false);rollLabel.textContent="ROLL 🎲"}
+        try{await move(n)}catch(e){
+          measure();
+          const to=(position+n)%Math.max(points.length,1);
+          if(points[to]){position=to;setSpriteFrame(0);cici.style.transform=transform(points[to]);press(points[to].tile,true);state="RESOLVING_TILE";showLanding(to)}
+          else{state="IDLE";setBusy(false)}
+        }
+        if(state==="IDLE")rollLabel.textContent="ROLL 🎲";
       }
       const messages={
         "START":["🏡","START","Back in Pocketville!","A fresh little lap begins. Keep building your savings dream.","LET'S GO!"],
@@ -262,8 +268,12 @@
       function fillPopup(m,choice=true){landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4]||"OKAY!";landingSkip.hidden=!choice}
       function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const amount=formatAmount(space[4]);m=["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+amount+" for this landing. 💗","SAVE "+amount]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(label="READY"){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");currentLanding=null;state="IDLE";status.innerHTML=`<strong>${label}</strong> · Cici is on tile ${position+1}`;setBusy(false)}
-      function transitionPopup(m){const card=overlay.querySelector(".landing-card");card.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.88)"}],{duration:150,easing:"ease-in"}).finished.then(()=>{fillPopup(m,true);card.animate([{opacity:0,transform:"scale(.88)"},{opacity:1,transform:"scale(1.04)",offset:.72},{opacity:1,transform:"scale(1)"}],{duration:330,easing:"cubic-bezier(.18,.9,.28,1.2)"})})}
-      function showChallenge(){const ch=challenges[Math.floor(Math.random()*challenges.length)];currentLanding.challenge=ch;transitionPopup([ch[0],ch[1],ch[2],ch[3],"ACCEPT CHALLENGE"]);landingSkip.textContent="NOT NOW"}
+      function transitionPopup(m,choice=false){
+        const card=overlay.querySelector(".landing-card");
+        const swap=()=>{fillPopup(m,choice);try{card.animate([{opacity:.35,transform:"scale(.94)"},{opacity:1,transform:"scale(1)"}],{duration:260,easing:"ease-out"})}catch(e){}};
+        try{const a=card.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.9)"}],{duration:140,easing:"ease-in"});if(a&&a.finished)a.finished.then(swap).catch(swap);else setTimeout(swap,150)}catch(e){swap()}
+      }
+      function showChallenge(){const ch=challenges[Math.floor(Math.random()*challenges.length)];currentLanding.challenge=ch;transitionPopup([ch[0],ch[1],ch[2],ch[3],"ACCEPT CHALLENGE"],true);landingSkip.textContent="NOT NOW"}
       function showChallengePanel(){const list=getChallenges();currentLanding={name:"ChallengePanel"};landingEmoji.textContent="📋";landingType.textContent="ACTIVE CHALLENGES";landingTitle.textContent=list.length?"Your little missions":"All clear!";landingMessage.innerHTML=list.length?'<div class="challenge-list">'+list.map((x,i)=>'<div class="challenge-item"><strong>'+x.title+'</strong><span>'+x.detail+'</span><button class="challenge-done" type="button" data-challenge-done="'+i+'">DONE ✓</button></div>').join("")+'</div>':"You don’t have any active challenges right now. 💗";landingAction.textContent="CLOSE";landingSkip.hidden=true;overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");state="RESOLVING_TILE";setBusy(true)}
       landingMessage.addEventListener("click",e=>{const b=e.target.closest("[data-challenge-done]");if(!b)return;const i=+b.dataset.challengeDone,list=getChallenges(),done=list.splice(i,1)[0];localStorage.setItem("pocketlyChallenges",JSON.stringify(list));const history=JSON.parse(localStorage.getItem("pocketlyCompletedChallenges")||"[]");history.push({...done,completedAt:new Date().toISOString()});localStorage.setItem("pocketlyCompletedChallenges",JSON.stringify(history));updateProgress();showChallengePanel()});
       challengePill.addEventListener("click",showChallengePanel);
@@ -291,14 +301,14 @@
           currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["✨","CLAIMED!","Pocketville says keep going!","Your surprise is claimed. The dice is ready for another adventure.","CONTINUE"]);landingSkip.hidden=true;return
         }
         if(currentLanding.name==="Challenge"&&!currentLanding.challenge){showChallenge();return}
-        if(currentLanding.name==="No-Spend"&&!currentLanding.challenge){const ch=["📵","NO-SPEND CHALLENGE","Wallet nap challenge!","For the rest of today, avoid non-essential spending. Essentials are always okay.","ACCEPT CHALLENGE"];currentLanding.challenge=ch;transitionPopup(ch);landingSkip.textContent="NOT NOW";return}
+        if(currentLanding.name==="No-Spend"&&!currentLanding.challenge){const ch=["📵","NO-SPEND CHALLENGE","Wallet nap challenge!","For the rest of today, avoid non-essential spending. Essentials are always okay.","ACCEPT CHALLENGE"];currentLanding.challenge=ch;transitionPopup(ch,true);landingSkip.textContent="NOT NOW";return}
         if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString()});localStorage.setItem("pocketlyChallenges",JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is now active. Finish it whenever you’re ready.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
         if(currentLanding.name==="Save"){completeDailySave(currentLanding.space[4]);return}
         if(currentLanding.name==="DailyComplete"){closeLanding("DAY COMPLETE");setBusy(false);return}
         closeLanding("READY")
       });
       landingSkip.addEventListener("click",()=>closeLanding("SKIPPED"));
-      async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
+      async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
       function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
       refreshCurrency();
       setBusy(false);
