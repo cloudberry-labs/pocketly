@@ -428,14 +428,14 @@
           <button class="btn primary dash-add" id="openSaveModal">+ ADD SAVINGS</button>
         </section>
         <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item active"><span>🏠</span>Home</button><button class="nav-item" id="openPockets"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="bottomProfile"><span>🌸</span>Profile</button>
+          <button class="nav-item active"><span>🏠</span>Home</button><button class="nav-item" id="openPockets"><span>👛</span>Pockets</button><button class="nav-item shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="bottomProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
       <div class="pockets-view" id="pocketsView">
         <header class="pockets-intro"><div><p>Save for every little dream</p><h2>My Pockets</h2></div><button class="add-pocket-mini" id="addPocketButton" aria-label="Create a new pocket">+</button></header>
         <div class="pockets-list" id="pocketsList"></div>
         <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item coming"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
+          <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
       <div class="play-view" id="playView">
@@ -449,7 +449,7 @@
           <button class="btn primary" id="rollButton">ROLL THE DICE 🎲</button>
           <p class="play-note" id="playNote">Roll the dice to begin. Savings are only counted after you confirm them.</p>
         </section>
-        <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
+        <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
       </div>
       <div class="landing-modal" id="landingModal">
         <div class="landing-card">
@@ -711,5 +711,13 @@
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
-</body>
+<script>
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>location.href="./?v=21"));
+  const requested=new URLSearchParams(location.search).get("view");
+  addEventListener("load",()=>{
+    if(requested==="pockets") document.querySelector("#openPockets")?.click();
+    if(requested==="profile") document.querySelector("#bottomProfile")?.click();
+    if(requested==="home") document.querySelector("#pocketsHome")?.click();
+  });
+</script></body>
 </html>
