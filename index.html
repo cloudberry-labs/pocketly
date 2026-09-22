@@ -117,7 +117,10 @@
 .note{margin:9px 7px 0;color:#766a7d;font-size:11px;line-height:1.45;text-align:center}
     @media(max-width:390px){body{padding:8px}.lab-head{margin-inline:7px}.lab-head h1{font-size:23px}.preview-button{padding-inline:10px}.storybook-board{border-radius:28px}.tile{border-width:2px}.tile.feature{border-width:3px}.tile-number{left:5px;top:4px}.center-world{border-radius:23px}.welcome-sign strong{font-size:20px}}
     @media(prefers-reduced-motion:reduce){.tile.key-press,.tile.key-final{animation-duration:.08s}.spark{display:none}}
-  </style>
+  
+    .production-nav{position:sticky;bottom:10px;z-index:100;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:min(calc(100% - 18px),560px);margin:12px auto 0;padding:7px;border:3px solid rgba(255,255,255,.92);border-radius:22px;background:rgba(255,250,253,.93);box-shadow:0 9px 24px rgba(74,54,82,.18);backdrop-filter:blur(12px)}
+    .production-nav button{min-width:0;padding:7px 3px;border:0;border-radius:15px;background:transparent;color:#7a6c7e;font:10px "Darumadrop One",sans-serif;cursor:pointer}.production-nav button span{display:block;font-size:19px}.production-nav button.active{background:#ffe4ef;color:#bd5684}
+    </style>
 </head>
 <body>
   <main class="lab">
@@ -131,7 +134,7 @@
       <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><span class="cici-sprite" id="ciciSprite"></span></span></div>
     </section>
     <div class="dev-controls" id="devControls" hidden></div><button id="previewButton" type="button" hidden></button><div class="motion-status" id="motionStatus"><strong>READY</strong> · Cici is on tile 1</div>
-  </main>
+  </main><nav class="production-nav" aria-label="Pocketly navigation"><button id="prodHome"><span>🏠</span>Home</button><button id="prodPockets"><span>👛</span>Pockets</button><button class="active"><span>🎲</span>Play</button><button id="prodProfile"><span>🌸</span>Profile</button></nav>
   <script>
     (()=>{
       "use strict";
@@ -273,5 +276,5 @@
       requestAnimationFrame(()=>place(0));
     })();
   </script>
-</body>
+<script>document.querySelector("#prodHome").onclick=()=>location.href="pocketly-shell.html#home";document.querySelector("#prodPockets").onclick=()=>location.href="pocketly-shell.html#pockets";document.querySelector("#prodProfile").onclick=()=>location.href="pocketly-shell.html#profile";</script></body>
 </html>
