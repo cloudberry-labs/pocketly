@@ -11,7 +11,7 @@
     html,body{margin:0;min-height:100%;font-family:"Darumadrop One",ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:var(--ink)}
     body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 13% 10%,#fff 0 7%,transparent 7.2%),radial-gradient(circle at 92% 12%,#cfefff 0 17%,transparent 17.2%),linear-gradient(145deg,#fff0f7,#edf8ff)}
     button{font:inherit}
-    .lab{width:min(100%,580px)}
+    .lab{width:min(100%,500px);padding:20px 16px 18px;border-radius:34px;background:linear-gradient(180deg,rgba(246,252,255,.9),rgba(255,242,248,.9));box-shadow:0 14px 38px rgba(88,76,105,.12)}
     .lab-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 5px 11px}
     .lab-head small{display:block;color:#887c91;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
     .lab-head h1{margin:2px 0 0;font-size:27px;line-height:1}
@@ -115,10 +115,10 @@
 .landing-skip{min-width:105px;padding:10px 15px;border:3px solid #fff;border-radius:999px;background:#f3edf2;box-shadow:0 5px 0 #d7c5d0;color:#806f7c;font-size:12px;cursor:pointer}
 .landing-skip:active{transform:translateY(4px);box-shadow:0 1px 0 #d7c5d0}
 .note{margin:9px 7px 0;color:#766a7d;font-size:11px;line-height:1.45;text-align:center}
-    @media(max-width:390px){body{padding:8px}.lab-head{margin-inline:7px}.lab-head h1{font-size:23px}.preview-button{padding-inline:10px}.storybook-board{border-radius:28px}.tile{border-width:2px}.tile.feature{border-width:3px}.tile-number{left:5px;top:4px}.center-world{border-radius:23px}.welcome-sign strong{font-size:20px}}
+    @media(max-width:390px){body{padding:8px}.lab{padding:12px 8px 10px;border-radius:28px}.lab-head{margin-inline:7px}.lab-head h1{font-size:23px}.preview-button{padding-inline:10px}.storybook-board{border-radius:28px}.tile{border-width:2px}.tile.feature{border-width:3px}.tile-number{left:5px;top:4px}.center-world{border-radius:23px}.welcome-sign strong{font-size:20px}}
     @media(prefers-reduced-motion:reduce){.tile.key-press,.tile.key-final{animation-duration:.08s}.spark{display:none}}
   
-    .production-nav{position:relative;bottom:auto;z-index:100;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:min(calc(100% - 18px),560px);margin:12px auto 18px;padding:7px;border:3px solid rgba(255,255,255,.92);border-radius:22px;background:rgba(255,250,253,.93);box-shadow:0 9px 24px rgba(74,54,82,.18);backdrop-filter:blur(12px)}
+    .production-nav{position:relative;bottom:auto;z-index:100;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:100%;margin:12px auto 0;padding:7px;border:3px solid rgba(255,255,255,.92);border-radius:22px;background:rgba(255,250,253,.93);box-shadow:0 9px 24px rgba(74,54,82,.18);backdrop-filter:blur(12px)}
     .production-nav button{min-width:0;padding:7px 3px;border:0;border-radius:15px;background:transparent;color:#7a6c7e;font:10px "Darumadrop One",sans-serif;cursor:pointer}.production-nav button span{display:block;font-size:19px}.production-nav button.active{background:#ffe4ef;color:#bd5684}
     </style>
 </head>
