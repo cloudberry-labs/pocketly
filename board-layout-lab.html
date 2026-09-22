@@ -63,7 +63,19 @@
     }
     .spark{position:absolute;z-index:20;width:7px;height:7px;border-radius:50%;background:#fff8a8;box-shadow:15px -6px 0 #ffd0e2,-14px -7px 0 #c8efff,9px 12px 0 #e7d8ff;pointer-events:none;animation:spark .58s ease-out forwards}
     @keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}32%{opacity:1}100%{opacity:0;transform:translate(-50%,-28px) scale(1.5) rotate(90deg)}}
-    .note{margin:12px 7px 0;color:#766a7d;font-size:11px;line-height:1.45;text-align:center}
+    .character-layer{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible}
+.cici-token{position:absolute;left:0;top:0;width:clamp(48px,14cqw,78px);height:clamp(48px,14cqw,78px);transform-origin:50% 92%;will-change:transform}
+.cici-sprite{display:block;width:100%;height:100%;background:url("cici-walk-atlas-v2.webp") 0 0/400% 200% no-repeat;filter:drop-shadow(0 5px 3px rgba(48,43,57,.25));transform-origin:50% 92%}
+.cici-token[data-state="idle"] .cici-sprite{animation:ciciIdle 3.2s ease-in-out infinite}
+.cici-token[data-state="landing"] .cici-sprite{animation:ciciLand .43s cubic-bezier(.2,.8,.25,1)}
+@keyframes ciciIdle{0%,100%{transform:translateY(0) rotate(-.7deg)}50%{transform:translateY(-2px) rotate(.7deg) scale(1.01,.995)}}
+@keyframes ciciLand{0%{transform:translateY(0)}36%{transform:translateY(-20px) rotate(-5deg) scale(.96,1.08)}68%{transform:translateY(5px) scale(1.12,.82)}84%{transform:translateY(-3px) scale(.98,1.04)}100%{transform:translateY(0)}}
+.dev-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 4px 0}
+.dev-controls button{padding:8px 11px;border:2px solid #fff;border-radius:13px;background:#fff;box-shadow:0 3px 0 #d7c7dc;color:#65576e;font-size:10px;cursor:pointer}
+.dev-controls button:disabled{opacity:.45;cursor:wait}
+.motion-status{margin:9px 7px 0;padding:8px 10px;border-radius:13px;background:rgba(255,255,255,.82);color:#766a7d;font-size:10px;text-align:center}
+.motion-status strong{color:#cf5d91}
+.note{margin:9px 7px 0;color:#766a7d;font-size:11px;line-height:1.45;text-align:center}
     @media(max-width:390px){body{padding:8px}.lab-head{margin-inline:7px}.lab-head h1{font-size:23px}.preview-button{padding-inline:10px}.storybook-board{border-radius:28px}.tile{border-width:2px}.tile.feature{border-width:3px}.tile-number{left:5px;top:4px}.center-world{border-radius:23px}.welcome-sign strong{font-size:20px}}
     @media(prefers-reduced-motion:reduce){.tile.key-press,.tile.key-final{animation-duration:.08s}.spark{display:none}}
   </style>
@@ -77,7 +89,12 @@
     <section class="storybook-board" id="board" aria-label="Pocketly 36-space board layout preview">
       <i class="foliage f1">🌿🌸</i><i class="foliage f2">🌼🌿</i><i class="foliage f3">🌸🌱</i><i class="foliage f4">🌿🌷</i><i class="foliage f5">🌸</i><i class="foliage f6">🌼</i>
       <div class="center-world"><div class="welcome-sign"><small>Welcome to</small><strong>Pocketville</strong><span>Save · Play · Build Your Little World</span></div></div>
+      <div class="character-layer" id="characterLayer"><span class="cici-token" id="cici" data-state="idle"><span class="cici-sprite" id="ciciSprite"></span></span></div>
     </section>
+    <div class="dev-controls" id="devControls">
+      <button type="button" data-move="1">MOVE 1</button><button type="button" data-move="3">MOVE 3</button><button type="button" data-move="6">MOVE 6</button><button type="button" data-move="12">MOVE 12</button><button type="button" id="resetCici">RESET CICI</button>
+    </div>
+    <div class="motion-status" id="motionStatus"><strong>READY</strong> · Cici is on tile 1</div>
     <p class="note">Tap any tile to test its keyboard-style press. “Preview Steps” demonstrates ordinary steps followed by a stronger final landing.</p>
   </main>
   <script>
@@ -96,12 +113,25 @@
         L(75.2,84.3,9,13.4,-1.4,"24px 17px 27px 20px"),L(62.5,83.4,13.6,14.9,1,"29px 20px 31px 22px"),L(52.6,85.1,10.5,12.7,-1.2,"19px 28px 20px 30px"),L(42.7,84.1,10.5,13.7,1.4,"28px 19px 27px 21px"),L(32.8,85.2,10.5,12.5,-1,"21px 29px 19px 27px"),L(22.9,84.2,10.5,13.5,1.2,"29px 18px 26px 22px"),L(9.2,83.2,14.4,15.1,-1.5,"31px 24px 29px 22px"),L(.8,84.4,9.1,13.5,1.2,"21px 29px 18px 27px"),
         L(.9,78.4,13.7,6.7,-1.2,"28px 19px 27px 20px"),L(1.5,72.3,12.7,6.7,1.1,"20px 29px 19px 27px"),L(.6,63,15.7,10,-1.4,"31px 22px 29px 20px"),L(1.4,57.2,12.7,6.4,1,"21px 29px 19px 27px"),L(.8,51.4,13.8,6.4,-1.1,"29px 18px 26px 21px"),L(1.5,45.6,12.7,6.4,1.3,"20px 28px 19px 30px"),L(.8,39.8,13.8,6.4,-1.3,"28px 19px 27px 21px"),L(1.4,34,12.7,6.4,1,"21px 29px 18px 27px"),L(.7,28.2,13.8,6.4,-1.1,"29px 18px 27px 20px"),L(1.2,22.4,13.2,6.4,1.3,"20px 28px 19px 29px"),L(.7,16.5,15.6,6.6,-1.2,"30px 22px 32px 24px")
       ];
-      const board=document.querySelector("#board"),button=document.querySelector("#previewButton");
-      spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${name}</span>`;tile.addEventListener("click",()=>press(tile,true));board.appendChild(tile)});
-      function sparkle(tile){const boardRect=board.getBoundingClientRect(),r=tile.getBoundingClientRect(),spark=document.createElement("i");spark.className="spark";spark.style.left=`${r.left-boardRect.left+r.width/2}px`;spark.style.top=`${r.top-boardRect.top+r.height*.55}px`;board.appendChild(spark);setTimeout(()=>spark.remove(),650)}
+      const board=document.querySelector("#board"),preview=document.querySelector("#previewButton"),cici=document.querySelector("#cici"),sprite=document.querySelector("#ciciSprite"),status=document.querySelector("#motionStatus"),controls=[...document.querySelectorAll("#devControls button")],reduced=matchMedia("(prefers-reduced-motion: reduce)");
+      let points=[],position=0,state="IDLE",facing=1,resizeFrame=0;
+      const wait=ms=>new Promise(r=>setTimeout(r,ms));
+      spaces.forEach((space,index)=>{const [icon,name,color,feature]=space,l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${name}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
+      function measure(){const br=board.getBoundingClientRect(),tw=cici.offsetWidth,th=cici.offsetHeight;points=[...board.querySelectorAll(".tile")].sort((a,b)=>+a.dataset.index-+b.dataset.index).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-br.left+r.width/2-tw/2,y:r.top-br.top+r.height*.58-th*.82,cx:r.left-br.left+r.width/2,cy:r.top-br.top+r.height/2,tile}})}
+      function setSpriteFrame(frame){const safe=((frame%8)+8)%8,col=safe%4,row=Math.floor(safe/4);sprite.style.backgroundPosition=`${col*(100/3)}% ${row*100}%`}
+      function transform(p,face=facing,bob=0,rot=0,sx=1,sy=1){return `translate3d(${p.x}px,${p.y+bob}px,0) rotate(${rot}deg) scaleX(${face*sx}) scaleY(${sy})`}
+      function place(i){measure();position=i;setSpriteFrame(0);cici.style.transform=transform(points[i]);cici.dataset.state="idle";status.innerHTML=`<strong>READY</strong> · Cici is on tile ${i+1}`}
+      function sparkle(tile){const br=board.getBoundingClientRect(),r=tile.getBoundingClientRect(),s=document.createElement("i");s.className="spark";s.style.left=`${r.left-br.left+r.width/2}px`;s.style.top=`${r.top-br.top+r.height*.55}px`;board.appendChild(s);setTimeout(()=>s.remove(),650)}
       function press(tile,final=false){tile.classList.remove("key-press","key-final");void tile.offsetWidth;tile.classList.add(final?"key-final":"key-press");if(final)sparkle(tile);setTimeout(()=>tile.classList.remove("key-press","key-final"),700)}
-      const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-      button.addEventListener("click",async()=>{if(button.disabled)return;button.disabled=true;button.textContent="STEPPING…";const tiles=[...board.querySelectorAll(".tile")];for(let i=0;i<10;i++){press(tiles[i],i===9);await wait(i===9?650:245)}button.disabled=false;button.textContent="PREVIEW STEPS"});
+      function setBusy(b){controls.forEach(x=>x.disabled=b);preview.disabled=b}
+      function follow(){if(innerWidth<=600)cici.scrollIntoView({behavior:reduced.matches?"auto":"smooth",block:"nearest",inline:"nearest"})}
+      async function moveSegment(fromIndex,toIndex){const from=points[fromIndex],to=points[toIndex],dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing,distance=Math.hypot(dx,dy),duration=reduced.matches?110:Math.max(540,Math.min(720,410+distance*.9)),tiny=Math.max(2,Math.min(3,Math.round(distance/62))),walkEnd=.8,frameMs=125;cici.dataset.state="moving";await new Promise(resolve=>{const start=performance.now();function frame(now){const elapsed=now-start,raw=Math.min(1,elapsed/duration),ease=raw<.18?2.78*raw*raw:raw>.82?1-2.78*(1-raw)*(1-raw):.5+(raw-.5)*1.22,x=from.x+dx*Math.max(0,Math.min(1,ease)),y=from.y+dy*Math.max(0,Math.min(1,ease));let bob=0,rot=0,sx=1,sy=1;if(!reduced.matches){if(raw<walkEnd){const wp=raw/walkEnd,w=Math.abs(Math.sin(wp*tiny*Math.PI));bob=-w*2.1;rot=Math.sin(wp*tiny*Math.PI*2)*.9*newFacing;sx=1+w*.009;sy=1-w*.009;setSpriteFrame(Math.floor(elapsed/frameMs)%4)}else{const h=(raw-walkEnd)/(1-walkEnd),arc=Math.sin(h*Math.PI);bob=-arc*7;rot=(1-h)*-1.3*newFacing;sx=1-arc*.018;sy=1+arc*.03;setSpriteFrame(h<.52?2:3)}}cici.style.transform=transform({x,y},newFacing,bob,rot,sx,sy);if(raw<1)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});facing=newFacing;position=toIndex;setSpriteFrame(0);cici.style.transform=transform(to);follow()}
+      async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="IDLE";status.innerHTML=`<strong>COMPLETE</strong> · Cici landed on tile ${position+1}`;setBusy(false)}
+      document.querySelectorAll("[data-move]").forEach(b=>b.addEventListener("click",()=>move(+b.dataset.move)));
+      document.querySelector("#resetCici").addEventListener("click",()=>{if(state==="IDLE")place(0)});
+      preview.addEventListener("click",()=>move(10));
+      new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{measure();if(state==="IDLE")place(position)})}).observe(board);
+      requestAnimationFrame(()=>place(0));
     })();
   </script>
 </body>
