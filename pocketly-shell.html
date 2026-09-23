@@ -749,7 +749,7 @@
     const savedPocket=getPocket();if(savedPocket){
       const resume=document.querySelector('[data-view="guest"]');
       resume.textContent="Continue to Pocketville";
-      resume.onclick=()=>{if(auth.currentUser){showDashboard()}else openAuth("login")}
+      resume.onclick=()=>openAuth("login")
     }
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
