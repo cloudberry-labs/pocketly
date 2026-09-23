@@ -737,7 +737,7 @@
     window.addEventListener("orientationchange",()=>setTimeout(()=>{if(playView.style.display==="block")coordinateManager?.schedule()},180),{passive:true});
 
 
-    onAuthStateChanged(auth,async user=>{if(!user){cloudUser=null;cloudReady=false;return}cloudUser=user;try{const restored=await restoreCloud(user);cloudReady=true;if(restored){const p=getPocket();if(p)showDashboard();else showStep(0)}else if(!getPocket())showStep(0);else showDashboard();pushCloud()}catch(e){cloudReady=true;console.warn("Pocketly cloud restore",e)}});
+    onAuthStateChanged(auth,async user=>{if(!user){cloudUser=null;cloudReady=false;return}cloudUser=user;/* Auth routing is handled explicitly by Create Account / Log In. Avoid racing the auth callback against the onboarding flow. */});
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville"}
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
