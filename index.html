@@ -315,8 +315,12 @@
         ["🏠","HOME DAY","One cozy low-spend activity!","Choose one free or already-paid activity instead of going out to spend."]
       ];
       function needsChoice(name){return name==="Save"||name==="Challenge"||name==="No-Spend"}
+      const boostKey="pocketlySavingsBoost";
+      const hasBoost=()=>localStorage.getItem(boostKey)==="1";
+      const activateBoost=()=>localStorage.setItem(boostKey,"1");
+      const consumeBoost=()=>localStorage.removeItem(boostKey);
       function fillPopup(m,choice=true){landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4]||"OKAY!";landingSkip.hidden=!choice}
-      function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const amount=formatAmount(space[4]);m=["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+amount+" for this landing. 💗","SAVE "+amount]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
+      function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const cfg=currencySets[selectedCurrency],original=cfg.amounts[space[4]],boosted=hasBoost(),pay=boosted?original/2:original;currentLanding.saveAmount=pay;currentLanding.boosted=boosted;const originalText=cfg.symbol+original.toLocaleString("en-US"),payText=cfg.symbol+pay.toLocaleString("en-US");m=boosted?["🌿","BOOST ACTIVE!","Your 50% Savings Boost is ready!","This Save was "+originalText+", but your Boost cuts it to "+payText+". Save only "+payText+" this turn. 💗","SAVE "+payText]:["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+originalText+" for this landing. 💗","SAVE "+originalText]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(label="READY"){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");currentLanding=null;state="IDLE";status.innerHTML=`<strong>${label}</strong> · Cici is on tile ${position+1}`;setBusy(false)}
       function transitionPopup(m,choice=false){
         const card=overlay.querySelector(".landing-card");
@@ -329,9 +333,9 @@
       challengePill.addEventListener("click",showChallengePanel);
       challengePill.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showChallengePanel()}});
       function showSpecialResult(pool){const r=pool[Math.floor(Math.random()*pool.length)];currentLanding.result=r;transitionPopup([r[0],r[1],r[2],r[3],r[4]]);landingSkip.hidden=true}
-      function completeDailySave(tier){
+      function completeDailySave(tier,overrideAmount=null){
         if(!activePocket)return 0;
-        const amount=currencySets[selectedCurrency].amounts[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
+        const amount=overrideAmount??currencySets[selectedCurrency].amounts[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
         if(i<0)return 0;
         pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,(Number(pockets[i].saved)||0)+amount);
         savePockets(pockets);activePocket=pockets[i];localStorage.setItem(dailyKey(),dayKey());updateProgress();
@@ -353,11 +357,13 @@
         if(currentLanding.name==="Challenge"&&!currentLanding.challenge){showChallenge();return}
         if(currentLanding.name==="No-Spend"&&!currentLanding.challenge){const ch=["📵","NO-SPEND CHALLENGE","Wallet nap challenge!","For the rest of today, avoid non-essential spending. Essentials are always okay.","ACCEPT CHALLENGE"];currentLanding.challenge=ch;transitionPopup(ch,true);landingSkip.textContent="NOT NOW";return}
         if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString()});localStorage.setItem("pocketlyChallenges",JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is now active. Finish it whenever you’re ready.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
-        if(currentLanding.name==="Save"){completeDailySave(currentLanding.space[4]);return}
+        if(currentLanding.name==="Boost"){activateBoost();transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active through future rolls until Cici lands on a SAVE tile. Then that Save amount will be cut in half.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="BoostActive";return}
+        if(currentLanding.name==="BoostActive"){closeLanding("BOOST ACTIVE");return}
+        if(currentLanding.name==="Save"){const boosted=currentLanding.boosted,amount=currentLanding.saveAmount;completeDailySave(currentLanding.space[4],amount);if(boosted)consumeBoost();return}
         if(currentLanding.name==="DailyComplete"){closeLanding("DAY COMPLETE");setBusy(false);return}
         closeLanding("READY")
       });
-      landingSkip.addEventListener("click",()=>closeLanding("SKIPPED"));
+      landingSkip.addEventListener("click",()=>{if(currentLanding?.name==="Save"&&currentLanding.boosted)consumeBoost();closeLanding("SKIPPED")});
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
       function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
       refreshCurrency();
