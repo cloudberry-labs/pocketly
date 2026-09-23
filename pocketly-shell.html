@@ -749,7 +749,17 @@
     const savedPocket=getPocket();if(savedPocket){
       const resume=document.querySelector('[data-view="guest"]');
       resume.textContent="Continue to Pocketville";
-      resume.onclick=()=>openAuth("login")
+      resume.onclick=async()=>{
+        const user=auth.currentUser;
+        if(user){
+          cloudUser=user;
+          try{await restoreCloud(user)}catch(e){console.warn("Pocketly resume restore",e)}
+          cloudReady=true;
+          showDashboard();
+        }else{
+          showDashboard();
+        }
+      }
     }
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
