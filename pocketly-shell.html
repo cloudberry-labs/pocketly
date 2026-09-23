@@ -90,6 +90,8 @@
     .pockets-intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.pockets-intro p{margin:0;color:#888194;font-size:.7rem}.pockets-intro h2{margin:1px 0 0;color:#5b566c;font-size:2.15rem}.add-pocket-mini{display:grid;width:46px;height:46px;place-items:center;border:3px solid white;border-radius:16px;background:#ef8caf;color:white;box-shadow:0 6px 0 #cc5d8b;font:400 1.55rem "Darumadrop One",sans-serif;cursor:pointer}
     .pockets-list{display:grid;max-height:645px;gap:12px;overflow:auto;padding:2px 2px 14px;scrollbar-width:none}.pockets-list::-webkit-scrollbar{display:none}
     .goal-card{position:relative;padding:17px;border:2px solid white;border-radius:23px;background:rgba(255,255,255,.88);box-shadow:0 9px 22px rgba(93,82,113,.1)}.goal-card.active-pocket{border-color:#8fd0f2;box-shadow:0 9px 24px rgba(100,176,217,.17)}.goal-card.completed{background:linear-gradient(135deg,#fff9e6,#fff2f8)}.goal-card.archived{display:none}.active-tag{position:absolute;right:13px;top:12px;padding:5px 9px;border-radius:99px;background:#e2f4fd;color:#548eb0;font-size:.58rem}.goal-icon{display:grid;width:44px;height:44px;place-items:center;float:left;margin-right:11px;border-radius:15px;background:#fff0f6;font-size:1.35rem}.goal-card h3{margin:1px 0;color:#5e596d;font-size:1.38rem}.goal-card small{color:#938c9d;font-size:.62rem}.goal-progress{clear:both;padding-top:14px}.goal-money{display:flex;justify-content:space-between;margin-bottom:6px;color:#777082;font-size:.68rem}.goal-money strong{color:#dd709c;font-size:.88rem}.goal-actions{display:flex;gap:7px;margin-top:12px}.tiny-btn{flex:1;min-height:34px;border:2px solid #ebe4ec;border-radius:12px;background:white;color:#716b7c;font:400 .66rem "Darumadrop One",sans-serif;cursor:pointer}.tiny-btn:disabled{cursor:not-allowed;opacity:.45}.tiny-btn.active-choice{border-color:#9fd7f3;background:#eef9ff;color:#4d8eaf}.tiny-btn.danger{color:#c8708e}.empty-pockets{padding:52px 25px;border:2px dashed #cde9f7;border-radius:24px;background:rgba(255,255,255,.6);color:#817a8c;text-align:center}.empty-pockets span{display:block;font-size:2.3rem}.empty-pockets h3{margin:8px 0;font-size:1.55rem}
+
+    .auth-modal{position:absolute;inset:0;z-index:60;display:none;place-items:center;padding:24px;background:rgba(74,66,86,.34);backdrop-filter:blur(5px)}.auth-modal.open{display:grid}.auth-card{width:100%;max-width:390px;padding:25px;border:3px solid white;border-radius:27px;background:#fffafc;box-shadow:0 22px 55px rgba(60,51,72,.24);text-align:center}.auth-card h2{margin:0;font-size:2.25rem}.auth-card>p{margin:5px 0 18px;color:#8a8292;font-size:.78rem}.auth-switch{margin-top:12px;border:0;background:transparent;color:#6c7bb1;text-decoration:underline;cursor:pointer}.cloud-status{min-height:18px;margin-top:9px;color:#7a7385;font-size:.68rem}
     @keyframes drift{0%,100%{transform:translateX(-5px) scale(.6)}50%{transform:translateX(10px) scale(.6)}}
     @keyframes waveA{0%,42%,100%{opacity:1}46%,88%{opacity:0}}
     @keyframes waveB{0%,42%,100%{opacity:0}46%,88%{opacity:1}}
@@ -480,9 +482,33 @@
           <div class="modal-actions"><button class="btn soft-btn" id="cancelPocketModal">CANCEL</button><button class="btn primary" id="savePocketButton">SAVE POCKET</button></div>
         </div>
       </div>
+
+      <div class="auth-modal" id="authModal" role="dialog" aria-modal="true">
+        <div class="auth-card"><h2 id="authTitle">Create Account</h2><p id="authCopy">Save your Pocketly world safely in the cloud.</p>
+          <div class="form"><div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" minlength="6" autocomplete="current-password" placeholder="At least 6 characters"></div></div>
+          <p class="form-error" id="authError"></p><button class="btn primary" id="authSubmit">CREATE ACCOUNT</button><button class="auth-switch" id="authSwitch">I already have an account</button><button class="auth-switch" id="authCancel">Cancel</button><div class="cloud-status" id="cloudStatus"></div>
+        </div>
+      </div>
     </section>
   </main>
-  <script>
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+    const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYc1c",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
+    const firebaseApp=initializeApp(firebaseConfig),auth=getAuth(firebaseApp),db=getFirestore(firebaseApp);
+    const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition","pocketlySound"];
+    let cloudUser=null,cloudReady=false,cloudTimer=null,authMode="create";
+    function collectCloudData(){const data={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(CLOUD_KEYS.includes(k)||k.startsWith("pocketly")))data[k]=localStorage.getItem(k)}return data}
+    async function pushCloud(){if(!cloudUser||!cloudReady)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(async()=>{try{await setDoc(doc(db,"users",cloudUser.uid),{email:cloudUser.email||"",data:collectCloudData(),updatedAt:serverTimestamp()},{merge:true});document.querySelector("#cloudStatus").textContent="☁️ Saved to Pocketly Cloud"}catch(e){console.warn("Pocketly cloud save",e)}},350)}
+    async function restoreCloud(user){const ref=doc(db,"users",user.uid),snap=await getDoc(ref);if(snap.exists()&&snap.data().data){Object.entries(snap.data().data).forEach(([k,v])=>{if(v!==null&&v!==undefined)localStorage.setItem(k,String(v))});return true}await setDoc(ref,{email:user.email||"",data:collectCloudData(),createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{merge:true});return false}
+    const nativeSet=Storage.prototype.setItem,nativeRemove=Storage.prototype.removeItem;
+    Storage.prototype.setItem=function(k,v){nativeSet.call(this,k,v);if(this===localStorage&&String(k).startsWith("pocketly"))pushCloud()};Storage.prototype.removeItem=function(k){nativeRemove.call(this,k);if(this===localStorage&&String(k).startsWith("pocketly"))pushCloud()};
+    function openAuth(mode){authMode=mode;document.querySelector("#authTitle").textContent=mode==="create"?"Create Account":"Welcome Back";document.querySelector("#authCopy").textContent=mode==="create"?"Your savings will follow you to every device.":"Log in to restore your Pocketly savings.";document.querySelector("#authSubmit").textContent=mode==="create"?"CREATE ACCOUNT":"LOG IN";document.querySelector("#authSwitch").textContent=mode==="create"?"I already have an account":"Create a new account";document.querySelector("#authError").textContent="";document.querySelector("#authModal").classList.add("open")}
+    document.querySelector("#authCancel").onclick=()=>document.querySelector("#authModal").classList.remove("open");document.querySelector("#authSwitch").onclick=()=>openAuth(authMode==="create"?"login":"create");
+    document.querySelector("#authSubmit").onclick=async()=>{const email=document.querySelector("#authEmail").value.trim(),password=document.querySelector("#authPassword").value,err=document.querySelector("#authError"),btn=document.querySelector("#authSubmit");if(!email||password.length<6){err.textContent="Enter a valid email and a password with at least 6 characters.";return}btn.disabled=true;err.textContent="";try{if(authMode==="create")await createUserWithEmailAndPassword(auth,email,password);else await signInWithEmailAndPassword(auth,email,password);document.querySelector("#authModal").classList.remove("open")}catch(e){err.textContent=(e.code==="auth/email-already-in-use"?"That email already has a Pocketly account.":e.code==="auth/invalid-credential"?"Email or password is incorrect.":e.message||"Could not sign in.");}finally{btn.disabled=false}};
+
     const copy={
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
@@ -494,7 +520,8 @@
     function showWelcome(){hideViews();welcome.style.display="flex"}
     function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
     document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
-      if(b.dataset.view==="create"){showStep(0);return}
+      if(b.dataset.view==="create"){openAuth("create");return}
+      if(b.dataset.view==="login"){openAuth("login");return}
       const c=copy[b.dataset.view];document.querySelector("#eyebrow").textContent=c[0];document.querySelector("#title").textContent=c[1];document.querySelector("#body").textContent=c[2];hideViews();next.style.display="flex"
     });
     document.querySelector("#onboardBack").onclick=()=>currentStep===0?showWelcome():showStep(currentStep-1);
@@ -708,6 +735,8 @@
     window.addEventListener("resize",()=>{if(playView.style.display==="block"&&turnController?.state===TURN_STATE.IDLE)coordinateManager?.schedule()},{passive:true});
     window.addEventListener("orientationchange",()=>setTimeout(()=>{if(playView.style.display==="block")coordinateManager?.schedule()},180),{passive:true});
 
+
+    onAuthStateChanged(auth,async user=>{if(!user){cloudUser=null;cloudReady=false;return}cloudUser=user;try{const restored=await restoreCloud(user);cloudReady=true;if(restored){const p=getPocket();if(p)showDashboard();else showStep(0)}else if(!getPocket())showStep(0);else showDashboard();pushCloud()}catch(e){cloudReady=true;console.warn("Pocketly cloud restore",e)}});
     const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville";resume.onclick=showDashboard}
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
