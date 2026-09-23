@@ -368,7 +368,7 @@
         </div>
         <div class="actions">
           <button class="btn primary" data-view="create">GET STARTED <span>→</span></button>
-          <button class="btn secondary" data-view="login">♙ &nbsp; I already have an account</button>
+          <button class="btn secondary" data-view="login">☁️ &nbsp; I already have an account</button>
           <button class="guest" data-view="guest">Continue as Guest</button>
         </div>
         <p class="dreams">Small saves. Big dreams. ✨</p>
@@ -737,8 +737,20 @@
     window.addEventListener("orientationchange",()=>setTimeout(()=>{if(playView.style.display==="block")coordinateManager?.schedule()},180),{passive:true});
 
 
-    onAuthStateChanged(auth,async user=>{if(!user){cloudUser=null;cloudReady=false;return}cloudUser=user;/* Auth routing is handled explicitly by Create Account / Log In. Avoid racing the auth callback against the onboarding flow. */});
-    const savedPocket=getPocket();if(savedPocket){const resume=document.querySelector('[data-view="guest"]');resume.textContent="Continue to Pocketville"}
+    onAuthStateChanged(auth,async user=>{
+      if(!user){cloudUser=null;cloudReady=false;return}
+      cloudUser=user;
+      try{
+        const restored=await restoreCloud(user);
+        cloudReady=true;
+        if(restored&&getPocket())showDashboard();
+      }catch(e){console.warn("Pocketly auto restore",e);cloudReady=true}
+    });
+    const savedPocket=getPocket();if(savedPocket){
+      const resume=document.querySelector('[data-view="guest"]');
+      resume.textContent="Continue to Pocketville";
+      resume.onclick=()=>{if(auth.currentUser){showDashboard()}else openAuth("login")}
+    }
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
