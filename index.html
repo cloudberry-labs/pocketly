@@ -333,17 +333,27 @@
       challengePill.addEventListener("click",showChallengePanel);
       challengePill.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showChallengePanel()}});
       function showSpecialResult(pool){const r=pool[Math.floor(Math.random()*pool.length)];currentLanding.result=r;transitionPopup([r[0],r[1],r[2],r[3],r[4]]);landingSkip.hidden=true}
-      function completeDailySave(tier,overrideAmount=null){
+      async function completeDailySave(tier,overrideAmount=null){
         if(!activePocket)return 0;
         const amount=overrideAmount??currencySets[selectedCurrency].amounts[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
         if(i<0)return 0;
-        pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,(Number(pockets[i].saved)||0)+amount);
-        savePockets(pockets);activePocket=pockets[i];localStorage.setItem(dailyKey(),dayKey());updateProgress();
+        const before=Number(pockets[i].saved)||0;
+        pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,before+amount);
+        savePockets(pockets);activePocket=pockets[i];updateProgress();
+        if(window.pocketlySyncBoardPockets){
+          const ok=await window.pocketlySyncBoardPockets(pockets);
+          if(!ok){
+            pockets[i].saved=before;savePockets(pockets);activePocket=pockets[i];updateProgress();
+            transitionPopup(["☁️","SAVE NOT FINISHED","Your money was not locked in yet.","Pocketly could not confirm the cloud save, so today’s turn is still open. Please try the Save again.","TRY AGAIN"]);
+            currentLanding.name="Save";landingSkip.hidden=false;return 0
+          }
+        }
+        localStorage.setItem(dailyKey(),dayKey());
         currentLanding.name="DailyComplete";
         transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete. 💗`,"SEE YOU TOMORROW"]);
         landingSkip.hidden=true;return amount
       }
-      landingAction.addEventListener("click",()=>{
+      landingAction.addEventListener("click",async()=>{
         if(!currentLanding)return closeLanding();
         if(currentLanding.name==="Mystery"&&!currentLanding.result){showSpecialResult(mysteries);return}
         if(currentLanding.name==="Bonus"&&!currentLanding.result){showSpecialResult(bonusResults);return}
@@ -351,7 +361,7 @@
         if(currentLanding.name==="Lucky Day!"&&!currentLanding.result){showSpecialResult(luckyResults);return}
         if(currentLanding.result){
           const r=currentLanding.result;
-          if(r[5]==="save"){completeDailySave(r[6]||0);currentLanding.result=null;return}
+          if(r[5]==="save"){await completeDailySave(r[6]||0);currentLanding.result=null;return}
           currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["✨","CLAIMED!","Pocketville says keep going!","Your surprise is claimed. The dice is ready for another adventure.","CONTINUE"]);landingSkip.hidden=true;return
         }
         if(currentLanding.name==="Challenge"&&!currentLanding.challenge){showChallenge();return}
@@ -359,7 +369,7 @@
         if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString()});localStorage.setItem("pocketlyChallenges",JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is now active. Finish it whenever you’re ready.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
         if(currentLanding.name==="Boost"){activateBoost();transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active through future rolls until Cici lands on a SAVE tile. Then that Save amount will be cut in half.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="BoostActive";return}
         if(currentLanding.name==="BoostActive"){closeLanding("BOOST ACTIVE");return}
-        if(currentLanding.name==="Save"){const boosted=currentLanding.boosted,amount=currentLanding.saveAmount;completeDailySave(currentLanding.space[4],amount);if(boosted)consumeBoost();return}
+        if(currentLanding.name==="Save"){const boosted=currentLanding.boosted,amount=currentLanding.saveAmount;const saved=await completeDailySave(currentLanding.space[4],amount);if(saved&&boosted)consumeBoost();return}
         if(currentLanding.name==="DailyComplete"){closeLanding("DAY COMPLETE");setBusy(false);return}
         closeLanding("READY")
       });
@@ -377,6 +387,23 @@
       requestAnimationFrame(()=>place(0));
     })();
   </script>
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYcls",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
+const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig),boardAuth=getAuth(app),boardDb=getFirestore(app);
+window.pocketlySyncBoardPockets=async pockets=>{
+  const user=boardAuth.currentUser;if(!user)return true;
+  try{
+    const active=pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived)||null,data={};
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("pocketly"))data[k]=localStorage.getItem(k)}
+    await setDoc(doc(boardDb,"users",user.uid),{email:user.email||"",data,pockets,onboardingComplete:!!active,updatedAt:serverTimestamp()},{merge:true});
+    const snap=await getDoc(doc(boardDb,"users",user.uid)),remote=snap.data()?.pockets||[];
+    return pockets.every(p=>{const rp=remote.find(x=>String(x.id)===String(p.id));return rp&&Number(rp.saved||0)===Number(p.saved||0)});
+  }catch(e){console.error("Pocketly board cloud save failed",e);return false}
+};
+</script>
 <script>document.querySelector("#prodHome").onclick=()=>location.href="pocketly-shell.html?view=home";
 document.querySelector("#prodPockets").onclick=()=>location.href="pocketly-shell.html?view=pockets";
 document.querySelector("#prodProfile").onclick=()=>location.href="pocketly-shell.html?view=profile";</script></body>
