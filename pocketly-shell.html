@@ -473,7 +473,7 @@
       <div class="save-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
         <div class="modal-card"><div class="profile-cloud">☁️</div><h2 id="profileTitle">Pocketville Profile</h2><p>Guest Dreamer</p>
           <div class="profile-stats"><div class="profile-stat"><strong id="profileLevel">Level 1</strong><span>Current level</span></div><div class="profile-stat"><strong id="profileProgress">0%</strong><span>Dream progress</span></div></div>
-          <div class="modal-actions"><button class="btn soft-btn" id="profileHome">WELCOME PAGE</button><button class="btn primary" id="closeProfile">CLOSE</button></div>
+          <div class="modal-actions"><button class="btn soft-btn" id="profileHome">WELCOME PAGE</button><button class="btn soft-btn" id="profileLogout">LOG OUT</button><button class="btn primary" id="closeProfile">CLOSE</button></div>
         </div>
       </div>
       <div class="save-modal" id="pocketModal" role="dialog" aria-modal="true" aria-labelledby="pocketModalTitle">
@@ -571,7 +571,7 @@
     document.querySelector("#closeSaveModal").onclick=cancelSave;
     document.querySelector("#confirmSave").onclick=()=>{if(savingInProgress)return;const add=Number(document.querySelector("#saveAmount").value),pocket=getPocket();if(!add||add<=0){document.querySelector("#saveError").textContent="Enter an amount greater than zero.";return}savingInProgress=true;document.querySelector("#confirmSave").disabled=true;const pockets=getPockets(),target=pockets.find(p=>p.id===pocket.id);target.saved=(Number(target.saved)||0)+add;savePockets(pockets);recordSaving(target,add,saveSource);saveModal.classList.remove("open");renderDashboard();if(saveSource==="game"){awardPoints(10);completeDailyTurn();renderPlayStats();showToast(`✨ ${money(add,target.currency)} saved to ${target.name}!`);celebrate();playChime()}saveSource="dashboard"};
     saveModal.onclick=e=>{if(e.target===saveModal)cancelSave()};
-    document.querySelector("#profileButton").onclick=()=>profileModal.classList.add("open");document.querySelector("#closeProfile").onclick=()=>profileModal.classList.remove("open");document.querySelector("#profileHome").onclick=()=>{profileModal.classList.remove("open");showWelcome()};profileModal.onclick=e=>{if(e.target===profileModal)profileModal.classList.remove("open")};
+    document.querySelector("#profileButton").onclick=()=>profileModal.classList.add("open");document.querySelector("#closeProfile").onclick=()=>profileModal.classList.remove("open");document.querySelector("#profileHome").onclick=()=>{profileModal.classList.remove("open");showWelcome()};document.querySelector("#profileLogout").onclick=async()=>{try{if(cloudUser&&cloudReady)await pushCloud();await signOut(auth);cloudUser=null;cloudReady=false;profileModal.classList.remove("open");showWelcome()}catch(e){console.warn("Pocketly logout",e)}};profileModal.onclick=e=>{if(e.target===profileModal)profileModal.classList.remove("open")};
     function esc(value){return String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
     function renderPockets(){
       const pockets=getPockets().filter(p=>!p.archived),list=document.querySelector("#pocketsList");if(!pockets.length){list.innerHTML='<div class="empty-pockets"><span>☁️</span><h3>No pockets yet</h3><p>Create a little place for your next dream.</p></div>';return}
