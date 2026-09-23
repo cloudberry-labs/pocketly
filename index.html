@@ -237,10 +237,19 @@
         if(state!=="IDLE"||completedToday())return;
         setBusy(true);state="ROLLING";rollLabel.textContent="ROLLING…";status.innerHTML="<strong>ROLLING</strong> · Good luck!";
         const n=Math.floor(Math.random()*6)+1;
-        await rollDie(n);
-        status.innerHTML=`<strong>ROLLED ${n}</strong> · Cici will move ${n}`;state="IDLE";await wait(260);
-        await move(n);
-        rollLabel.textContent="ROLL 🎲";
+        try{
+          await rollDie(n);
+          status.innerHTML=`<strong>ROLLED ${n}</strong> · Cici will move ${n}`;
+          await wait(260);
+          state="IDLE";
+          await move(n);
+        }catch(err){
+          console.error("Pocketly turn error",err);
+          state="IDLE";cici.dataset.state="idle";setSpriteFrame(0);setBusy(false);
+          status.innerHTML="<strong>READY</strong> · Try your roll again";
+        }finally{
+          rollLabel.textContent=completedToday()?"COME BACK TOMORROW 🌙":"ROLL 🎲";
+        }
       }
       const messages={
         "START":["🏡","START","Back in Pocketville!","A fresh little lap begins. Keep building your savings dream.","LET'S GO!"],
