@@ -496,7 +496,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-    const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYc1c",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
+    const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYcls",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
     const firebaseApp=initializeApp(firebaseConfig),auth=getAuth(firebaseApp),db=getFirestore(firebaseApp);
     const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition","pocketlySound"];
     let cloudUser=null,cloudReady=false,cloudTimer=null,authMode="create";
