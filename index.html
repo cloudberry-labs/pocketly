@@ -161,7 +161,19 @@
       let selectedCurrency=activePocket?.currency||"PHP";
       if(!currencySets[selectedCurrency])selectedCurrency="PHP";
       const formatMoney=(n,c=selectedCurrency)=>new Intl.NumberFormat(undefined,{style:"currency",currency:c,maximumFractionDigits:0}).format(Number(n)||0);
-      const formatAmount=(tier)=>{const cfg=currencySets[selectedCurrency],n=cfg.amounts[tier];return cfg.symbol+n.toLocaleString("en-US")};
+      const currencySteps={PHP:10,CNY:1,USD:1,EUR:1,GBP:1,JPY:100};
+      function dynamicSaveAmounts(){
+        const cfg=currencySets[selectedCurrency],p=activePocket;if(!p)return cfg.amounts;
+        const remaining=Math.max(0,(Number(p.amount)||0)-(Number(p.saved)||0));
+        if(!remaining)return cfg.amounts;
+        let days=0;
+        if(p.date){const end=new Date(p.date+"T23:59:59"),now=new Date();days=Math.max(1,Math.ceil((end-now)/86400000))}
+        if(!days)return cfg.amounts;
+        const daily=remaining/days,step=currencySteps[selectedCurrency]||1;
+        const round=n=>Math.max(step,Math.round(n/step)*step);
+        return [0.55,0.75,1,1.25,1.5].map(mult=>Math.min(remaining,round(daily*mult)));
+      }
+      const formatAmount=(tier)=>{const cfg=currencySets[selectedCurrency],n=dynamicSaveAmounts()[tier];return cfg.symbol+n.toLocaleString("en-US")};
       const displayName=(space)=>space[1]==="Save"?"Save "+formatAmount(space[4]):space[1];
       const L=(x,y,w,h,rot,radius)=>({x,y,w,h,rot,radius});
       const layouts=[
@@ -320,7 +332,7 @@
       const activateBoost=()=>localStorage.setItem(boostKey,"1");
       const consumeBoost=()=>localStorage.removeItem(boostKey);
       function fillPopup(m,choice=true){landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4]||"OKAY!";landingSkip.hidden=!choice}
-      function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const cfg=currencySets[selectedCurrency],original=cfg.amounts[space[4]],boosted=hasBoost(),pay=boosted?original/2:original;currentLanding.saveAmount=pay;currentLanding.boosted=boosted;const originalText=cfg.symbol+original.toLocaleString("en-US"),payText=cfg.symbol+pay.toLocaleString("en-US");m=boosted?["🌿","BOOST ACTIVE!","Your 50% Savings Boost is ready!","This Save was "+originalText+", but your Boost cuts it to "+payText+". Save only "+payText+" this turn. 💗","SAVE "+payText]:["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+originalText+" for this landing. 💗","SAVE "+originalText]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
+      function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const cfg=currencySets[selectedCurrency],original=dynamicSaveAmounts()[space[4]],boosted=hasBoost(),pay=boosted?original/2:original;currentLanding.saveAmount=pay;currentLanding.boosted=boosted;const originalText=cfg.symbol+original.toLocaleString("en-US"),payText=cfg.symbol+pay.toLocaleString("en-US");m=boosted?["🌿","BOOST ACTIVE!","Your 50% Savings Boost is ready!","This Save was "+originalText+", but your Boost cuts it to "+payText+". Save only "+payText+" this turn. 💗","SAVE "+payText]:["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+originalText+" for this landing. 💗","SAVE "+originalText]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(label="READY"){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");currentLanding=null;state="IDLE";status.innerHTML=`<strong>${label}</strong> · Cici is on tile ${position+1}`;setBusy(false)}
       function transitionPopup(m,choice=false){
         const card=overlay.querySelector(".landing-card");
@@ -335,7 +347,7 @@
       function showSpecialResult(pool){const r=pool[Math.floor(Math.random()*pool.length)];currentLanding.result=r;transitionPopup([r[0],r[1],r[2],r[3],r[4]]);landingSkip.hidden=true}
       async function completeDailySave(tier,overrideAmount=null){
         if(!activePocket)return 0;
-        const amount=overrideAmount??currencySets[selectedCurrency].amounts[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
+        const amount=overrideAmount??dynamicSaveAmounts()[tier],pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));
         if(i<0)return 0;
         const before=Number(pockets[i].saved)||0;
         pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,before+amount);
