@@ -395,8 +395,9 @@
       async function completePocketChange(amount){
         if(!activePocket||!(amount>0))return false;const pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));if(i<0)return false;
         const before=Number(pockets[i].saved)||0,target=Number(pockets[i].amount)||Infinity,remaining=Math.max(0,target-before);if(!(remaining>0)){transitionPopup(["🎉","GOAL COMPLETE","This Pocket is already full!","You’ve already reached "+activePocket.name+". No extra Pocket Change was added.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return false}const actual=Math.max(0,Math.min(amount,remaining));if(!(actual>0))return false;
-        pockets[i].saved=before+actual;savePockets(pockets);activePocket=pockets[i];updateProgress();sfx("save");
+        pockets[i].saved=before+actual;savePockets(pockets);activePocket=pockets[i];updateProgress();
         if(window.pocketlySyncBoardPockets){const ok=await window.pocketlySyncBoardPockets(pockets);if(!ok){pockets[i].saved=before;savePockets(pockets);activePocket=pockets[i];updateProgress();transitionPopup(["☁️","CHANGE NOT ADDED","Your Pocket Change was not saved.","Pocketly could not confirm the cloud save, so nothing was added. You can try again.","TRY AGAIN"],true);currentLanding.name="PocketChangeEntry";landingSkip.textContent="NOT TODAY";return false}}
+        sfx("save");
         transitionPopup(["🪙","POCKET CHANGE ADDED","Every little bit counts!","You added "+formatMoney(actual)+" to "+activePocket.name+". Your regular daily Save is still available. 💗","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return true
       }
       function showChallenge(){const ch=challenges[Math.floor(Math.random()*challenges.length)];currentLanding.challenge=ch;transitionPopup([ch[0],ch[1],ch[2],ch[3],"ACCEPT CHALLENGE"],true);landingSkip.textContent="NOT NOW"}
@@ -417,7 +418,7 @@
         if(i<0)return 0;
         const before=Number(pockets[i].saved)||0;
         pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,before+amount);
-        savePockets(pockets);activePocket=pockets[i];updateProgress();sfx("save");
+        savePockets(pockets);activePocket=pockets[i];updateProgress();
         if(window.pocketlySyncBoardPockets){
           const ok=await window.pocketlySyncBoardPockets(pockets);
           if(!ok){
@@ -426,7 +427,7 @@
             currentLanding.name="Save";landingSkip.hidden=false;return 0
           }
         }
-        localStorage.setItem(dailyKey(),dayKey());syncGameState();
+        localStorage.setItem(dailyKey(),dayKey());syncGameState();sfx("save");
         currentLanding.name="DailyComplete";
         transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete.${getExtraRolls()?" You still have "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" whenever you want to use "+(getExtraRolls()===1?"it":"them")+".":" 💗"}`,"CONTINUE"]);
         landingSkip.hidden=true;return amount
