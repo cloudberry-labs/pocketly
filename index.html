@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Pocketly</title>
   <style>
-    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:swap}
+    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:block}
     :root{color-scheme:light;--ink:#413453;--pink:#ed72a6;--pink-deep:#be4f84;--cream:#fff9f1}
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%;font-family:"Darumadrop One",ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:var(--ink)}
@@ -491,7 +491,7 @@
       window.addEventListener("focus",dailyRefresh);
       window.addEventListener("pageshow",dailyRefresh);
       setInterval(()=>{if(dayKey()!==lastSeenDay)dailyRefresh()},60000);
-      diceButton.addEventListener("click",takeTurn);
+      diceButton.addEventListener("click",async()=>{unlockAudio();if(audioCtx?.state==="suspended")try{await audioCtx.resume()}catch(e){}takeTurn()});
       setDieFace(1);
       
       
