@@ -791,10 +791,6 @@
 <script>
   document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=72"}));
   const requested=new URLSearchParams(location.search).get("view");
-  addEventListener("load",()=>{
-    if(requested==="pockets") sessionStorage.setItem("pocketlyShellView","pockets");
-    else if(requested==="home") sessionStorage.setItem("pocketlyShellView","home");
-    if(requested==="profile") setTimeout(()=>document.querySelector("#bottomProfile")?.click(),0);
-  });
+  if(requested==="profile") addEventListener("load",()=>setTimeout(()=>document.querySelector("#bottomProfile")?.click(),0));
 </script></body>
 </html>
