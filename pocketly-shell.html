@@ -503,10 +503,10 @@
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
     };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),playView=document.querySelector("#playView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
     const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
     let currentStep=0,selectedGoal="",editingPocketId=null,saveSource="dashboard",currentLandingType="start",currentLandingEvent="standard",bonusRollUsed=false,turnTimer=null,landingResolving=false,savingInProgress=false;
-    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none";playView.style.display="none"}
+    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none"}
     function showWelcome(){hideViews();welcome.style.display="flex"}
     function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
     document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
@@ -606,7 +606,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=89"}));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=90"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
