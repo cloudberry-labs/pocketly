@@ -190,8 +190,6 @@
       const saveBoardPosition=()=>{localStorage.setItem(boardPositionKey(),String(position));syncGameState()};
       const dayKey=()=>new Date().toLocaleDateString("en-CA");
       const dailyKey=()=>`pocketlyDailySaveDate_${activePocket?.id||"guest"}`;
-      const dailyRollKey=()=>`pocketlyDailyRollDate_${activePocket?.id||"guest"}`;
-      const normalRollUsed=()=>localStorage.getItem(dailyRollKey())===dayKey();
       const completedToday=()=>!!activePocket&&localStorage.getItem(dailyKey())===dayKey();
       const extraRollKey=()=>`pocketlyExtraRolls_${activePocket?.id||"guest"}`;
       const freePassKey=()=>`pocketlyFreePassDate_${activePocket?.id||"guest"}`;
@@ -239,11 +237,9 @@
       function sparkle(tile){const br=board.getBoundingClientRect(),r=tile.getBoundingClientRect(),s=document.createElement("i");s.className="spark";s.style.left=`${r.left-br.left+r.width/2}px`;s.style.top=`${r.top-br.top+r.height*.55}px`;board.appendChild(s);setTimeout(()=>s.remove(),650)}
       function press(tile,final=false){tile.classList.remove("key-press","key-final");void tile.offsetWidth;tile.classList.add(final?"key-final":"key-press");if(final)sparkle(tile);setTimeout(()=>tile.classList.remove("key-press","key-final"),700)}
       function updateRollUI(){
-        const extras=getExtraRolls(),done=dayComplete(),used=normalRollUsed();
-        if(done)rollLabel.textContent=extras?("EXTRA ROLL 🎲 · "+extras+" LEFT"):"COME BACK TOMORROW 🌙";
-        else if(!used)rollLabel.textContent=extras?("DAILY ROLL 🎲 · +"+extras+" EXTRA"):"DAILY ROLL 🎲";
-        else rollLabel.textContent=extras?("EXTRA ROLL 🎲 · "+extras+" LEFT"):"DAILY ROLL USED 🌙";
-        diceButton.disabled=state!=="IDLE"||(done&&!extras)||(used&&!extras)
+        const extras=getExtraRolls(),done=dayComplete();
+        rollLabel.textContent=done?(extras?("EXTRA ROLL 🎲 · "+extras+" LEFT"):"COME BACK TOMORROW 🌙"):(extras?("ROLL 🎲 · +"+extras+" EXTRA"):"ROLL 🎲");
+        diceButton.disabled=state!=="IDLE"||(done&&!extras)
       }
       function setBusy(b){controls.forEach(x=>x.disabled=b);preview.disabled=b;diceButton.disabled=b; if(!b)updateRollUI()}
       function follow(){if(innerWidth<=600)cici.scrollIntoView({behavior:reduced.matches?"auto":"smooth",block:"nearest",inline:"nearest"})}
@@ -303,12 +299,8 @@
         setDieFace(n);
       }
       async function takeTurn(){
-        if(state!=="IDLE")return;
-        const used=normalRollUsed(),extras=getExtraRolls();
-        if((dayComplete()||used)&&!extras)return;
-        const usingExtra=used||dayComplete();
-        if(usingExtra)setExtraRolls(extras-1);
-        else{localStorage.setItem(dailyRollKey(),dayKey());syncGameState()}
+        if(state!=="IDLE"||(dayComplete()&&!getExtraRolls()))return;
+        const usingExtra=dayComplete()&&getExtraRolls()>0;if(usingExtra)setExtraRolls(getExtraRolls()-1);
         setBusy(true);state="ROLLING";rollLabel.textContent="ROLLING…";status.innerHTML="<strong>ROLLING</strong> · Good luck!";
         const n=Math.floor(Math.random()*6)+1;
         try{
