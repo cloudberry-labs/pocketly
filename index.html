@@ -210,7 +210,8 @@
       const getChallenges=()=>{try{return JSON.parse(localStorage.getItem(challengesKey())||"[]")}catch{return[]}};
       const updateProgress=()=>{syncActivePocket();savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=pruneChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       const wait=ms=>new Promise(r=>setTimeout(r,ms));
-      const soundOn=()=>localStorage.getItem("pocketlySound")!=="off";
+      localStorage.setItem("pocketlySound","on");
+      const soundOn=()=>true;
       let audioCtx=null;
       function tone(freq=440,duration=.08,type="sine",gain=.035,delay=0){
         if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch(e){}
