@@ -7,7 +7,7 @@
   <title>Pocketly</title>
   <meta name="description" content="Save, play, and build your little world in Pocketville.">
   <style>
-    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:swap}
+    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:block}
     :root{--ink:#565169;--purple:#7470cc;--pink:#eaa1bf;--blue:#9bd8f7}
     *{box-sizing:border-box}
     html,body{min-height:100%;margin:0}
@@ -606,7 +606,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=90"}));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=92"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
