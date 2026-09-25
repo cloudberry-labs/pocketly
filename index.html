@@ -311,6 +311,7 @@
           await move(n);
         }catch(err){
           console.error("Pocketly turn error",err);
+          if(usingExtra)setExtraRolls(getExtraRolls()+1);
           state="IDLE";cici.dataset.state="idle";setSpriteFrame(0);setBusy(false);
           status.innerHTML="<strong>READY</strong> · Try your roll again";
         }finally{
