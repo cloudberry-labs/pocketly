@@ -209,6 +209,19 @@
       const getChallenges=()=>{try{return JSON.parse(localStorage.getItem(challengesKey())||"[]")}catch{return[]}};
       const updateProgress=()=>{syncActivePocket();savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       const wait=ms=>new Promise(r=>setTimeout(r,ms));
+      const soundOn=()=>localStorage.getItem("pocketlySound")!=="off";
+      let audioCtx=null;
+      function tone(freq=440,duration=.08,type="sine",gain=.035,delay=0){
+        if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch(e){}
+      }
+      function sfx(kind){
+        if(kind==="roll"){[260,330,410,520].forEach((f,i)=>tone(f,.07,"triangle",.025,i*.055));}
+        if(kind==="step"){tone(230,.045,"sine",.018);}
+        if(kind==="jump"){tone(390,.06,"sine",.025);tone(610,.08,"sine",.018,.055);}
+        if(kind==="popup"){tone(620,.07,"sine",.025);tone(820,.09,"sine",.018,.065);}
+        if(kind==="save"){tone(523,.09,"sine",.03);tone(659,.1,"sine",.028,.08);tone(784,.16,"sine",.025,.17);}
+      }
+
       spaces.forEach((space,index)=>{const [icon,name,_color,feature]=space,color=index%2===0?"pink":"blue",l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${displayName(space)}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
       function measure(){const br=board.getBoundingClientRect(),tw=cici.offsetWidth,th=cici.offsetHeight;points=[...board.querySelectorAll(".tile")].sort((a,b)=>+a.dataset.index-+b.dataset.index).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-br.left+r.width/2-tw/2,y:r.top-br.top+r.height*.58-th*.82,cx:r.left-br.left+r.width/2,cy:r.top-br.top+r.height/2,tile}})}
       function setSpriteFrame(frame){const safe=((frame%8)+8)%8,col=safe%4,row=Math.floor(safe/4);sprite.style.backgroundPosition=`${col*(100/3)}% ${row*100}%`}
@@ -228,7 +241,7 @@
         if(!from||!to)throw new Error("Missing tile point");
         const dx=to.x-from.x,dy=to.y-from.y,newFacing=Math.abs(dx)>3?(dx<0?-1:1):facing;
         const distance=Math.hypot(dx,dy),duration=Math.max(540,Math.min(720,410+distance*.9)),tiny=Math.max(2,Math.min(3,Math.round(distance/62))),walkEnd=.8,frameMs=125;
-        cici.dataset.state="moving";
+        cici.dataset.state="moving";sfx("step");
         await new Promise(resolve=>{
           const start=performance.now();
           function frame(now){
@@ -252,6 +265,7 @@
       }
       function setDieFace(n){const [x,y,z]=orientation[n];die.style.transform=`rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z-4}deg)`;die.dataset.face=n}
       async function rollDie(n){
+        sfx("roll");
         const current=+die.dataset.face||1,[x,y,z]=orientation[n],duration=960;
         const from=orientation[current]||orientation[1];
         const dieFrames=[
@@ -353,6 +367,7 @@
       function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const cfg=currencySets[selectedCurrency],original=dynamicSaveAmounts()[space[4]],boosted=hasBoost(),pay=boosted?original/2:original;currentLanding.saveAmount=pay;currentLanding.boosted=boosted;const originalText=cfg.symbol+original.toLocaleString("en-US"),payText=cfg.symbol+pay.toLocaleString("en-US");m=boosted?["🌿","BOOST ACTIVE!","Your 50% Savings Boost is ready!","This Save was "+originalText+", but your Boost cuts it to "+payText+". Save only "+payText+" this turn. 💗","SAVE "+payText]:["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+originalText+" for this landing. 💗","SAVE "+originalText]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(label="READY"){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");currentLanding=null;state="IDLE";status.innerHTML=`<strong>${label}</strong> · Cici is on tile ${position+1}`;setBusy(false)}
       function transitionPopup(m,choice=false){
+        sfx("popup");
         const card=overlay.querySelector(".landing-card");
         const swap=()=>{fillPopup(m,choice);try{card.animate([{opacity:.35,transform:"scale(.94)"},{opacity:1,transform:"scale(1)"}],{duration:260,easing:"ease-out"})}catch(e){}};
         try{const a=card.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.9)"}],{duration:140,easing:"ease-in"});if(a&&a.finished)a.finished.then(swap).catch(swap);else setTimeout(swap,150)}catch(e){swap()}
@@ -373,7 +388,7 @@
       async function completePocketChange(amount){
         if(!activePocket||!(amount>0))return false;const pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));if(i<0)return false;
         const before=Number(pockets[i].saved)||0,target=Number(pockets[i].amount)||Infinity,actual=Math.max(0,Math.min(amount,target-before));if(!(actual>0))return false;
-        pockets[i].saved=before+actual;savePockets(pockets);activePocket=pockets[i];updateProgress();
+        pockets[i].saved=before+actual;savePockets(pockets);activePocket=pockets[i];updateProgress();sfx("save");
         if(window.pocketlySyncBoardPockets){const ok=await window.pocketlySyncBoardPockets(pockets);if(!ok){pockets[i].saved=before;savePockets(pockets);activePocket=pockets[i];updateProgress();transitionPopup(["☁️","CHANGE NOT ADDED","Your Pocket Change was not saved.","Pocketly could not confirm the cloud save, so nothing was added. You can try again.","TRY AGAIN"],true);currentLanding.name="PocketChangeEntry";landingSkip.textContent="NOT TODAY";return false}}
         transitionPopup(["🪙","POCKET CHANGE ADDED","Every little bit counts!","You added "+formatMoney(actual)+" to "+activePocket.name+". Your regular daily Save is still available. 💗","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return true
       }
@@ -393,7 +408,7 @@
         if(i<0)return 0;
         const before=Number(pockets[i].saved)||0;
         pockets[i].saved=Math.min(Number(pockets[i].amount)||Infinity,before+amount);
-        savePockets(pockets);activePocket=pockets[i];updateProgress();
+        savePockets(pockets);activePocket=pockets[i];updateProgress();sfx("save");
         if(window.pocketlySyncBoardPockets){
           const ok=await window.pocketlySyncBoardPockets(pockets);
           if(!ok){
@@ -448,7 +463,7 @@
         closeLanding("READY")
       });
       landingSkip.addEventListener("click",()=>{if(currentLanding?.pendingSpecialSave){currentLanding.pendingSpecialSave=null;closeLanding("NOT SAVED");return}if(currentLanding?.result?.[5]==="save"){currentLanding.result=null;closeLanding("NOT SAVED");return}closeLanding("SKIPPED")});
-      async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
+      async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);sfx("jump");await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
       function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
       function dailyRefresh(){
         const today=dayKey();if(today!==lastSeenDay)lastSeenDay=today;
