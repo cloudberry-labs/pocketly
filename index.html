@@ -289,12 +289,12 @@
         "No-Spend":["📵","NO-SPEND","Wallet nap time!","Can you make today a no-spend day? Future you might thank you.","I'M IN!"],
         "Treat":["💗","TREAT","A tiny treat moment!","Enjoy something small without forgetting the dream you’re saving for.","YAY!"],
         "Boost":["🌿","SAVINGS BOOST","Your next Save is 50% easier!","Keep this Boost until you land on your next SAVE tile. Whatever amount that tile asks you to save, you only need to save half. Example: ₱100 becomes ₱50. Your Pocket will record only the amount you actually saved.","GOT IT!"],
-        "Mini Shop":["🏡","MINI SHOP","Welcome to the Mini Shop!","A special Pocketville stop. Shop mechanics will be connected later.","LOOK AROUND"],
+        "Mini Shop":["🏡","MINI SHOP","Window-shopping break!","No money leaves your Pocket here. Take a cozy look around, then keep playing.","CONTINUE"],
         "Challenge":["🔎","CHALLENGE","Challenge spotted!","A small money challenge is waiting for you. Ready to try it?","ACCEPT!"],
-        "Travel Spot":["🏝️","TRAVEL SPOT","Dream destination!","Imagine where your savings could take you. Travel mechanics come later.","DREAM!"],
+        "Travel Spot":["🏝️","TRAVEL SPOT","Dream destination!","Pick one place you’d love to visit and picture what your savings could make possible. No saving required.","KEEP DREAMING"],
         "Rest":["🌙","COZY REST","Take a little break!","No saving required on this tile. This turn simply ends here — no automatic extra roll. Tap CONTINUE when you’re ready, then your dice will be available for your next normal turn.","CONTINUE"],
         "Reward":["🌈","REWARD","You found a reward!","A happy little win for making progress in Pocketville.","CLAIM!"],
-        "Lucky Day!":["🌈","LUCKY DAY!","It’s your lucky day!","Something extra-special will happen here once rewards are connected.","LUCKY ME!"]
+        "Lucky Day!":["🌈","LUCKY DAY!","It’s your lucky day!","Reveal a random Pocketville perk. If it asks for a save, you’ll always confirm before anything is added.","REVEAL LUCK"]
       };
       const mysteries=[
         ["🎲","EXTRA ROLL!","Pocketville gave you a free extra roll!","No saving required. Take another roll and keep exploring.","NICE!","free"],
@@ -302,11 +302,11 @@
         ["🪙","TINY SAVE","A tiny savings surprise!","Save the smallest amount for your selected currency to complete today’s Pocketly goal.","SAVE IT","save",0],
         ["💗","HALF-STEP SAVE","A sweet little savings nudge!","Pocketville picked a small amount for today.","SAVE IT","save",1],
         ["⭐","LUCKY BOOST","Bonus progress!","You found a little boost. No extra money needed — enjoy another roll.","CLAIM","free"],
-        ["🎁","CHOICE CARD","You choose!","Take a free pass, or make the smallest save and finish today strong.","FREE PASS","choice"]
+        ["🎁","FREE PASS","Pocketville gave you a choice-free break!","No saving required on this mystery. Keep your coins and continue exploring.","TAKE THE PASS","free"]
       ];
       const bonusResults=[
         ["⭐","BONUS!","Bonus roll unlocked!","You earned another roll. No saving required.","CLAIM","free"],
-        ["🌿","BOOST!","A little Pocketville boost!","Keep exploring — your next roll is free.","CLAIM","free"]
+        ["🌿","BOOST!","Savings Boost unlocked!","Your next SAVE tile will be 50% easier. The Boost stays active until you use it.","ACTIVATE","boost"]
       ];
       const rewardResults=[
         ["🌈","REWARD!","You earned a cozy reward!","No money needed. Celebrate your progress and take another roll.","CLAIM","free"],
@@ -384,6 +384,7 @@
             transitionPopup(["🪙","CONFIRM SAVE","Would you like to save "+amountText+"?","Nothing will be added to your Pocket unless you confirm this save.","YES, SAVE "+amountText],true);
             landingSkip.textContent="NOT NOW";return
           }
+          if(r[5]==="boost"){activateBoost();currentLanding.result=null;currentLanding.name="BoostActive";transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active until you land on a SAVE tile. Only the amount you actually save will be recorded.","CONTINUE"]);landingSkip.hidden=true;return}
           currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["✨","CLAIMED!","Pocketville says keep going!","Your surprise is claimed. The dice is ready for another adventure.","CONTINUE"]);landingSkip.hidden=true;return
         }
         if(currentLanding.pendingSpecialSave){
@@ -399,7 +400,7 @@
         if(currentLanding.name==="DailyComplete"){closeLanding("DAY COMPLETE");setBusy(false);return}
         closeLanding("READY")
       });
-      landingSkip.addEventListener("click",()=>{if(currentLanding?.name==="Save"&&currentLanding.boosted)consumeBoost();if(currentLanding?.pendingSpecialSave){currentLanding.pendingSpecialSave=null;closeLanding("NOT SAVED");return}if(currentLanding?.result?.[5]==="save"){currentLanding.result=null;closeLanding("NOT SAVED");return}closeLanding("SKIPPED")});
+      landingSkip.addEventListener("click",()=>{if(currentLanding?.pendingSpecialSave){currentLanding.pendingSpecialSave=null;closeLanding("NOT SAVED");return}if(currentLanding?.result?.[5]==="save"){currentLanding.result=null;closeLanding("NOT SAVED");return}closeLanding("SKIPPED")});
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
       function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
       refreshCurrency();
