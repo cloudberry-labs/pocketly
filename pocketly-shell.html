@@ -487,7 +487,7 @@
     import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
     const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYcls",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
     const firebaseApp=initializeApp(firebaseConfig),auth=getAuth(firebaseApp),db=getFirestore(firebaseApp);
-    const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition","pocketlySound"];
+    const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition"];
     let cloudUser=null,cloudReady=false,cloudTimer=null,authMode="create",userNavigated=false;
     function collectCloudData(){const data={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(CLOUD_KEYS.includes(k)||k.startsWith("pocketly")))data[k]=localStorage.getItem(k)}return data}
     async function writeCloudNow(){const user=auth.currentUser||cloudUser;if(!user){console.warn("Pocketly cloud save: no signed-in user");return false}clearTimeout(cloudTimer);try{const payload=collectCloudData();const pocketsSnapshot=getPockets();await setDoc(doc(db,"users",user.uid),{email:user.email||"",data:payload,pockets:pocketsSnapshot,onboardingComplete:!!getPocket(),updatedAt:serverTimestamp()},{merge:true});const verify=await getDoc(doc(db,"users",user.uid));const verified=verify.exists()?verify.data():null,remote=verified?.data;if(!remote||remote.pocketlyPockets!==payload.pocketlyPockets||JSON.stringify(verified?.pockets||[])!==JSON.stringify(pocketsSnapshot))throw new Error("Cloud verification failed");const s=document.querySelector("#cloudStatus");if(s)s.textContent="☁️ Saved to Pocketly Cloud";return true}catch(e){console.error("Pocketly cloud save failed",e);const s=document.querySelector("#cloudStatus");if(s)s.textContent="⚠️ Cloud save failed";return false}} async function pushCloud(){if(!(cloudUser||auth.currentUser)||!cloudReady)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(()=>writeCloudNow(),350)}
@@ -606,7 +606,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=92"}));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=93"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
