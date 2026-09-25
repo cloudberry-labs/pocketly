@@ -186,14 +186,15 @@
       let points=[],position=0,state="IDLE",facing=1,resizeFrame=0,currentLanding=null;
       const boardPositionKey=()=>`pocketlyBoardPosition_${activePocket?.id||"guest"}`;
       const loadBoardPosition=()=>{const n=Number(localStorage.getItem(boardPositionKey()));return Number.isInteger(n)&&n>=0&&n<spaces.length?n:0};
-      const saveBoardPosition=()=>localStorage.setItem(boardPositionKey(),String(position));
+      const syncGameState=()=>{if(window.pocketlySyncBoardState)window.pocketlySyncBoardState()};
+      const saveBoardPosition=()=>{localStorage.setItem(boardPositionKey(),String(position));syncGameState()};
       const dayKey=()=>new Date().toLocaleDateString("en-CA");
       const dailyKey=()=>`pocketlyDailySaveDate_${activePocket?.id||"guest"}`;
       const completedToday=()=>!!activePocket&&localStorage.getItem(dailyKey())===dayKey();
       const extraRollKey=()=>`pocketlyExtraRolls_${activePocket?.id||"guest"}`;
       const freePassKey=()=>`pocketlyFreePassDate_${activePocket?.id||"guest"}`;
       const getExtraRolls=()=>Math.max(0,Number(localStorage.getItem(extraRollKey()))||0);
-      const setExtraRolls=n=>localStorage.setItem(extraRollKey(),String(Math.max(0,Math.floor(n))));
+      const setExtraRolls=n=>{localStorage.setItem(extraRollKey(),String(Math.max(0,Math.floor(n))));syncGameState()};
       const dayComplete=()=>completedToday()||localStorage.getItem(freePassKey())===dayKey();
       let lastSeenDay=dayKey();
       const getSavings=()=>Number(activePocket?.saved||0);
@@ -367,8 +368,8 @@
       const challengesKey=()=>pocketStateKey("pocketlyChallenges");
       const completedChallengesKey=()=>pocketStateKey("pocketlyCompletedChallenges");
       const hasBoost=()=>localStorage.getItem(boostKey())==="1";
-      const activateBoost=()=>localStorage.setItem(boostKey(),"1");
-      const consumeBoost=()=>localStorage.removeItem(boostKey());
+      const activateBoost=()=>{localStorage.setItem(boostKey(),"1");syncGameState()};
+      const consumeBoost=()=>{localStorage.removeItem(boostKey());syncGameState()};
       function fillPopup(m,choice=true){landingEmoji.textContent=m[0];landingType.textContent=m[1];landingTitle.textContent=m[2];landingMessage.textContent=m[3];landingAction.textContent=m[4]||"OKAY!";landingSkip.hidden=!choice}
       function showLanding(index){const space=spaces[index],[icon,name]=space;currentLanding={index,space,name};let m;if(name==="Save"){const cfg=currencySets[selectedCurrency],original=dynamicSaveAmounts()[space[4]],boosted=hasBoost(),pay=boosted?original/2:original;currentLanding.saveAmount=pay;currentLanding.boosted=boosted;const originalText=cfg.symbol+original.toLocaleString("en-US"),payText=cfg.symbol+pay.toLocaleString("en-US");m=boosted?["🌿","BOOST ACTIVE!","Your 50% Savings Boost is ready!","This Save was "+originalText+", but your Boost cuts it to "+payText+". Save only "+payText+" this turn. 💗","SAVE "+payText]:["🪙","SAVE TIME!","A little today, a lot closer to your dream.","Pocketville picked your amount — save "+originalText+" for this landing. 💗","SAVE "+originalText]}else{m=messages[name]||[icon,name,"You landed here!","Another little step through Pocketville.","OKAY!"]}fillPopup(m,needsChoice(name));landingSkip.textContent=name==="Save"?"SKIP":"NOT NOW";overlay.classList.add("show");overlay.setAttribute("aria-hidden","false")}
       function closeLanding(label="READY"){overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");currentLanding=null;state="IDLE";status.innerHTML=`<strong>${label}</strong> · Cici is on tile ${position+1}`;setBusy(false)}
@@ -400,9 +401,9 @@
       }
       function showChallenge(){const ch=challenges[Math.floor(Math.random()*challenges.length)];currentLanding.challenge=ch;transitionPopup([ch[0],ch[1],ch[2],ch[3],"ACCEPT CHALLENGE"],true);landingSkip.textContent="NOT NOW"}
       function challengeExpired(x){return x.expiresAt&&Date.now()>Number(x.expiresAt)}
-      function pruneChallenges(){const list=getChallenges(),keep=list.filter(x=>!challengeExpired(x));if(keep.length!==list.length)localStorage.setItem(challengesKey(),JSON.stringify(keep));return keep}
+      function pruneChallenges(){const list=getChallenges(),keep=list.filter(x=>!challengeExpired(x));if(keep.length!==list.length)localStorage.setItem(challengesKey(),JSON.stringify(keep));syncGameState();return keep}
       function showChallengePanel(){const list=pruneChallenges();currentLanding={name:"ChallengePanel"};landingEmoji.textContent="📋";landingType.textContent="ACTIVE CHALLENGES";landingTitle.textContent=list.length?"Your little missions":"All clear!";landingMessage.innerHTML=list.length?'<div class="challenge-list">'+list.map((x,i)=>'<div class="challenge-item"><strong>'+x.title+'</strong><span>'+x.detail+'</span><button class="challenge-done" type="button" data-challenge-done="'+i+'">DONE ✓</button></div>').join("")+'</div>':"You don’t have any active challenges right now. 💗";landingAction.textContent="CLOSE";landingSkip.hidden=true;overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");state="RESOLVING_TILE";setBusy(true)}
-      landingMessage.addEventListener("click",e=>{const b=e.target.closest("[data-challenge-done]");if(!b)return;const i=+b.dataset.challengeDone,list=getChallenges(),done=list.splice(i,1)[0];localStorage.setItem(challengesKey(),JSON.stringify(list));const history=JSON.parse(localStorage.getItem(completedChallengesKey())||"[]");history.push({...done,completedAt:new Date().toISOString()});localStorage.setItem(completedChallengesKey(),JSON.stringify(history));updateProgress();showChallengePanel()});
+      landingMessage.addEventListener("click",e=>{const b=e.target.closest("[data-challenge-done]");if(!b)return;const i=+b.dataset.challengeDone,list=getChallenges(),done=list.splice(i,1)[0];localStorage.setItem(challengesKey(),JSON.stringify(list));const history=JSON.parse(localStorage.getItem(completedChallengesKey())||"[]");history.push({...done,completedAt:new Date().toISOString()});localStorage.setItem(completedChallengesKey(),JSON.stringify(history));syncGameState();updateProgress();showChallengePanel()});
       challengePill.addEventListener("click",showChallengePanel);
       challengePill.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showChallengePanel()}});
       function showSpecialResult(pool){
@@ -425,7 +426,7 @@
             currentLanding.name="Save";landingSkip.hidden=false;return 0
           }
         }
-        localStorage.setItem(dailyKey(),dayKey());
+        localStorage.setItem(dailyKey(),dayKey());syncGameState();
         currentLanding.name="DailyComplete";
         transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete.${getExtraRolls()?" You still have "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" whenever you want to use "+(getExtraRolls()===1?"it":"them")+".":" 💗"}`,"CONTINUE"]);
         landingSkip.hidden=true;return amount
@@ -443,7 +444,7 @@
         if(currentLanding.result){
           const r=currentLanding.result;
           if(r[5]==="+roll"){const add=Number(r[6])||1;setExtraRolls(getExtraRolls()+add);currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["🎲","EXTRA ROLL"+(add>1?"S":"")+" SAVED!",add+" extra roll"+(add>1?"s":"")+" added","You now have "+getExtraRolls()+" Extra Roll"+(getExtraRolls()===1?"":"s")+" available. They carry over until you use them.","CONTINUE"]);landingSkip.hidden=true;return}
-          if(r[5]==="pass"){localStorage.setItem(freePassKey(),dayKey());currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["🌙","FREE PASS USED","Today is complete!","No regular Save is required today. Your "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" will stay available until you choose to use "+(getExtraRolls()===1?"it":"them")+".","CONTINUE"]);landingSkip.hidden=true;return}
+          if(r[5]==="pass"){localStorage.setItem(freePassKey(),dayKey());syncGameState();currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["🌙","FREE PASS USED","Today is complete!","No regular Save is required today. Your "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" will stay available until you choose to use "+(getExtraRolls()===1?"it":"them")+".","CONTINUE"]);landingSkip.hidden=true;return}
           if(r[5]==="save"){
             const tier=r[6]||0,amount=dynamicSaveAmounts()[tier],amountText=formatMoney(amount);
             currentLanding.pendingSpecialSave={tier,amount};
@@ -460,7 +461,7 @@
         }
                 if(currentLanding.name==="Challenge"&&!currentLanding.challenge){showChallenge();return}
         if(currentLanding.name==="No-Spend"&&!currentLanding.challenge){const ch=["📵","NO-SPEND CHALLENGE","Wallet nap challenge!","For the rest of today, avoid non-essential spending. Essentials are always okay.","ACCEPT CHALLENGE"];currentLanding.challenge=ch;transitionPopup(ch,true);landingSkip.textContent="NOT NOW";return}
-        if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString(),expiresAt:Date.now()+86400000});localStorage.setItem(challengesKey(),JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is active for the next 24 hours. Mark it Done when you complete it.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
+        if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString(),expiresAt:Date.now()+86400000});localStorage.setItem(challengesKey(),JSON.stringify(list));syncGameState();updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is active for the next 24 hours. Mark it Done when you complete it.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
         if(currentLanding.name==="Boost"){activateBoost();transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active through future rolls until Cici lands on a SAVE tile. Then that Save amount will be cut in half.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="BoostActive";return}
         if(currentLanding.name==="BoostActive"){closeLanding("BOOST ACTIVE");return}
         if(currentLanding.name==="Save"){
@@ -499,6 +500,18 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYcls",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
 const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig),boardAuth=getAuth(app),boardDb=getFirestore(app);
+let boardStateTimer=null;
+window.pocketlySyncBoardState=()=>{
+  const user=boardAuth.currentUser;if(!user)return;
+  clearTimeout(boardStateTimer);
+  boardStateTimer=setTimeout(async()=>{
+    try{
+      const data={};
+      for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("pocketly"))data[k]=localStorage.getItem(k)}
+      await setDoc(doc(boardDb,"users",user.uid),{email:user.email||"",data,updatedAt:serverTimestamp()},{merge:true});
+    }catch(e){console.error("Pocketly game-state cloud save failed",e)}
+  },180);
+};
 window.pocketlySyncBoardPockets=async pockets=>{
   const user=boardAuth.currentUser;if(!user)return true;
   try{
