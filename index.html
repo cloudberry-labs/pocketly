@@ -213,7 +213,7 @@
       const soundOn=()=>localStorage.getItem("pocketlySound")!=="off";
       let audioCtx=null;
       function tone(freq=440,duration=.08,type="sine",gain=.035,delay=0){
-        if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch(e){}
+        if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch(e){}
       }
       function sfx(kind){
         if(kind==="roll"){
@@ -228,6 +228,8 @@
           tone(988,.07,"triangle",.026,.11);tone(1319,.09,"triangle",.024,.17);tone(1568,.16,"sine",.022,.25);
         }
       }
+      const unlockAudio=()=>{if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume()}catch(e){}};
+      ["pointerdown","touchstart","keydown"].forEach(type=>window.addEventListener(type,unlockAudio,{once:true,passive:true}));
 
       spaces.forEach((space,index)=>{const [icon,name,_color,feature]=space,color=index%2===0?"pink":"blue",l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${displayName(space)}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
       function measure(){const br=board.getBoundingClientRect(),tw=cici.offsetWidth,th=cici.offsetHeight;points=[...board.querySelectorAll(".tile")].sort((a,b)=>+a.dataset.index-+b.dataset.index).map(tile=>{const r=tile.getBoundingClientRect();return{x:r.left-br.left+r.width/2-tw/2,y:r.top-br.top+r.height*.58-th*.82,cx:r.left-br.left+r.width/2,cy:r.top-br.top+r.height/2,tile}})}
