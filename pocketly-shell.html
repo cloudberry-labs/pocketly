@@ -746,7 +746,7 @@
       try{
         const restored=await restoreCloud(user);
         cloudReady=true;
-        if(restored&&getPocket())showDashboard();
+        if(restored&&getPocket()&&!userNavigated)showDashboard();
       }catch(e){console.warn("Pocketly auto restore",e);cloudReady=true}
     });
     const savedPocket=getPocket();if(savedPocket){
@@ -767,7 +767,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>location.href="./?v=71"));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=72"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
