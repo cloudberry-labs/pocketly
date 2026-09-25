@@ -352,14 +352,14 @@
         ["🪙","LUCKY SAVE","Tiny amount, big win!","Save the smallest amount and complete today’s Pocketly goal.","SAVE IT","save",0]
       ];
       const challenges=[
-        ["💧","NO-SPEND CHALLENGE","No drinks out today!","Skip buying coffee, milk tea, soda, or bottled drinks for the rest of the day."],
-        ["🍱","PANTRY CHALLENGE","Use what you already have!","Make your next meal or snack from food you already have instead of buying something new."],
-        ["🛍️","CART PAUSE","24-hour cart rule!","Leave one non-essential item in your cart for 24 hours before deciding whether to buy it."],
-        ["🪙","COIN CHECK","Find one tiny saving opportunity!","Skip one small non-essential purchase today and keep that money in your pocket."],
-        ["📵","NO-SPEND WINDOW","Three hours, zero spending!","Choose any three-hour window today and spend nothing during that time."],
-        ["🧹","USE IT FIRST","Shop your own stuff!","Before buying one non-essential item, use or finish something similar you already own."],
-        ["🎯","WANT VS NEED","Catch one impulse buy!","When you want to buy something today, ask: need, planned want, or impulse? Skip one impulse."],
-        ["🏠","HOME DAY","One cozy low-spend activity!","Choose one free or already-paid activity instead of going out to spend."]
+        ["💧","SKIP A DRINK","Don’t buy one drink today.","Example: skip coffee, milk tea, soda, or bottled water if you already have a drink with you."],
+        ["🍱","EAT WHAT YOU HAVE","Use food you already have.","Example: make your next meal or snack from food at home instead of buying something."],
+        ["🛍️","WAIT BEFORE BUYING","Wait 24 hours before buying one non-essential item.","Example: leave clothes, makeup, or a gadget in your cart until tomorrow, then decide if you still want it."],
+        ["🪙","SKIP ONE SMALL BUY","Don’t buy one small thing you don’t really need.","Example: skip a snack, extra drink, or small impulse purchase today."],
+        ["📵","NO SPENDING FOR 3 HOURS","Choose any 3-hour period today and don’t spend money.","Example: 6 PM–9 PM. Normal essentials or emergencies are always okay."],
+        ["🧹","USE IT FIRST","Use something you already own before buying another.","Example: finish your current shampoo, skincare, or snacks before replacing them."],
+        ["🎯","SKIP ONE IMPULSE BUY","Notice one thing you suddenly want and don’t buy it today.","Example: if you see a cute item you didn’t plan to buy, leave it for now."],
+        ["🏠","DO SOMETHING FREE","Choose one fun activity that costs nothing today.","Example: watch something you already have, read, walk, journal, or relax at home."]
       ];
       function needsChoice(name){return name==="Save"||name==="Challenge"||name==="No-Spend"||name==="Pocket Change"}
       const pocketStateKey=name=>name+"_"+(activePocket?.id||"guest");
