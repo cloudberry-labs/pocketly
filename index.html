@@ -184,6 +184,9 @@
       ];
       const board=document.querySelector("#board"),currencySelect=document.querySelector("#currencySelect"),savingsTotalEl=document.querySelector("#savingsTotal"),challengeCountEl=document.querySelector("#challengeCount"),challengePill=document.querySelector("#challengePill"),overlay=document.querySelector("#landingOverlay"),landingEmoji=document.querySelector("#landingEmoji"),landingType=document.querySelector("#landingType"),landingTitle=document.querySelector("#landingTitle"),landingMessage=document.querySelector("#landingMessage"),landingAction=document.querySelector("#landingAction"),landingSkip=document.querySelector("#landingSkip"),preview=document.querySelector("#previewButton"),die=document.querySelector("#die"),dieScene=document.querySelector("#dieScene"),diceShadow=document.querySelector("#diceShadow"),diceButton=document.querySelector("#diceButton"),rollLabel=document.querySelector("#rollLabel"),cici=document.querySelector("#cici"),sprite=document.querySelector("#ciciSprite"),status=document.querySelector("#motionStatus")||{innerHTML:""},controls=[],reduced=matchMedia("(prefers-reduced-motion: reduce)");
       let points=[],position=0,state="IDLE",facing=1,resizeFrame=0,currentLanding=null;
+      const boardPositionKey=()=>`pocketlyBoardPosition_${activePocket?.id||"guest"}`;
+      const loadBoardPosition=()=>{const n=Number(localStorage.getItem(boardPositionKey()));return Number.isInteger(n)&&n>=0&&n<spaces.length?n:0};
+      const saveBoardPosition=()=>localStorage.setItem(boardPositionKey(),String(position));
       const dayKey=()=>new Date().toLocaleDateString("en-CA");
       const dailyKey=()=>`pocketlyDailySaveDate_${activePocket?.id||"guest"}`;
       const completedToday=()=>!!activePocket&&localStorage.getItem(dailyKey())===dayKey();
@@ -244,7 +247,7 @@
           }
           requestAnimationFrame(frame);
         });
-        facing=newFacing;position=toIndex;setSpriteFrame(0);cici.style.transform=transform(to);
+        facing=newFacing;position=toIndex;saveBoardPosition();setSpriteFrame(0);cici.style.transform=transform(to);
         try{follow()}catch(e){}
       }
       function setDieFace(n){const [x,y,z]=orientation[n];die.style.transform=`rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z-4}deg)`;die.dataset.face=n}
@@ -460,7 +463,8 @@
       
       preview.addEventListener("click",()=>move(10));
       new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{measure();if(state==="IDLE")place(position)})}).observe(board);
-      requestAnimationFrame(()=>place(0));
+      position=loadBoardPosition();
+      requestAnimationFrame(()=>place(position));
     })();
   </script>
 <script type="module">
