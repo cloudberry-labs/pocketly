@@ -322,12 +322,12 @@
         "Mystery":["🎁","MYSTERY","Ooh… a mystery!","Something unexpected found you. Mystery rewards will be connected after this popup test.","REVEAL!"],
         "Bonus":["⭐","BONUS","Lucky landing!","A little bonus is waiting for you. We’ll connect the real reward next.","CLAIM!"],
         "No-Spend":["📵","NO-SPEND","Wallet nap time!","Can you make today a no-spend day? Future you might thank you.","I'M IN!"],
-        "Treat":["💗","TREAT","A tiny treat moment!","Enjoy something small without forgetting the dream you’re saving for.","YAY!"],
+        "Treat":["💗","TREAT","A tiny free treat moment!","Take a guilt-free pause: enjoy something you already have, rest for a bit, play a favorite song, or do one little thing that feels good without spending.","ENJOY 💗"],
         "Boost":["🌿","SAVINGS BOOST","Your next Save is 50% easier!","Keep this Boost until you land on your next SAVE tile. Whatever amount that tile asks you to save, you only need to save half. Example: ₱100 becomes ₱50. Your Pocket will record only the amount you actually saved.","GOT IT!"],
         "Goal Check":["🎯","GOAL CHECK","See how far you’ve come!","Your Pocket progress is waiting for a quick check-in.","CHECK PROGRESS"],
         "Challenge":["🔎","CHALLENGE","Challenge spotted!","A small money challenge is waiting for you. Ready to try it?","ACCEPT!"],
         "Pocket Change":["🪙","POCKET CHANGE","Got some loose change today?","Add whatever spare coins or small change you actually have today. This is optional extra savings and does not complete your regular daily Save.","ADD CHANGE"],
-        "Rest":["🌙","COZY REST","Take a little break!","No saving required on this tile. This turn simply ends here — no automatic extra roll. Tap CONTINUE when you’re ready, then your dice will be available for your next normal turn.","CONTINUE"],
+        "Rest":["🌙","COZY REST","Take a little break!","No saving required on this tile. This turn ends here — it does not grant an Extra Roll or complete today’s Save. Tap CONTINUE when you’re ready.","CONTINUE"],
         "Reward":["🌈","REWARD","You found a reward!","A happy little win for making progress in Pocketville.","CLAIM!"],
         "Lucky Day!":["🌈","LUCKY DAY!","It’s your lucky day!","Reveal a random Pocketville perk. If it asks for a save, you’ll always confirm before anything is added.","REVEAL LUCK"]
       };
@@ -382,7 +382,7 @@
         if(!activePocket){transitionPopup(["🎯","GOAL CHECK","No active Pocket yet","Create or activate a Pocket first so Pocketly can show your progress.","CONTINUE"]);currentLanding.name="Resolved";return}
         const saved=Number(activePocket.saved)||0,target=Number(activePocket.amount)||0,remaining=Math.max(0,target-saved),pct=target?Math.min(100,Math.round(saved/target*100)):0;
         let timing="";
-        if(activePocket.date){const end=new Date(activePocket.date+"T23:59:59"),days=Math.max(0,Math.ceil((end-new Date())/86400000));timing=days?(" · "+days+" day"+(days===1?"":"s")+" to go"):" · target date reached"}
+        if(activePocket.date){const end=new Date(activePocket.date+"T23:59:59"),days=Math.max(0,Math.ceil((end-new Date())/86400000));timing=days?(" · "+days+" day"+(days===1?"":"s")+" to go"):" · target date reached — you can adjust your target date in Pockets"}
         transitionPopup(["🎯","GOAL CHECK",pct+"% of "+activePocket.name+" complete",formatMoney(saved)+" saved · "+formatMoney(remaining)+" remaining"+timing+". Keep going — every real save moves the goal closer. 💗","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved"
       }
       function showPocketChangeEntry(){
@@ -393,7 +393,7 @@
       }
       async function completePocketChange(amount){
         if(!activePocket||!(amount>0))return false;const pockets=getPockets(),i=pockets.findIndex(p=>String(p.id)===String(activePocket.id));if(i<0)return false;
-        const before=Number(pockets[i].saved)||0,target=Number(pockets[i].amount)||Infinity,actual=Math.max(0,Math.min(amount,target-before));if(!(actual>0))return false;
+        const before=Number(pockets[i].saved)||0,target=Number(pockets[i].amount)||Infinity,remaining=Math.max(0,target-before);if(!(remaining>0)){transitionPopup(["🎉","GOAL COMPLETE","This Pocket is already full!","You’ve already reached "+activePocket.name+". No extra Pocket Change was added.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return false}const actual=Math.max(0,Math.min(amount,remaining));if(!(actual>0))return false;
         pockets[i].saved=before+actual;savePockets(pockets);activePocket=pockets[i];updateProgress();sfx("save");
         if(window.pocketlySyncBoardPockets){const ok=await window.pocketlySyncBoardPockets(pockets);if(!ok){pockets[i].saved=before;savePockets(pockets);activePocket=pockets[i];updateProgress();transitionPopup(["☁️","CHANGE NOT ADDED","Your Pocket Change was not saved.","Pocketly could not confirm the cloud save, so nothing was added. You can try again.","TRY AGAIN"],true);currentLanding.name="PocketChangeEntry";landingSkip.textContent="NOT TODAY";return false}}
         transitionPopup(["🪙","POCKET CHANGE ADDED","Every little bit counts!","You added "+formatMoney(actual)+" to "+activePocket.name+". Your regular daily Save is still available. 💗","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return true
