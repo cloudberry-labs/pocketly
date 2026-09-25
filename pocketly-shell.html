@@ -7,7 +7,7 @@
   <title>Pocketly</title>
   <meta name="description" content="Save, play, and build your little world in Pocketville.">
   <style>
-    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:block}
+    @font-face{font-family:"Darumadrop One";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/darumadropone/DarumadropOne-Regular.ttf") format("truetype");font-display:swap}
     :root{--ink:#565169;--purple:#7470cc;--pink:#eaa1bf;--blue:#9bd8f7}
     *{box-sizing:border-box}
     html,body{min-height:100%;margin:0}
@@ -442,6 +442,19 @@
           <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
+      <div class="play-view" id="playView">
+        <div class="game-toast" id="gameToast" role="status" aria-live="polite"></div><div class="confetti" id="confetti" aria-hidden="true"></div>
+        <header class="play-intro"><div><p>Little steps, big dreams</p><h2>Pocketly</h2></div><div class="play-tools"><span class="points-pill">⭐ <b id="pointsCount">0</b> points</span><button class="sound-toggle" id="soundToggle" aria-label="Turn sound off" title="Sound on">🔊</button></div></header>
+        <section class="game-card">
+          <h3 id="playPocketName">Your active pocket</h3>
+          <p>Roll around Pocketville. What you land on decides your next tiny money mission.</p>
+          <div class="game-board" id="gameBoard"></div>
+          <div class="roll-result" id="rollResult">Cici is ready! ✨</div>
+          <button class="btn primary" id="rollButton">ROLL THE DICE 🎲</button>
+          <p class="play-note" id="playNote">Roll the dice to begin. Savings are only counted after you confirm them.</p>
+        </section>
+        <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
+      </div>
       <div class="landing-modal" id="landingModal">
         <div class="landing-card">
           <div class="landing-icon" id="landingIcon">🪙</div>
@@ -487,7 +500,7 @@
     import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
     const firebaseConfig={apiKey:"AIzaSyCH7unTRvT08B_XczbP0rg_3ztLI3IYcls",authDomain:"pocketly-42150.firebaseapp.com",projectId:"pocketly-42150",storageBucket:"pocketly-42150.firebasestorage.app",messagingSenderId:"877267692509",appId:"1:877267692509:web:deb99a09f3b6d74a5ca434"};
     const firebaseApp=initializeApp(firebaseConfig),auth=getAuth(firebaseApp),db=getFirestore(firebaseApp);
-    const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition"];
+    const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition","pocketlySound"];
     let cloudUser=null,cloudReady=false,cloudTimer=null,authMode="create",userNavigated=false;
     function collectCloudData(){const data={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(CLOUD_KEYS.includes(k)||k.startsWith("pocketly")))data[k]=localStorage.getItem(k)}return data}
     async function writeCloudNow(){const user=auth.currentUser||cloudUser;if(!user){console.warn("Pocketly cloud save: no signed-in user");return false}clearTimeout(cloudTimer);try{const payload=collectCloudData();const pocketsSnapshot=getPockets();await setDoc(doc(db,"users",user.uid),{email:user.email||"",data:payload,pockets:pocketsSnapshot,onboardingComplete:!!getPocket(),updatedAt:serverTimestamp()},{merge:true});const verify=await getDoc(doc(db,"users",user.uid));const verified=verify.exists()?verify.data():null,remote=verified?.data;if(!remote||remote.pocketlyPockets!==payload.pocketlyPockets||JSON.stringify(verified?.pockets||[])!==JSON.stringify(pocketsSnapshot))throw new Error("Cloud verification failed");const s=document.querySelector("#cloudStatus");if(s)s.textContent="☁️ Saved to Pocketly Cloud";return true}catch(e){console.error("Pocketly cloud save failed",e);const s=document.querySelector("#cloudStatus");if(s)s.textContent="⚠️ Cloud save failed";return false}} async function pushCloud(){if(!(cloudUser||auth.currentUser)||!cloudReady)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(()=>writeCloudNow(),350)}
@@ -503,10 +516,10 @@
       login:["Welcome back","Your little world is waiting.","Secure sign-in and cloud save will be connected in the next phase."],
       guest:["Guest mode","Take a tiny peek around.","You can explore Pocketville first, then create an account when you’re ready to save your progress."]
     };
-    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
+    const welcome=document.querySelector("#welcome"),next=document.querySelector("#next"),onboarding=document.querySelector("#onboarding"),dashboard=document.querySelector("#dashboard"),pocketsView=document.querySelector("#pocketsView"),playView=document.querySelector("#playView"),saveModal=document.querySelector("#saveModal"),profileModal=document.querySelector("#profileModal"),pocketModal=document.querySelector("#pocketModal");
     const steps=[...document.querySelectorAll(".step")],dots=[...document.querySelectorAll(".progress i")];
     let currentStep=0,selectedGoal="",editingPocketId=null,saveSource="dashboard",currentLandingType="start",currentLandingEvent="standard",bonusRollUsed=false,turnTimer=null,landingResolving=false,savingInProgress=false;
-    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none"}
+    function hideViews(){welcome.style.display="none";next.style.display="none";onboarding.style.display="none";dashboard.style.display="none";pocketsView.style.display="none";playView.style.display="none"}
     function showWelcome(){hideViews();welcome.style.display="flex"}
     function showStep(index){currentStep=index;steps.forEach((s,i)=>s.classList.toggle("active",i===index));dots.forEach((d,i)=>d.classList.toggle("active",i<=Math.min(index,2)));hideViews();onboarding.style.display="block";onboarding.scrollTop=0}
     document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
@@ -535,7 +548,7 @@
     function getPocket(){const pockets=getPockets();return pockets.find(p=>p.active&&!p.archived)||pockets.find(p=>!p.archived)||null}
     function pocketGameKey(base,pocketId){const id=pocketId??getPocket()?.id??"guest";return `${base}_${id}`}
     function initializePocketGameState(pocketId){
-      try{localStorage.setItem(pocketGameKey("pocketlyBoardPosition",pocketId),"0");localStorage.setItem(pocketGameKey("pocketlyLastDice",pocketId),"1");["pocketlyNextRollAt","pocketlyPendingLanding","pocketlyBonusRollUsed"].forEach(k=>localStorage.removeItem(pocketGameKey(k,pocketId)))}catch(e){}
+      try{localStorage.setItem(pocketGameKey("pocketlyBoardPosition",pocketId),"0");localStorage.setItem(pocketGameKey("pocketlyLastDice",pocketId),"1");localStorage.removeItem(pocketGameKey("pocketlyNextRollAt",pocketId));localStorage.removeItem(pocketGameKey("pocketlyPendingLanding",pocketId));localStorage.removeItem(pocketGameKey("pocketlyBonusRollUsed",pocketId))}catch(e){}
     }
     function loadPocketPosition(){const pocket=getPocket();if(!pocket)return 0;const key=pocketGameKey("pocketlyBoardPosition",pocket.id),stored=localStorage.getItem(key);if(stored!==null)return Math.min(35,Math.max(0,Number(stored)||0));const legacy=Math.min(35,Math.max(0,Number(localStorage.getItem("pocketlyBoardPosition"))||0));localStorage.setItem(key,String(legacy));return legacy}
     function savePocketPosition(position){const safe=Math.min(35,Math.max(0,Number(position)||0));localStorage.setItem(pocketGameKey("pocketlyBoardPosition"),String(safe));localStorage.setItem("pocketlyBoardPosition",String(safe))}
@@ -575,8 +588,156 @@
     document.querySelector("#savePocketButton").onclick=async()=>{const name=document.querySelector("#newPocketName").value.trim(),category=document.querySelector("#newPocketCategory").value,amount=Number(document.querySelector("#newPocketTarget").value),currency=document.querySelector("#newPocketCurrency").value,date=document.querySelector("#newPocketDate").value;if(!name||!amount||amount<=0){document.querySelector("#pocketModalError").textContent="Add a pocket name and target amount.";return}const pockets=getPockets();if(editingPocketId){const p=pockets.find(x=>x.id===editingPocketId);if(!p){document.querySelector("#pocketModalError").textContent="Pocket not found. Please reopen and try again.";return}if(amount<Number(p.saved||0)){document.querySelector("#pocketModalError").textContent="Target cannot be lower than the amount already saved ("+money(Number(p.saved)||0,p.currency)+").";return}if(currency!==p.currency&&Number(p.saved||0)>0){document.querySelector("#pocketModalError").textContent="Currency cannot be changed after savings have been added. Create a new Pocket for a different currency.";return}Object.assign(p,{name,category,amount,currency,date})}else{pockets.forEach(p=>p.active=false);const newPocket={id:Date.now(),name,category,amount,currency,date,saved:0,active:true,archived:false,createdAt:new Date().toISOString()};pockets.push(newPocket);savePockets(pockets);initializePocketGameState(newPocket.id);playerPosition=0;resetMotionRuntime()}savePockets(pockets);renderPockets();if(cloudUser||auth.currentUser){const ok=await writeCloudNow();if(!ok){document.querySelector("#pocketModalError").textContent="Could not save this Pocket to the cloud yet. Please try again.";return}}pocketModal.classList.remove("open")};
     document.querySelector("#pocketsList").onclick=e=>{const btn=e.target.closest("[data-action]");if(!btn)return;const card=btn.closest("[data-id]"),id=Number(card.dataset.id),pockets=getPockets(),pocket=pockets.find(p=>p.id===id);if(btn.dataset.action==="active"){pockets.forEach(p=>p.active=p.id===id);savePockets(pockets);playerPosition=loadPocketPosition();resetMotionRuntime();renderPockets();renderDashboard();writeCloudNow()}if(btn.dataset.action==="edit")openPocketEditor(pocket);if(btn.dataset.action==="delete"){if(!pocket||!confirm(`Delete "${pocket.name}"? This will permanently remove this pocket and its saved progress.`))return;const snapshot=JSON.stringify(pockets),wasActive=!!pocket.active,next=pockets.filter(p=>p.id!==id);if(wasActive&&next.length)next[0].active=true;savePockets(next);try{const history=JSON.parse(localStorage.getItem("pocketlySavingsHistory")||"[]").filter(x=>String(x.pocketId)!==String(id));localStorage.setItem("pocketlySavingsHistory",JSON.stringify(history));for(const k of Object.keys(localStorage)){if(k.endsWith("_"+id)&&k.startsWith("pocketly"))localStorage.removeItem(k)}}catch(e){}playerPosition=loadPocketPosition();resetMotionRuntime();renderPockets();if(next.length)renderDashboard();else showStep(0);if(cloudUser||auth.currentUser){writeCloudNow().then(ok=>{if(!ok){savePockets(JSON.parse(snapshot));renderPockets();renderDashboard();alert("Pocketly could not confirm this deletion in the cloud. The Pocket was restored — please try again.")}})}}};
     
-    // Gameplay lives in index.html. The shell only owns Home, Pockets, Profile,
-    // account/cloud state, and navigation into the current game build.
+    const boardSpaces=[
+      ["start","🌱","START"],["save","💧","Save"],["mystery","❓","Mystery"],["bonus","⭐","Bonus"],["save","🪙","Save"],["challenge","🛒","No-Spend"],["treat","🧁","Treat"],["save","💗","Save"],["boost","🌿","Boost"],["corner mystery","🎁","Mystery"],
+      ["save","🪙","Save"],["rest","☁️","Rest"],["mystery","💌","Mystery"],["save","💧","Save"],["bonus","✨","Bonus"],["challenge","🍳","Challenge"],["save","🪙","Save"],["chaos","🎲","Chaos"],["corner treat","🌈","Reward"],
+      ["save","💗","Save"],["mystery","🔮","Mystery"],["boost","🌱","Boost"],["save","💧","Save"],["challenge","📵","No-Spend"],["bonus","⭐","Bonus"],["save","🪙","Save"],["mystery","🎀","Mystery"],["corner rest","🌙","Rest"],
+      ["save","💗","Save"],["treat","☕","Treat"],["mystery","❓","Mystery"],["save","💧","Save"],["boost","🌿","Boost"],["chaos","🌀","Chaos"],["bonus","✨","Bonus"],["save","🪙","Save"]
+    ];
+    const boardCoords=[];
+    for(let c=1;c<=10;c++)boardCoords.push([10,c]);
+    for(let r=9;r>=1;r--)boardCoords.push([r,10]);
+    for(let c=9;c>=1;c--)boardCoords.push([1,c]);
+    for(let r=2;r<=9;r++)boardCoords.push([r,1]);
+    const TURN_WAIT_MS=24*60*60*1000;
+    let playerPosition=loadPocketPosition(),soundOn=localStorage.getItem("pocketlySound")!=="off";
+    function getPoints(){return Number(localStorage.getItem("pocketlyPoints"))||0}
+    function awardPoints(value){localStorage.setItem("pocketlyPoints",String(getPoints()+value))}
+    function recordSaving(pocket,amount,source){try{const items=JSON.parse(localStorage.getItem("pocketlySavingsHistory")||"[]");items.unshift({id:Date.now(),pocketId:pocket.id,pocketName:pocket.name,amount,currency:pocket.currency,source,date:new Date().toISOString()});localStorage.setItem("pocketlySavingsHistory",JSON.stringify(items.slice(0,100)))}catch(e){}}
+    function renderPlayStats(){const p=getPocket();document.querySelector("#pointsCount").textContent=getPoints();if(!p)return;const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));const name=document.querySelector("#centerPocketName"),copy=document.querySelector("#centerPocketProgress"),fill=document.querySelector("#centerProgressFill");if(name)name.textContent=p.name;if(copy)copy.textContent=`${money(Number(p.saved)||0,p.currency)} / ${money(p.amount,p.currency)}`;if(fill)fill.style.width=percent+"%"}
+    function buildTileLayouts(){
+      const layouts=Array(36),radii=["22px 29px 17px 25px","29px 18px 25px 16px","18px 27px 21px 30px","26px 17px 29px 20px"],rots=[-2.2,1.4,-1.1,2.1,-1.7,.8];
+      const set=(i,x,y,w,h,n=0)=>layouts[i]={x,y,w,h,r:radii[n%radii.length],rot:rots[n%rots.length]};
+      set(0,0,84.5,15.5,15.5,0);set(9,84.5,83.8,15.5,16.2,1);set(18,84,0,16,15.5,2);set(27,0,0,16,15.5,3);
+      const horizontal=(indexes,start,end,weights,ys,hs,seed)=>{const total=weights.reduce((a,b)=>a+b,0);let x=start;indexes.forEach((i,n)=>{const w=(end-start)*weights[n]/total;set(i,x,ys[n],w+.45,hs[n],seed+n);x+=w})};
+      const vertical=(indexes,start,end,weights,xs,ws,seed)=>{const total=weights.reduce((a,b)=>a+b,0);let y=start;indexes.forEach((i,n)=>{const h=(end-start)*weights[n]/total;set(i,xs[n],y,ws[n],h+.35,seed+n);y+=h})};
+      horizontal([1,2,3,4,5,6,7,8],14.5,85.5,[1.14,.82,1.18,.9,1.08,.84,1.16,1.02],[86,84.8,85.7,84.4,85.5,84.7,85.8,84.6],[13.7,15.1,13.9,15.2,14,15,13.7,15.1],4);
+      horizontal([26,25,24,23,22,21,20,19],14.5,85,[1.06,.82,1.17,.88,1.1,.84,1.14,1.03],[1.4,.2,1.1,0,1.3,.3,1.2,.1],[13.8,15.1,14,15.3,13.9,15,13.8,15.2],12);
+      vertical([17,16,15,14,13,12,11,10],14,85,[1.04,.83,1.18,.88,1.1,.82,1.16,1.02],[85.7,84.5,85.8,84.4,85.5,84.6,85.8,84.5],[14.3,15.5,14.1,15.6,14.4,15.3,14.1,15.5],20);
+      vertical([28,29,30,31,32,33,34,35],14,85,[1.08,.82,1.15,.88,1.1,.84,1.14,1.01],[.2,1.4,.1,1.5,.3,1.3,.1,1.4],[15.3,14.1,15.5,14,15.3,14.2,15.5,14.1],28);
+      return layouts
+    }
+    function diceFaceMarkup(number){return `<span class="dice-3d-face face-${number}" aria-hidden="true">${(pipMap[number]||[]).map(p=>`<i class="pip p${p}"></i>`).join("")}</span>`}
+    const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+    const TURN_STATE=Object.freeze({IDLE:"IDLE",ROLLING:"ROLLING",DICE_LANDED:"DICE_LANDED",MOVING:"MOVING",LANDING:"LANDING",RESOLVING_TILE:"RESOLVING_TILE"});
+    const DICE_SKINS=Object.freeze({classic:{id:"classic",unlocked:true},"pink-heart":{id:"pink-heart",unlocked:false}});
+    const DICE_ORIENTATION={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
+    const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    let coordinateManager=null,characterController=null,diceController=null,turnController=null;
+
+    class BoardCoordinateManager{
+      constructor(board,layer){this.board=board;this.layer=layer;this.points=[];this.frame=0;this.observer=null}
+      start(){this.recalculate();if("ResizeObserver" in window){this.observer=new ResizeObserver(()=>this.schedule());this.observer.observe(this.board)}requestAnimationFrame(()=>this.recalculate())}
+      schedule(){cancelAnimationFrame(this.frame);this.frame=requestAnimationFrame(()=>{this.recalculate();if(turnController?.state===TURN_STATE.IDLE)characterController?.place(playerPosition)})}
+      recalculate(){const layerRect=this.layer.getBoundingClientRect(),token=this.layer.querySelector("#playerToken"),tokenW=token?.offsetWidth||48,tokenH=token?.offsetHeight||60;this.points=boardSpaces.map((_,index)=>{const tile=this.board.querySelector(`.board-tile[data-index="${index}"]`);if(!tile)return null;const r=tile.getBoundingClientRect();return{tile:index,x:r.left-layerRect.left+r.width/2-tokenW/2,y:r.top-layerRect.top+r.height*.6-tokenH*.82,centerX:r.left-layerRect.left+r.width/2,centerY:r.top-layerRect.top+r.height/2}})}
+      get(index){return this.points[index]||{tile:index,x:0,y:0,centerX:0,centerY:0}}
+      destroy(){cancelAnimationFrame(this.frame);this.observer?.disconnect()}
+    }
+
+    class CharacterController{
+      constructor(board,layer,coordinates){this.board=board;this.layer=layer;this.coordinates=coordinates;this.token=layer.querySelector("#playerToken");this.image=this.token.querySelector("img");this.facing=1;this.runId=0;this.setCharacterState("idle")}
+      setCharacterState(state){this.token.dataset.state=state;this.token.setAttribute("aria-label",`Cici ${state}`)}
+      pose(point,facing=this.facing,bob=0,rotation=0,squashX=1,squashY=1){return `translate3d(${point.x}px,${point.y+bob}px,0) rotate(${rotation}deg) scaleX(${facing*squashX}) scaleY(${squashY})`}
+      place(index){this.coordinates.recalculate();const point=this.coordinates.get(index),next=this.coordinates.get((index+1)%36),dx=next.x-point.x;if(Math.abs(dx)>4)this.facing=dx<0?-1:1;this.token.style.transform=this.pose(point,this.facing);this.token.dataset.tile=String(index);this.setCharacterState("idle")}
+      cancel(){this.runId++;this.token.getAnimations().forEach(a=>a.cancel());this.image.getAnimations().forEach(a=>a.cancel());this.setCharacterState("idle")}
+      async anticipate(run){if(reducedMotion.matches)return;this.setCharacterState("moving");const animation=this.image.animate([{transform:"translateY(0) scale(1)"},{transform:"translateY(5px) scale(1.1,.86)"},{transform:"translateY(-4px) scale(.97,1.05)"},{transform:"translateY(0) scale(1)"}],{duration:190,easing:"cubic-bezier(.2,.75,.25,1)"});await animation.finished.catch(()=>{});if(run!==this.runId)throw new Error("Character movement cancelled")}
+      followCamera(index){const tile=this.board.querySelector(`.board-tile[data-index="${index}"]`);if(!tile)return;const r=tile.getBoundingClientRect(),topZone=78,bottomZone=innerHeight-105;if(r.top<topZone||r.bottom>bottomZone){const target=(r.top+r.bottom)/2-innerHeight/2;window.scrollBy({top:target,behavior:reducedMotion.matches?"auto":"smooth"})}}
+      async segment(fromIndex,toIndex,run){const from=this.coordinates.get(fromIndex),to=this.coordinates.get(toIndex),dx=to.x-from.x,dy=to.y-from.y,distance=Math.hypot(dx,dy),oldFacing=this.facing,newFacing=Math.abs(dx)>4?(dx<0?-1:1):oldFacing,duration=reducedMotion.matches?55:Math.max(180,Math.min(280,175+distance*.78));this.followCamera(toIndex);this.setCharacterState("moving");await new Promise((resolve,reject)=>{const started=performance.now();const tick=now=>{if(run!==this.runId){reject(new Error("Character movement cancelled"));return}const raw=Math.min(1,(now-started)/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=from.x+(to.x-from.x)*ease,y=from.y+(to.y-from.y)*ease,bob=reducedMotion.matches?0:-Math.sin(raw*Math.PI*2)*2-Math.sin(raw*Math.PI)*8,rotation=reducedMotion.matches?0:Math.sin(raw*Math.PI*2)*4*newFacing,squashX=reducedMotion.matches?1:1+.025*Math.sin(raw*Math.PI*2),squashY=reducedMotion.matches?1:1-.03*Math.sin(raw*Math.PI*2),facing=oldFacing===newFacing?newFacing:(raw<.28?oldFacing*(1-raw/0.28)+newFacing*(raw/0.28):newFacing);this.token.style.transform=this.pose({x,y},facing,bob,rotation,squashX,squashY);if(raw<1)requestAnimationFrame(tick);else resolve()};requestAnimationFrame(tick)});this.facing=newFacing;this.token.style.transform=this.pose(to,newFacing);this.token.dataset.tile=String(toIndex)}
+      spark(point,finalStep=false){if(reducedMotion.matches)return;const sparkle=document.createElement("i");sparkle.className="step-particle";sparkle.style.left=`${point.centerX}px`;sparkle.style.top=`${point.centerY+12}px`;if(finalStep)sparkle.style.transform="scale(1.35)";this.layer.appendChild(sparkle);setTimeout(()=>sparkle.remove(),560)}
+      async contact(index,finalStep){const tile=this.board.querySelector(`.board-tile[data-index="${index}"]`),point=this.coordinates.get(index);if(!tile)return;tile.classList.remove("step-contact","final-contact");void tile.offsetWidth;tile.classList.add(finalStep?"final-contact":"step-contact");this.spark(point,finalStep);document.dispatchEvent(new CustomEvent(finalStep?"pocketly:final-land":"pocketly:footstep",{detail:{tile:index+1}}));await wait(reducedMotion.matches?20:finalStep?120:55);setTimeout(()=>tile.classList.remove("step-contact","final-contact"),620)}
+      async finalLanding(index,run){this.setCharacterState("landing");if(!reducedMotion.matches){const animation=this.image.animate([{transform:"translateY(0) scale(1)"},{transform:"translateY(-18px) rotate(-5deg) scale(.96,1.08)",offset:.34},{transform:"translateY(5px) scale(1.12,.82)",offset:.68},{transform:"translateY(-3px) scale(.98,1.04)",offset:.84},{transform:"translateY(0) scale(1)"}],{duration:430,easing:"cubic-bezier(.2,.76,.25,1)"});await animation.finished.catch(()=>{})}if(run!==this.runId)throw new Error("Character movement cancelled");await this.contact(index,true);this.setCharacterState("idle")}
+      async moveBy(steps,startIndex){const run=++this.runId;this.coordinates.recalculate();await this.anticipate(run);for(let step=0;step<steps;step++){const from=(startIndex+step)%36,to=(from+1)%36;await this.segment(from,to,run);if(step===steps-1)await this.finalLanding(to,run);else await this.contact(to,false)}return(startIndex+steps)%36}
+    }
+
+    class DiceController{
+      constructor(button){this.button=button;this.cube=button.querySelector("#diceCube");this.shadow=button.querySelector("#diceShadow");const requested=localStorage.getItem("pocketlyDiceSkin")||"classic";this.skin=DICE_SKINS[requested]?.unlocked?requested:"classic";button.dataset.skin=this.skin;this.setFace(loadLastDice())}
+      orientation(number,turns=0){const [x,y,z]=DICE_ORIENTATION[number]||DICE_ORIENTATION[1];return `rotateX(${x+720*turns}deg) rotateY(${y+720*turns}deg) rotateZ(${z+360*turns}deg)`}
+      setFace(number){const safe=Math.min(6,Math.max(1,Number(number)||1));this.cube.dataset.face=String(safe);this.cube.style.transform=this.orientation(safe)}
+      emit(name){document.dispatchEvent(new CustomEvent(`pocketly:${name}`))}
+      spark(){if(reducedMotion.matches)return;const sparkle=document.createElement("i");sparkle.className="dice-landing-spark";this.button.appendChild(sparkle);setTimeout(()=>sparkle.remove(),620)}
+      async roll(result){this.button.disabled=true;this.button.classList.add("is-pressed");this.emit("dice-tap");const current=Number(this.cube.dataset.face)||1;if(reducedMotion.matches){await wait(70);this.setFace(result);this.button.classList.remove("is-pressed");await wait(90);return}const press=this.cube.animate([{transform:`${this.orientation(current)} scale(1)`},{transform:`${this.orientation(current)} translateY(6px) scale(.84,.78)`},{transform:`${this.orientation(current)} translateY(-4px) scale(1.07,.96)`},{transform:`${this.orientation(current)} scale(1)`}],{duration:175,easing:"cubic-bezier(.2,.8,.25,1)"});await press.finished.catch(()=>{});this.button.classList.remove("is-pressed");this.emit("dice-tumble");const [rx,ry,rz]=DICE_ORIENTATION[result];const tumble=this.cube.animate([{transform:"translate3d(-34px,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.82)",offset:0},{transform:"translate3d(25px,-46px,0) rotateX(250deg) rotateY(205deg) rotateZ(125deg) scale(1.08)",offset:.34},{transform:"translate3d(-12px,-14px,0) rotateX(505deg) rotateY(420deg) rotateZ(275deg) scale(.94)",offset:.68},{transform:`translate3d(0,0,0) rotateX(${rx+720}deg) rotateY(${ry+720}deg) rotateZ(${rz+360}deg) scale(1)`,offset:1}],{duration:960,easing:"cubic-bezier(.14,.72,.22,1)",fill:"forwards"});const shadow=this.shadow.animate([{transform:"translateX(-50%) scale(1)",opacity:.24},{transform:"translateX(-50%) scale(.48)",opacity:.09,offset:.35},{transform:"translateX(-50%) scale(1.2)",opacity:.31,offset:.82},{transform:"translateX(-50%) scale(1)",opacity:.23}],{duration:960,easing:"ease-in-out"});await tumble.finished.catch(()=>{});shadow.cancel();tumble.cancel();this.setFace(result);this.spark();this.emit("dice-land");const settle=this.cube.animate([{transform:`${this.orientation(result)} translateY(0) scale(1)`},{transform:`${this.orientation(result)} translateY(5px) scale(1.08,.84)`},{transform:`${this.orientation(result)} translateY(-4px) scale(.97,1.05)`},{transform:`${this.orientation(result)} translateY(0) scale(1)`}],{duration:250,easing:"cubic-bezier(.2,.8,.25,1)"});await settle.finished.catch(()=>{});this.setFace(result)}
+    }
+
+    class TurnController{
+      constructor(){this.state=TURN_STATE.IDLE;this.sequence=0}
+      set(state){this.state=state;const board=document.querySelector("#gameBoard");if(board)board.dataset.turnState=state;syncTurnState()}
+      reset(){this.sequence++;characterController?.cancel();this.state=TURN_STATE.IDLE;syncTurnState()}
+      async roll(isBonus=false){
+        if(this.state!==TURN_STATE.IDLE)return;
+        const pocket=getPocket();if(!pocket){showToast("Create a pocket first.");return}
+        if(!isBonus&&getPendingLanding()){const pending=getPendingLanding();this.set(TURN_STATE.RESOLVING_TILE);showLanding(pending.type,pending.event);return}
+        if(!isBonus&&turnLocked()){showToast(`🌙 Next Pocketly roll in ${countdownText()}`);syncTurnState();return}
+        if(!isBonus){bonusRollUsed=false;localStorage.removeItem(activePocketKey("pocketlyBonusRollUsed"))}
+        const sequence=++this.sequence,rollResult=Math.floor(Math.random()*6)+1,confirmedStart=playerPosition,rollButton=document.querySelector("#rollButton");
+        try{
+          this.set(TURN_STATE.ROLLING);rollButton.textContent="ROLLING… 🎲";document.querySelector("#rollResult").textContent="Rolling... 🎲";
+          await diceController.roll(rollResult);if(sequence!==this.sequence)return;
+          localStorage.setItem(activePocketKey("pocketlyLastDice"),String(rollResult));localStorage.setItem("pocketlyLastDice",String(rollResult));document.querySelector("#rollResult").textContent=`You rolled ${rollResult}! 🎲`;
+          this.set(TURN_STATE.DICE_LANDED);await wait(reducedMotion.matches?60:280);if(sequence!==this.sequence)return;
+          this.set(TURN_STATE.MOVING);rollButton.textContent=`CICI IS MOVING ${rollResult}…`;
+          const destination=await characterController.moveBy(rollResult,confirmedStart);if(sequence!==this.sequence)return;
+          this.set(TURN_STATE.LANDING);playerPosition=destination;savePocketPosition(playerPosition);
+          const type=boardSpaces[playerPosition][0].split(" ")[0],event=chooseLandingEvent(type);document.querySelector("#playNote").textContent=landingCopy[type]||"Tiny steps count!";localStorage.setItem(activePocketKey("pocketlyPendingLanding"),JSON.stringify({type,event,position:playerPosition,rolled:rollResult,createdAt:Date.now(),bonusRollUsed}));
+          this.set(TURN_STATE.RESOLVING_TILE);document.dispatchEvent(new CustomEvent("pocketly:tile-resolve",{detail:{tile:playerPosition+1,type,event}}));showLanding(type,event)
+        }catch(error){console.error("Pocketly turn recovered:",error);playerPosition=loadPocketPosition();coordinateManager?.recalculate();characterController?.place(playerPosition);showToast("Cici is ready again—your confirmed position is safe.");this.state=TURN_STATE.IDLE}
+        finally{if([TURN_STATE.ROLLING,TURN_STATE.DICE_LANDED,TURN_STATE.MOVING,TURN_STATE.LANDING].includes(this.state))this.state=TURN_STATE.IDLE;syncTurnState()}
+      }
+    }
+
+    function activePocketKey(base){return pocketGameKey(base)}
+    function loadLastDice(){return Number(localStorage.getItem(activePocketKey("pocketlyLastDice"))||localStorage.getItem("pocketlyLastDice"))||1}
+    function resetMotionRuntime(){clearInterval(turnTimer);turnController?.reset();coordinateManager?.destroy();coordinateManager=null;characterController=null;diceController=null}
+    function renderBoard(){
+      const board=document.querySelector("#gameBoard"),faces=[1,2,3,4,5,6].map(diceFaceMarkup).join("");resetMotionRuntime();board.innerHTML=`<div class="board-center"><div class="board-center-panel"><strong class="board-center-title">Welcome to Pocketville</strong><span class="board-center-sub" id="centerPocketName">Your little dream</span><div class="center-progress"><div class="center-progress-copy"><span>Active pocket</span><span id="centerPocketProgress">₱0 / ₱0</span></div><div class="center-progress-track"><div class="center-progress-fill" id="centerProgressFill"></div></div></div><button class="board-dice" id="boardDice" type="button" data-skin="classic" aria-label="Roll the Pocketly dice"><span class="dice-shadow" id="diceShadow"></span><span class="dice-cube" id="diceCube">${faces}</span></button><small class="turn-note" id="turnNote">One roll = one saving turn</small></div></div>`;
+      const layouts=buildTileLayouts();boardSpaces.forEach((space,i)=>{const tile=document.createElement("div"),l=layouts[i],featured=[0,9,18,27,3,15,24,33].includes(i);tile.className=`board-tile ${space[0]} ${featured?"featured":""}`;tile.dataset.index=i;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--r:${l.r};--rot:${l.rot}deg`;tile.innerHTML=`<small class="tile-number">${i+1}</small><span class="tile-icon">${space[1]}</span><span class="tile-name">${space[2]}</span>`;board.appendChild(tile)});
+      const layer=document.createElement("div");layer.className="character-layer";layer.id="character-layer";layer.setAttribute("aria-hidden","true");layer.innerHTML='<span class="player-token" id="playerToken" data-state="idle"><img src="cici-welcome.png" alt=""></span>';board.appendChild(layer);
+      const panel=board.querySelector(".board-center-panel"),roll=document.querySelector("#rollButton");if(panel&&roll)panel.appendChild(roll);
+      coordinateManager=new BoardCoordinateManager(board,layer);coordinateManager.start();characterController=new CharacterController(board,layer,coordinateManager);diceController=new DiceController(document.querySelector("#boardDice"));turnController=turnController||new TurnController();turnController.state=TURN_STATE.IDLE;
+      requestAnimationFrame(()=>{coordinateManager.recalculate();characterController.place(playerPosition)});document.querySelector("#boardDice").onclick=()=>performRoll(false);renderPlayStats();syncTurnState()
+    }
+    function updateToken(){coordinateManager?.recalculate();characterController?.place(playerPosition)}
+    function showPlay(){hideViews();const p=getPocket();playerPosition=loadPocketPosition();document.querySelector("#playPocketName").textContent=p?p.name:"Create a pocket first";playView.style.display="block";bonusRollUsed=localStorage.getItem(activePocketKey("pocketlyBonusRollUsed"))==="true";renderBoard();renderPlayStats();const pending=getPendingLanding();if(pending)setTimeout(()=>{turnController.set(TURN_STATE.RESOLVING_TILE);showLanding(pending.type,pending.event)},220)}
+    const landingCopy={save:"A little Save space! Choose an amount you can really put aside, then add it from your pocket.",mystery:"Mystery time! 🎀 A Pocketly card will open here in the next step.",bonus:"Lucky landing! ⭐ You earned a little game bonus — no money added automatically.",challenge:"Tiny challenge! Try a no-spend or mindful-money mission. You can always skip.",treat:"Treat space! 🧁 Celebrate your progress without guilt.",boost:"Savings Boost! 🌿 Your next confirmed save can earn extra Pocket Points.",rest:"Cozy rest stop. ☁️ Nothing to do — just enjoy the landing.",chaos:"Chaos! 🌀 A silly Pocketly twist is coming here.",start:"Back at START! 🌱 Another little lap around your dream."};
+    document.querySelectorAll(".coming").forEach(b=>b.onclick=showPlay);
+    document.querySelector("#playHome").onclick=()=>navigate(showDashboard);document.querySelector("#playPockets").onclick=()=>navigate(showPockets);document.querySelector("#playProfile").onclick=()=>profileModal.classList.add("open");
+    const pipMap={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+    function getPendingLanding(){try{return JSON.parse(localStorage.getItem(activePocketKey("pocketlyPendingLanding"))||"null")}catch(e){return null}}
+    function nextRollAt(){return Number(localStorage.getItem(activePocketKey("pocketlyNextRollAt")))||0}
+    function turnLocked(){return nextRollAt()>Date.now()}
+    function countdownText(){const left=Math.max(0,nextRollAt()-Date.now()),hours=Math.floor(left/3600000),minutes=Math.floor(left%3600000/60000),seconds=Math.floor(left%60000/1000);return `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`}
+    function completeDailyTurn(){localStorage.setItem(activePocketKey("pocketlyNextRollAt"),String(Date.now()+TURN_WAIT_MS));localStorage.removeItem(activePocketKey("pocketlyPendingLanding"));localStorage.removeItem(activePocketKey("pocketlyBonusRollUsed"));bonusRollUsed=false;if(turnController)turnController.state=TURN_STATE.IDLE;syncTurnState()}
+    function syncTurnState(){const button=document.querySelector("#rollButton"),dice=document.querySelector("#boardDice"),note=document.querySelector("#turnNote"),pending=getPendingLanding(),locked=turnLocked(),state=turnController?.state||TURN_STATE.IDLE;if(!button||!note)return;clearInterval(turnTimer);const busy=!pending&&![TURN_STATE.IDLE,TURN_STATE.RESOLVING_TILE].includes(state);if(pending){button.disabled=true;if(dice)dice.disabled=true;button.textContent="FINISH TODAY’S MISSION";note.textContent="Resolve your landing before another roll.";note.classList.add("locked")}else if(locked){button.disabled=true;if(dice)dice.disabled=true;button.textContent="TURN COMPLETE ✓";note.textContent=`Next Pocketly roll in ${countdownText()}`;note.classList.add("locked");turnTimer=setInterval(()=>{if(!turnLocked()){clearInterval(turnTimer);syncTurnState()}else note.textContent=`Next Pocketly roll in ${countdownText()}`},1000)}else if(busy){button.disabled=true;if(dice)dice.disabled=true;button.textContent=state===TURN_STATE.ROLLING?"ROLLING… 🎲":"CICI IS MOVING…";note.textContent="Pocketly turn in progress…";note.classList.remove("locked")}else{button.disabled=false;if(dice)dice.disabled=false;button.textContent="ROLL THE DICE 🎲";note.textContent="One roll = one real-life saving turn";note.classList.remove("locked")}}
+    const landingDetails={
+      save:["🪙","You landed on Save!","Set aside a little amount today. Every bit counts!","I SAVED IT!"],
+      mystery:["🎁","Mystery time!","A surprise Pocketly card is waiting for you.","OPEN CARD"],
+      bonus:["⭐","Bonus!","Lucky landing! You earned a tiny Pocketly bonus.","YAY!"],
+      challenge:["💪","Tiny Challenge!","Try a mindful-money mission. You can always skip it.","I'LL TRY IT"],
+      treat:["💗","Treat Yourself!","Celebrate your progress with a small guilt-free treat.","THANK YOU!"],
+      boost:["🌱","Savings Boost!","Your next confirmed save can earn extra Pocket Points.","BOOST IT!"],
+      rest:["🌙","Cozy Rest Stop","Nothing to do here. Cici gets a tiny break too!","REST"],
+      chaos:["🌀","Plot Twist!","Pocketville has a silly surprise for this turn.","SHOW ME"],
+      start:["🏡","Welcome Back!","You made another little trip around Pocketville.","LET'S GO!"]
+    };
+    function chooseLandingEvent(type){if(bonusRollUsed)return "standard";const chance={bonus:.6,mystery:.2,chaos:.35}[type]||0;return Math.random()<chance?"reroll":"standard"}
+    function showLanding(type,event="standard"){
+      if(turnController)turnController.state=TURN_STATE.RESOLVING_TILE;
+      currentLandingType=type;currentLandingEvent=event||"standard";landingResolving=false;document.querySelector("#landingAction").disabled=false;document.querySelector("#landingSkip").disabled=false;
+      const d=currentLandingEvent==="reroll"?["🎲",type==="bonus"?"Bonus Re-Roll!":type==="mystery"?"Mystery Re-Roll!":"Chaos Re-Roll!","Lucky Cici! You earned one extra dice roll for this turn.","ROLL AGAIN"]:(landingDetails[type]||["✨","Tiny step!","Every little step counts.","GOT IT!"]);
+      document.querySelector("#landingIcon").textContent=d[0];document.querySelector("#landingTitle").textContent=d[1];document.querySelector("#landingText").textContent=d[2];document.querySelector("#landingAction").textContent=d[3]+" ✨";document.querySelector("#landingModal").classList.add("open")
+    }
+    document.querySelector("#landingAction").onclick=()=>{if(landingResolving)return;landingResolving=true;document.querySelector("#landingAction").disabled=true;document.querySelector("#landingSkip").disabled=true;document.querySelector("#landingModal").classList.remove("open");if(currentLandingEvent==="reroll"&&!bonusRollUsed){bonusRollUsed=true;localStorage.setItem(activePocketKey("pocketlyBonusRollUsed"),"true");localStorage.removeItem(activePocketKey("pocketlyPendingLanding"));awardPoints(3);if(turnController)turnController.state=TURN_STATE.IDLE;showToast("🎲 Bonus roll unlocked! +3 Pocket Points");setTimeout(()=>performRoll(true),320);return}if(currentLandingType==="save"){openSave("game");return}const reward=currentLandingType==="bonus"?10:currentLandingType==="challenge"||currentLandingType==="boost"?7:3;awardPoints(reward);completeDailyTurn();renderPlayStats();showToast(`⭐ Mission complete! +${reward} Pocket Points`);playChime()};
+    document.querySelector("#landingSkip").onclick=()=>{if(landingResolving)return;landingResolving=true;document.querySelector("#landingAction").disabled=true;document.querySelector("#landingSkip").disabled=true;document.querySelector("#landingModal").classList.remove("open");completeDailyTurn();showToast("☁️ No pressure—today’s turn is complete.")};
+    document.querySelector("#landingModal").onclick=e=>{if(e.target.id==="landingModal")showToast("Finish or skip the mission to complete today’s turn.")};
+    function performRoll(isBonus=false){return turnController?.roll(isBonus)}
+    document.querySelector("#rollButton").onclick=()=>performRoll(false);
+
+    function showToast(message){const toast=document.querySelector("#gameToast");toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),3200)}
+    function celebrate(){const box=document.querySelector("#confetti"),colors=["#ef78ad","#7bcff2","#ffd469","#9bd48a","#b995e5"];box.innerHTML="";for(let i=0;i<28;i++){const bit=document.createElement("i");bit.style.left=Math.random()*100+"%";bit.style.background=colors[i%colors.length];bit.style.setProperty("--drift",(Math.random()*120-60)+"px");bit.style.animationDelay=Math.random()*.35+"s";box.appendChild(bit)}setTimeout(()=>box.innerHTML="",1800)}
+    function playChime(){if(!soundOn)return;try{const AudioCtx=window.AudioContext||window.webkitAudioContext,ctx=new AudioCtx();[523.25,659.25,783.99].forEach((frequency,i)=>{const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.type="sine";oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.0001,ctx.currentTime+i*.11);gain.gain.exponentialRampToValueAtTime(.11,ctx.currentTime+i*.11+.02);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+i*.11+.25);oscillator.connect(gain).connect(ctx.destination);oscillator.start(ctx.currentTime+i*.11);oscillator.stop(ctx.currentTime+i*.11+.27)})}catch(e){}}
+    function syncSoundButton(){const b=document.querySelector("#soundToggle");b.textContent=soundOn?"🔊":"🔇";b.title=soundOn?"Sound on":"Sound off";b.setAttribute("aria-label",soundOn?"Turn sound off":"Turn sound on")}
+    document.querySelector("#soundToggle").onclick=()=>{soundOn=!soundOn;localStorage.setItem("pocketlySound",soundOn?"on":"off");syncSoundButton();if(soundOn)playChime()};syncSoundButton();
+    window.addEventListener("resize",()=>{if(playView.style.display==="block"&&turnController?.state===TURN_STATE.IDLE)coordinateManager?.schedule()},{passive:true});
+    window.addEventListener("orientationchange",()=>setTimeout(()=>{if(playView.style.display==="block")coordinateManager?.schedule()},180),{passive:true});
 
 
     onAuthStateChanged(auth,async user=>{
@@ -606,7 +767,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=93"}));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=72"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
