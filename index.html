@@ -215,11 +215,17 @@
         if(!soundOn())return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch(e){}
       }
       function sfx(kind){
-        if(kind==="roll"){[260,330,410,520].forEach((f,i)=>tone(f,.07,"triangle",.025,i*.055));}
-        if(kind==="step"){tone(230,.045,"sine",.018);}
-        if(kind==="jump"){tone(390,.06,"sine",.025);tone(610,.08,"sine",.018,.055);}
-        if(kind==="popup"){tone(620,.07,"sine",.025);tone(820,.09,"sine",.018,.065);}
-        if(kind==="save"){tone(523,.09,"sine",.03);tone(659,.1,"sine",.028,.08);tone(784,.16,"sine",.025,.17);}
+        if(kind==="roll"){
+          [190,155,220,175,245,165,210,145,260,180,230,135].forEach((f,i)=>tone(f,.045,i%2?"square":"triangle",.018,i*.055));
+          tone(105,.09,"triangle",.028,.68);tone(82,.12,"sine",.025,.74);
+        }
+        if(kind==="step"){tone(185,.035,"triangle",.012);tone(125,.03,"sine",.009,.025);}
+        if(kind==="jump"){tone(330,.055,"sine",.02);tone(520,.08,"sine",.016,.05);}
+        if(kind==="popup"){tone(560,.055,"sine",.018);tone(760,.075,"sine",.014,.05);}
+        if(kind==="save"){
+          tone(1320,.035,"sine",.028);tone(1760,.045,"sine",.022,.045);
+          tone(988,.07,"triangle",.026,.11);tone(1319,.09,"triangle",.024,.17);tone(1568,.16,"sine",.022,.25);
+        }
       }
 
       spaces.forEach((space,index)=>{const [icon,name,_color,feature]=space,color=index%2===0?"pink":"blue",l=layouts[index],tile=document.createElement("button"),side=index<8?"top":index<17?"right":index<25?"bottom":"left";tile.type="button";tile.className=`tile side-${side} ${color}${feature?" feature":""}`;tile.dataset.index=index;tile.style.cssText=`--x:${l.x}%;--y:${l.y}%;--w:${l.w}%;--h:${l.h}%;--rot:${l.rot}deg;--radius:${l.radius}`;tile.innerHTML=`<small class="tile-number">${index+1}</small><span class="tile-icon">${icon}</span><span class="tile-name">${displayName(space)}</span>`;tile.addEventListener("click",()=>press(tile,true));board.insertBefore(tile,document.querySelector("#characterLayer"))});
