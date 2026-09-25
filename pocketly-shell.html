@@ -442,19 +442,6 @@
           <button class="nav-item" id="pocketsHome"><span>🏠</span>Home</button><button class="nav-item active"><span>👛</span>Pockets</button><button class="nav-item shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="pocketsProfile"><span>🌸</span>Profile</button>
         </nav>
       </div>
-      <div class="play-view" id="playView">
-        <div class="game-toast" id="gameToast" role="status" aria-live="polite"></div><div class="confetti" id="confetti" aria-hidden="true"></div>
-        <header class="play-intro"><div><p>Little steps, big dreams</p><h2>Pocketly</h2></div><div class="play-tools"><span class="points-pill">⭐ <b id="pointsCount">0</b> points</span><button class="sound-toggle" id="soundToggle" aria-label="Turn sound off" title="Sound on">🔊</button></div></header>
-        <section class="game-card">
-          <h3 id="playPocketName">Your active pocket</h3>
-          <p>Roll around Pocketville. What you land on decides your next tiny money mission.</p>
-          <div class="game-board" id="gameBoard"></div>
-          <div class="roll-result" id="rollResult">Cici is ready! ✨</div>
-          <button class="btn primary" id="rollButton">ROLL THE DICE 🎲</button>
-          <p class="play-note" id="playNote">Roll the dice to begin. Savings are only counted after you confirm them.</p>
-        </section>
-        <nav class="bottom-nav" aria-label="Main navigation"><button class="nav-item" id="playHome"><span>🏠</span>Home</button><button class="nav-item" id="playPockets"><span>👛</span>Pockets</button><button class="nav-item active shell-play-link"><span>🎲</span>Play</button><button class="nav-item" id="playProfile"><span>🌸</span>Profile</button></nav>
-      </div>
       <div class="landing-modal" id="landingModal">
         <div class="landing-card">
           <div class="landing-icon" id="landingIcon">🪙</div>
@@ -619,7 +606,7 @@
     function back(){next.style.display="none";welcome.style.display="flex"} document.querySelector("#back").onclick=back;document.querySelector("#back2").onclick=back;
   </script>
 <script>
-  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=87"}));
+  document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=89"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
     if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
