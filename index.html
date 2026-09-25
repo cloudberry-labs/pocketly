@@ -187,6 +187,12 @@
       const dayKey=()=>new Date().toLocaleDateString("en-CA");
       const dailyKey=()=>`pocketlyDailySaveDate_${activePocket?.id||"guest"}`;
       const completedToday=()=>!!activePocket&&localStorage.getItem(dailyKey())===dayKey();
+      const extraRollKey=()=>`pocketlyExtraRolls_${activePocket?.id||"guest"}`;
+      const freePassKey=()=>`pocketlyFreePassDate_${activePocket?.id||"guest"}`;
+      const getExtraRolls=()=>Math.max(0,Number(localStorage.getItem(extraRollKey()))||0);
+      const setExtraRolls=n=>localStorage.setItem(extraRollKey(),String(Math.max(0,Math.floor(n))));
+      const dayComplete=()=>completedToday()||localStorage.getItem(freePassKey())===dayKey();
+      let lastSeenDay=dayKey();
       const getSavings=()=>Number(activePocket?.saved||0);
       function savePockets(a){localStorage.setItem("pocketlyPockets",JSON.stringify(a));const p=a.find(x=>x.active&&!x.archived)||a.find(x=>!x.archived);if(p)localStorage.setItem("pocketlyFirstPocket",JSON.stringify(p))}
       function syncActivePocket(){
@@ -207,7 +213,12 @@
       function place(i){measure();position=i;setSpriteFrame(0);cici.style.transform=transform(points[i]);cici.dataset.state="idle";status.innerHTML=`<strong>READY</strong> · Cici is on tile ${i+1}`}
       function sparkle(tile){const br=board.getBoundingClientRect(),r=tile.getBoundingClientRect(),s=document.createElement("i");s.className="spark";s.style.left=`${r.left-br.left+r.width/2}px`;s.style.top=`${r.top-br.top+r.height*.55}px`;board.appendChild(s);setTimeout(()=>s.remove(),650)}
       function press(tile,final=false){tile.classList.remove("key-press","key-final");void tile.offsetWidth;tile.classList.add(final?"key-final":"key-press");if(final)sparkle(tile);setTimeout(()=>tile.classList.remove("key-press","key-final"),700)}
-      function setBusy(b){controls.forEach(x=>x.disabled=b);preview.disabled=b;diceButton.disabled=b||completedToday();if(completedToday())rollLabel.textContent="COME BACK TOMORROW 🌙"}
+      function updateRollUI(){
+        const extras=getExtraRolls(),done=dayComplete();
+        rollLabel.textContent=done?(extras?("EXTRA ROLL 🎲 · "+extras+" LEFT"):"COME BACK TOMORROW 🌙"):(extras?("ROLL 🎲 · +"+extras+" EXTRA"):"ROLL 🎲");
+        diceButton.disabled=state!=="IDLE"||(done&&!extras)
+      }
+      function setBusy(b){controls.forEach(x=>x.disabled=b);preview.disabled=b;diceButton.disabled=b; if(!b)updateRollUI()}
       function follow(){if(innerWidth<=600)cici.scrollIntoView({behavior:reduced.matches?"auto":"smooth",block:"nearest",inline:"nearest"})}
       async function moveSegment(fromIndex,toIndex){
         const from=points[fromIndex],to=points[toIndex];
@@ -264,7 +275,8 @@
         setDieFace(n);
       }
       async function takeTurn(){
-        if(state!=="IDLE"||completedToday())return;
+        if(state!=="IDLE"||(dayComplete()&&!getExtraRolls()))return;
+        const usingExtra=dayComplete()&&getExtraRolls()>0;if(usingExtra)setExtraRolls(getExtraRolls()-1);
         setBusy(true);state="ROLLING";rollLabel.textContent="ROLLING…";status.innerHTML="<strong>ROLLING</strong> · Good luck!";
         const n=Math.floor(Math.random()*6)+1;
         try{
@@ -278,7 +290,7 @@
           state="IDLE";cici.dataset.state="idle";setSpriteFrame(0);setBusy(false);
           status.innerHTML="<strong>READY</strong> · Try your roll again";
         }finally{
-          rollLabel.textContent=completedToday()?"COME BACK TOMORROW 🌙":"ROLL 🎲";
+          updateRollUI();
         }
       }
       const messages={
@@ -297,23 +309,23 @@
         "Lucky Day!":["🌈","LUCKY DAY!","It’s your lucky day!","Reveal a random Pocketville perk. If it asks for a save, you’ll always confirm before anything is added.","REVEAL LUCK"]
       };
       const mysteries=[
-        ["🎲","EXTRA ROLL!","Pocketville gave you a free extra roll!","No saving required. Take another roll and keep exploring.","NICE!","free"],
-        ["🌙","FREE PASS","No saving this time!","Your mystery gift is a guilt-free pass. Keep your coins and roll again.","YAY!","free"],
+        ["🎲","EXTRA ROLL!","Pocketville gave you an extra roll!","It will be saved until you use it — today or another day.","CLAIM","+roll"],
+        ["🌙","FREE PASS","No saving required today!","Use this pass to complete today without a regular Save. Any stored Extra Rolls stay yours for later.","USE PASS","pass"],
         ["🪙","TINY SAVE","A tiny savings surprise!","Save the smallest amount for your selected currency to complete today’s Pocketly goal.","SAVE IT","save",0],
         ["💗","HALF-STEP SAVE","A sweet little savings nudge!","Pocketville picked a small amount for today.","SAVE IT","save",1],
-        ["⭐","LUCKY BOOST","Bonus progress!","You found a little boost. No extra money needed — enjoy another roll.","CLAIM","free"],
-        ["🎁","FREE PASS","Pocketville gave you a choice-free break!","No saving required on this mystery. Keep your coins and continue exploring.","TAKE THE PASS","free"]
+        ["⭐","LUCKY BOOST","Bonus progress!","Your next SAVE tile will be 50% easier. The Boost stays until you use it.","ACTIVATE","boost"],
+        ["🎁","FREE PASS","Pocketville gave you a saving break!","Use this pass to complete today without a regular Save. Stored Extra Rolls remain available later.","USE PASS","pass"]
       ];
       const bonusResults=[
-        ["⭐","BONUS!","Bonus roll unlocked!","You earned another roll. No saving required.","CLAIM","free"],
+        ["⭐","BONUS!","Extra roll unlocked!","This roll is stored until you use it — it carries over to future days.","CLAIM","+roll"],
         ["🌿","BOOST!","Savings Boost unlocked!","Your next SAVE tile will be 50% easier. The Boost stays active until you use it.","ACTIVATE","boost"]
       ];
       const rewardResults=[
-        ["🌈","REWARD!","You earned a cozy reward!","No money needed. Celebrate your progress and take another roll.","CLAIM","free"],
-        ["🎀","REWARD!","Free-pass reward!","Nothing to save on this tile. Keep going.","CLAIM","free"]
+        ["🌈","REWARD!","Extra roll earned!","Your reward is one stored Extra Roll. Use it today or keep it for another day.","CLAIM","+roll"],
+        ["🎀","REWARD!","Free Pass earned!","Use it to complete today without a regular Save. Stored Extra Rolls remain yours.","USE PASS","pass"]
       ];
       const luckyResults=[
-        ["🌈","LUCKY DAY!","Two-roll luck!","Pocketville says keep playing — enjoy another roll before your daily save.","LUCKY ME!","free"],
+        ["🌈","LUCKY DAY!","Two extra rolls!","Pocketville gave you 2 stored Extra Rolls. Use them today or save them for later.","LUCKY ME!","+roll",2],
         ["🪙","LUCKY SAVE","Tiny amount, big win!","Save the smallest amount and complete today’s Pocketly goal.","SAVE IT","save",0]
       ];
       const challenges=[
@@ -386,7 +398,7 @@
         }
         localStorage.setItem(dailyKey(),dayKey());
         currentLanding.name="DailyComplete";
-        transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete. 💗`,"SEE YOU TOMORROW"]);
+        transitionPopup(["🌸","POCKETLY DAY COMPLETE!","Your save went straight to "+activePocket.name+"!",`You saved ${formatMoney(amount)}. ${formatMoney(Math.max(0,activePocket.amount-activePocket.saved))} remaining · ${activePocket.amount?Math.min(100,Math.round(activePocket.saved/activePocket.amount*100)):0}% complete.${getExtraRolls()?" You still have "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" whenever you want to use "+(getExtraRolls()===1?"it":"them")+".":" 💗"}`,"CONTINUE"]);
         landingSkip.hidden=true;return amount
       }
       landingAction.addEventListener("click",async()=>{
@@ -401,6 +413,8 @@
         if(currentLanding.name==="Lucky Day!"&&!currentLanding.result){showSpecialResult(luckyResults);return}
         if(currentLanding.result){
           const r=currentLanding.result;
+          if(r[5]==="+roll"){const add=Number(r[6])||1;setExtraRolls(getExtraRolls()+add);currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["🎲","EXTRA ROLL"+(add>1?"S":"")+" SAVED!",add+" extra roll"+(add>1?"s":"")+" added","You now have "+getExtraRolls()+" Extra Roll"+(getExtraRolls()===1?"":"s")+" available. They carry over until you use them.","CONTINUE"]);landingSkip.hidden=true;return}
+          if(r[5]==="pass"){localStorage.setItem(freePassKey(),dayKey());currentLanding.result=null;currentLanding.name="Resolved";transitionPopup(["🌙","FREE PASS USED","Today is complete!","No regular Save is required today. Your "+getExtraRolls()+" stored Extra Roll"+(getExtraRolls()===1?"":"s")+" will stay available until you choose to use "+(getExtraRolls()===1?"it":"them")+".","CONTINUE"]);landingSkip.hidden=true;return}
           if(r[5]==="save"){
             const tier=r[6]||0,amount=dynamicSaveAmounts()[tier],amountText=formatMoney(amount);
             currentLanding.pendingSpecialSave={tier,amount};
@@ -420,15 +434,26 @@
         if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString()});localStorage.setItem("pocketlyChallenges",JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is now active. Finish it whenever you’re ready.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
         if(currentLanding.name==="Boost"){activateBoost();transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active through future rolls until Cici lands on a SAVE tile. Then that Save amount will be cut in half.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="BoostActive";return}
         if(currentLanding.name==="BoostActive"){closeLanding("BOOST ACTIVE");return}
-        if(currentLanding.name==="Save"){const boosted=currentLanding.boosted,amount=currentLanding.saveAmount;const saved=await completeDailySave(currentLanding.space[4],amount);if(saved&&boosted)consumeBoost();return}
+        if(currentLanding.name==="Save"){
+          if(completedToday()){const amount=currentLanding.saveAmount;currentLanding.pendingBonusSave={tier:currentLanding.space[4],amount};transitionPopup(["🪙","BONUS SAVE","Today’s regular Save is already complete!","Would you like to add an optional extra "+formatMoney(amount)+" to "+activePocket.name+"?","SAVE EXTRA"],true);landingSkip.textContent="SKIP";currentLanding.name="BonusSaveConfirm";return}
+          const boosted=currentLanding.boosted,amount=currentLanding.saveAmount;const saved=await completeDailySave(currentLanding.space[4],amount);if(saved&&boosted)consumeBoost();return}
+        if(currentLanding.name==="BonusSaveConfirm"){const p=currentLanding.pendingBonusSave;currentLanding.pendingBonusSave=null;await completePocketChange(p.amount);return}
         if(currentLanding.name==="DailyComplete"){closeLanding("DAY COMPLETE");setBusy(false);return}
         closeLanding("READY")
       });
       landingSkip.addEventListener("click",()=>{if(currentLanding?.pendingSpecialSave){currentLanding.pendingSpecialSave=null;closeLanding("NOT SAVED");return}if(currentLanding?.result?.[5]==="save"){currentLanding.result=null;closeLanding("NOT SAVED");return}closeLanding("SKIPPED")});
       async function move(count){if(state!=="IDLE")return;state="MOVING";setBusy(true);measure();if(!points.length){state="IDLE";setBusy(false);return;}status.innerHTML=`<strong>MOVING</strong> · ${count} step${count===1?"":"s"}`;for(let step=0;step<count;step++){const to=(position+1)%points.length;await moveSegment(position,to);const final=step===count-1;press(points[to].tile,final);if(!final)await wait(reduced.matches?20:70)}state="LANDING";cici.dataset.state="landing";setSpriteFrame(3);await wait(reduced.matches?80:430);setSpriteFrame(0);cici.dataset.state="idle";state="RESOLVING_TILE";status.innerHTML=`<strong>LANDED</strong> · Tile ${position+1}`;showLanding(position)}
       function refreshCurrency(){syncActivePocket();[...board.querySelectorAll(".tile")].forEach((tile,i)=>{tile.querySelector(".tile-name").textContent=displayName(spaces[i])});savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length}
+      function dailyRefresh(){
+        const today=dayKey();if(today!==lastSeenDay)lastSeenDay=today;
+        syncActivePocket();refreshCurrency();if(state==="IDLE")updateRollUI()
+      }
       refreshCurrency();
       setBusy(false);
+      document.addEventListener("visibilitychange",()=>{if(!document.hidden)dailyRefresh()});
+      window.addEventListener("focus",dailyRefresh);
+      window.addEventListener("pageshow",dailyRefresh);
+      setInterval(()=>{if(dayKey()!==lastSeenDay)dailyRefresh()},60000);
       diceButton.addEventListener("click",takeTurn);
       setDieFace(1);
       
