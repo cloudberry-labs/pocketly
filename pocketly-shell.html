@@ -502,6 +502,8 @@
     const firebaseApp=initializeApp(firebaseConfig),auth=getAuth(firebaseApp),db=getFirestore(firebaseApp);
     const CLOUD_KEYS=["pocketlyPockets","pocketlyFirstPocket","pocketlyBoardPosition","pocketlySound"];
     let cloudUser=null,cloudReady=false,cloudTimer=null,authMode="create",userNavigated=false;
+    const VIEW_KEY="pocketlyShellView";
+    const rememberView=view=>sessionStorage.setItem(VIEW_KEY,view);
     function collectCloudData(){const data={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(CLOUD_KEYS.includes(k)||k.startsWith("pocketly")))data[k]=localStorage.getItem(k)}return data}
     async function writeCloudNow(){const user=auth.currentUser||cloudUser;if(!user){console.warn("Pocketly cloud save: no signed-in user");return false}clearTimeout(cloudTimer);try{const payload=collectCloudData();const pocketsSnapshot=getPockets();await setDoc(doc(db,"users",user.uid),{email:user.email||"",data:payload,pockets:pocketsSnapshot,onboardingComplete:!!getPocket(),updatedAt:serverTimestamp()},{merge:true});const verify=await getDoc(doc(db,"users",user.uid));const verified=verify.exists()?verify.data():null,remote=verified?.data;if(!remote||remote.pocketlyPockets!==payload.pocketlyPockets||JSON.stringify(verified?.pockets||[])!==JSON.stringify(pocketsSnapshot))throw new Error("Cloud verification failed");const s=document.querySelector("#cloudStatus");if(s)s.textContent="☁️ Saved to Pocketly Cloud";return true}catch(e){console.error("Pocketly cloud save failed",e);const s=document.querySelector("#cloudStatus");if(s)s.textContent="⚠️ Cloud save failed";return false}} async function pushCloud(){if(!(cloudUser||auth.currentUser)||!cloudReady)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(()=>writeCloudNow(),350)}
     async function restoreCloud(user){const ref=doc(db,"users",user.uid),snap=await getDoc(ref);if(snap.exists()&&snap.data().data){const remoteDoc=snap.data();Object.entries(remoteDoc.data).forEach(([k,v])=>{if(v!==null&&v!==undefined)nativeSet.call(localStorage,k,String(v))});if(Array.isArray(remoteDoc.pockets)&&remoteDoc.pockets.length){nativeSet.call(localStorage,"pocketlyPockets",JSON.stringify(remoteDoc.pockets));const active=remoteDoc.pockets.find(p=>p.active&&!p.archived)||remoteDoc.pockets.find(p=>!p.archived);if(active)nativeSet.call(localStorage,"pocketlyFirstPocket",JSON.stringify(active))}return true}await setDoc(ref,{email:user.email||"",data:collectCloudData(),createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{merge:true});return false}
@@ -560,7 +562,7 @@
       const note=percent===0?"Every little save is a tiny brick for your dream. Let’s begin!":percent<25?"A tiny start is still a start. I’m proud of you!":percent<50?"Look! Your little world is starting to grow!":percent<75?"You’re more than halfway to something wonderful!":percent<100?"So close! Your dream is almost within reach!":"You did it! Your dream pocket is complete!";
       const level=percent<25?1:percent<50?2:percent<75?3:percent<100?4:5;document.querySelector("#ciciNote").textContent=note;document.querySelector("#levelPill").textContent=level===1?"Tiny Beginning · Level 1":level===2?"Little Builder · Level 2":level===3?"Dream Grower · Level 3":level===4?"Cozy Creator · Level 4":"Dream Keeper · Level 5";document.querySelector("#profileLevel").textContent="Level "+level;document.querySelector("#profileProgress").textContent=percent+"%";
     }
-    function showDashboard(){hideViews();renderDashboard();dashboard.style.display="block"}
+    function showDashboard(){hideViews();renderDashboard();dashboard.style.display="block";rememberView("home")}
     function navigate(fn){userNavigated=true;fn()}
     document.querySelector("#finishOnboarding").textContent="ENTER POCKETVILLE →";document.querySelector("#finishOnboarding").onclick=showDashboard;
     function openSave(source="dashboard"){
@@ -581,7 +583,7 @@
       const categoryIcons={home:"🏡",travel:"✈️",emergency:"☂️",special:"🎁",education:"📚",custom:"✨"};
       list.innerHTML=pockets.map((p,i)=>{const percent=Math.min(100,Math.round(((Number(p.saved)||0)/Number(p.amount))*100));return `<article class="goal-card ${p.active?"active-pocket":""} ${percent>=100?"completed":""}" data-id="${p.id}">${p.active?'<span class="active-tag">ACTIVE</span>':""}<span class="goal-icon">${categoryIcons[p.category]||"✨"}</span><h3>${esc(p.name)}</h3><small>${percent>=100?"Dream completed!":"Saving in progress"}</small><div class="goal-progress"><div class="goal-money"><strong>${money(Number(p.saved)||0,p.currency)}</strong><span>of ${money(p.amount,p.currency)} · ${percent}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></div><div class="goal-actions">${p.active?'<button class="tiny-btn active-choice" disabled>ACTIVE</button>':`<button class="tiny-btn" data-action="active">USE THIS</button>`}<button class="tiny-btn" data-action="edit">EDIT</button><button class="tiny-btn danger" data-action="delete">DELETE</button></div></article>`}).join("");
     }
-    function showPockets(){hideViews();renderPockets();pocketsView.style.display="block"}
+    function showPockets(){hideViews();renderPockets();pocketsView.style.display="block";rememberView("pockets")}
     function openPocketEditor(pocket=null){editingPocketId=pocket?pocket.id:null;document.querySelector("#pocketModalTitle").textContent=pocket?"Edit Your Pocket":"Create a New Pocket";document.querySelector("#newPocketName").value=pocket?pocket.name:"";document.querySelector("#newPocketCategory").value=pocket&&pocket.category?pocket.category:"custom";document.querySelector("#newPocketTarget").value=pocket?pocket.amount:"";document.querySelector("#newPocketCurrency").value=pocket?pocket.currency:"PHP";document.querySelector("#newPocketDate").value=pocket&&pocket.date?pocket.date:"";document.querySelector("#pocketModalError").textContent="";pocketModal.classList.add("open")}
     document.querySelector("#openPockets").onclick=()=>navigate(showPockets);document.querySelector("#pocketsHome").onclick=()=>navigate(showDashboard);document.querySelector("#addPocketButton").onclick=()=>openPocketEditor();document.querySelector("#bottomProfile").onclick=()=>profileModal.classList.add("open");document.querySelector("#pocketsProfile").onclick=()=>profileModal.classList.add("open");
     document.querySelector("#cancelPocketModal").onclick=()=>pocketModal.classList.remove("open");pocketModal.onclick=e=>{if(e.target===pocketModal)pocketModal.classList.remove("open")};
@@ -746,7 +748,7 @@
       try{
         const restored=await restoreCloud(user);
         cloudReady=true;
-        if(restored&&getPocket()&&!userNavigated){document.querySelector("#authModal").classList.remove("open");showDashboard();}
+        if(restored&&getPocket()&&!userNavigated){document.querySelector("#authModal").classList.remove("open");const remembered=sessionStorage.getItem(VIEW_KEY);if(remembered==="pockets")showPockets();else showDashboard();}
       }catch(e){console.warn("Pocketly auto restore",e);cloudReady=true}
     });
     const savedPocket=getPocket();if(savedPocket){
@@ -758,10 +760,8 @@
           cloudUser=user;
           try{await restoreCloud(user)}catch(e){console.warn("Pocketly resume restore",e)}
           cloudReady=true;
-          showDashboard();
-        }else{
-          openAuth("login");
         }
+        showDashboard();
       }
     }
     let pocketlyRefreshBusy=false;
@@ -786,9 +786,10 @@
   document.querySelectorAll(".shell-play-link").forEach(b=>b.addEventListener("click",()=>{userNavigated=true;sessionStorage.setItem("pocketlyReturnView","play");location.href="./?v=72"}));
   const requested=new URLSearchParams(location.search).get("view");
   addEventListener("load",()=>{
-    if(requested==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
-    if(requested==="profile") setTimeout(()=>document.querySelector("#bottomProfile")?.click(),0);
-    if(requested==="home") setTimeout(()=>document.querySelector("#pocketsHome")?.click(),0);
+    const target=requested||sessionStorage.getItem("pocketlyShellView");
+    if(target==="pockets") setTimeout(()=>document.querySelector("#openPockets")?.click(),0);
+    if(target==="profile") setTimeout(()=>document.querySelector("#bottomProfile")?.click(),0);
+    if(target==="home") setTimeout(()=>document.querySelector("#pocketsHome")?.click(),0);
   });
 </script></body>
 </html>
