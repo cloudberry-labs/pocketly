@@ -207,7 +207,7 @@
         name.textContent=activePocket.name;saved.textContent=`${formatMoney(s)} saved`;rem.textContent=`${formatMoney(Math.max(0,t-s))} remaining`;pct.textContent=`${p}% of ${formatMoney(t)}`;fill.style.width=p+"%";
       }
       const getChallenges=()=>{try{return JSON.parse(localStorage.getItem(challengesKey())||"[]")}catch{return[]}};
-      const updateProgress=()=>{syncActivePocket();savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=getChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
+      const updateProgress=()=>{syncActivePocket();savingsTotalEl.textContent=activePocket?formatMoney(activePocket.saved):"—";challengeCountEl.textContent=pruneChallenges().length};const orientation={1:[0,0,0],2:[0,-90,0],3:[-90,0,0],4:[90,0,0],5:[0,90,0],6:[0,180,0]};
       const wait=ms=>new Promise(r=>setTimeout(r,ms));
       const soundOn=()=>localStorage.getItem("pocketlySound")!=="off";
       let audioCtx=null;
@@ -355,7 +355,7 @@
         ["💧","NO-SPEND CHALLENGE","No drinks out today!","Skip buying coffee, milk tea, soda, or bottled drinks for the rest of the day."],
         ["🍱","PANTRY CHALLENGE","Use what you already have!","Make your next meal or snack from food you already have instead of buying something new."],
         ["🛍️","CART PAUSE","24-hour cart rule!","Leave one non-essential item in your cart for 24 hours before deciding whether to buy it."],
-        ["🪙","COIN BOOST","Add a tiny extra save!","Save the smallest SAVE amount in your selected currency as a little bonus today."],
+        ["🪙","COIN CHECK","Find one tiny saving opportunity!","Skip one small non-essential purchase today and keep that money in your pocket."],
         ["📵","NO-SPEND WINDOW","Three hours, zero spending!","Choose any three-hour window today and spend nothing during that time."],
         ["🧹","USE IT FIRST","Shop your own stuff!","Before buying one non-essential item, use or finish something similar you already own."],
         ["🎯","WANT VS NEED","Catch one impulse buy!","When you want to buy something today, ask: need, planned want, or impulse? Skip one impulse."],
@@ -399,7 +399,9 @@
         transitionPopup(["🪙","POCKET CHANGE ADDED","Every little bit counts!","You added "+formatMoney(actual)+" to "+activePocket.name+". Your regular daily Save is still available. 💗","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="Resolved";return true
       }
       function showChallenge(){const ch=challenges[Math.floor(Math.random()*challenges.length)];currentLanding.challenge=ch;transitionPopup([ch[0],ch[1],ch[2],ch[3],"ACCEPT CHALLENGE"],true);landingSkip.textContent="NOT NOW"}
-      function showChallengePanel(){const list=getChallenges();currentLanding={name:"ChallengePanel"};landingEmoji.textContent="📋";landingType.textContent="ACTIVE CHALLENGES";landingTitle.textContent=list.length?"Your little missions":"All clear!";landingMessage.innerHTML=list.length?'<div class="challenge-list">'+list.map((x,i)=>'<div class="challenge-item"><strong>'+x.title+'</strong><span>'+x.detail+'</span><button class="challenge-done" type="button" data-challenge-done="'+i+'">DONE ✓</button></div>').join("")+'</div>':"You don’t have any active challenges right now. 💗";landingAction.textContent="CLOSE";landingSkip.hidden=true;overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");state="RESOLVING_TILE";setBusy(true)}
+      function challengeExpired(x){return x.expiresAt&&Date.now()>Number(x.expiresAt)}
+      function pruneChallenges(){const list=getChallenges(),keep=list.filter(x=>!challengeExpired(x));if(keep.length!==list.length)localStorage.setItem(challengesKey(),JSON.stringify(keep));return keep}
+      function showChallengePanel(){const list=pruneChallenges();currentLanding={name:"ChallengePanel"};landingEmoji.textContent="📋";landingType.textContent="ACTIVE CHALLENGES";landingTitle.textContent=list.length?"Your little missions":"All clear!";landingMessage.innerHTML=list.length?'<div class="challenge-list">'+list.map((x,i)=>'<div class="challenge-item"><strong>'+x.title+'</strong><span>'+x.detail+'</span><button class="challenge-done" type="button" data-challenge-done="'+i+'">DONE ✓</button></div>').join("")+'</div>':"You don’t have any active challenges right now. 💗";landingAction.textContent="CLOSE";landingSkip.hidden=true;overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");state="RESOLVING_TILE";setBusy(true)}
       landingMessage.addEventListener("click",e=>{const b=e.target.closest("[data-challenge-done]");if(!b)return;const i=+b.dataset.challengeDone,list=getChallenges(),done=list.splice(i,1)[0];localStorage.setItem(challengesKey(),JSON.stringify(list));const history=JSON.parse(localStorage.getItem(completedChallengesKey())||"[]");history.push({...done,completedAt:new Date().toISOString()});localStorage.setItem(completedChallengesKey(),JSON.stringify(history));updateProgress();showChallengePanel()});
       challengePill.addEventListener("click",showChallengePanel);
       challengePill.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showChallengePanel()}});
@@ -458,7 +460,7 @@
         }
                 if(currentLanding.name==="Challenge"&&!currentLanding.challenge){showChallenge();return}
         if(currentLanding.name==="No-Spend"&&!currentLanding.challenge){const ch=["📵","NO-SPEND CHALLENGE","Wallet nap challenge!","For the rest of today, avoid non-essential spending. Essentials are always okay.","ACCEPT CHALLENGE"];currentLanding.challenge=ch;transitionPopup(ch,true);landingSkip.textContent="NOT NOW";return}
-        if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString()});localStorage.setItem(challengesKey(),JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is now active. Finish it whenever you’re ready.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
+        if(currentLanding.challenge){const list=getChallenges();list.push({title:currentLanding.challenge[2],detail:currentLanding.challenge[3],acceptedAt:new Date().toISOString(),expiresAt:Date.now()+86400000});localStorage.setItem(challengesKey(),JSON.stringify(list));updateProgress();transitionPopup(["💗","ACCEPTED!","Challenge added!","Your challenge is active for the next 24 hours. Mark it Done when you complete it.","DONE"]);landingSkip.hidden=true;currentLanding.challenge=null;currentLanding.name="Resolved";return}
         if(currentLanding.name==="Boost"){activateBoost();transitionPopup(["🌿","BOOST ACTIVE!","50% off your next Save!","Your Savings Boost will stay active through future rolls until Cici lands on a SAVE tile. Then that Save amount will be cut in half.","CONTINUE"]);landingSkip.hidden=true;currentLanding.name="BoostActive";return}
         if(currentLanding.name==="BoostActive"){closeLanding("BOOST ACTIVE");return}
         if(currentLanding.name==="Save"){
