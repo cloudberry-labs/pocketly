@@ -491,7 +491,7 @@
       window.addEventListener("focus",dailyRefresh);
       window.addEventListener("pageshow",dailyRefresh);
       setInterval(()=>{if(dayKey()!==lastSeenDay)dailyRefresh()},60000);
-      diceButton.addEventListener("click",async()=>{unlockAudio();if(audioCtx?.state==="suspended")try{await audioCtx.resume()}catch(e){}takeTurn()});
+      diceButton.addEventListener("click",async()=>{unlockAudio();if(audioCtx?.state==="suspended")try{await audioCtx.resume()}catch(e){}tone(440,.018,"sine",.0001);takeTurn()});
       setDieFace(1);
       
       
