@@ -15,7 +15,7 @@
     body{font-family:"Darumadrop One","Comic Sans MS",sans-serif;color:var(--ink);font-weight:400}
     h1,h2,h3,h4,h5,h6,.title,.section-title{font-family:"Darumadrop One","Comic Sans MS",sans-serif;font-weight:400}
     button{font:inherit}
-    .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:28px 18px 48px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
+    html.booting body{visibility:hidden}\n    body{opacity:1;transition:opacity .14s ease}\n    .shell{position:relative;isolation:isolate;display:grid;min-height:100svh;place-items:center;overflow:hidden;padding:28px 18px 48px;background:radial-gradient(circle at 16% 14%,rgba(255,255,255,.86) 0 6%,transparent 6.2%),linear-gradient(145deg,#ffeaf4 0%,#f7ecff 42%,#e6f7ff 100%)}
     .shell:before{content:"";position:absolute;inset:0;z-index:-3;opacity:.38;background-image:radial-gradient(#beaee0 1.2px,transparent 1.2px);background-size:22px 22px}
     .orb{position:absolute;z-index:-2;border:1px solid rgba(255,255,255,.72);border-radius:48% 52% 68% 32%/54% 35% 65% 46%}
     .o1{width:340px;height:340px;top:-120px;right:-95px;background:rgba(159,222,248,.38);transform:rotate(24deg)}
@@ -358,6 +358,7 @@
 @media(prefers-reduced-motion:reduce){.player-token[data-state="idle"] img{animation:none}.board-tile.step-contact,.board-tile.final-contact{animation:none}}
 
 </style>
+  <script>document.documentElement.classList.add("booting");</script>
 </head>
 <body>
   <main class="shell">
@@ -744,15 +745,18 @@
 
 
     onAuthStateChanged(auth,async user=>{
-      if(!user){cloudUser=null;cloudReady=false;return}
+      if(!user){cloudUser=null;cloudReady=false;document.documentElement.classList.remove("booting");return}
       cloudUser=user;
       try{
-        const restored=await restoreCloud(user);
+        await restoreCloud(user);
         cloudReady=true;
-        if(restored&&getPocket()&&!userNavigated){document.querySelector("#authModal").classList.remove("open");const remembered=sessionStorage.getItem(VIEW_KEY);if(remembered==="pockets")showPockets();else showDashboard();}
+        if(getPocket()&&!userNavigated){document.querySelector("#authModal").classList.remove("open");const remembered=sessionStorage.getItem(VIEW_KEY);if(remembered==="pockets")showPockets();else showDashboard();}
       }catch(e){console.warn("Pocketly auto restore",e);cloudReady=true}
+      finally{document.documentElement.classList.remove("booting")}
     });
     const savedPocket=getPocket();if(savedPocket){
+      const remembered=sessionStorage.getItem(VIEW_KEY);
+      if(remembered==="pockets")showPockets();else showDashboard();
       const resume=document.querySelector('[data-view="guest"]');
       resume.textContent="Continue to Pocketville";
       resume.onclick=async()=>{
